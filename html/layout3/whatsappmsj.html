@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar Mensaje por WhatsApp</title>
+</head>
+<body>
+  <button id="sendWhatsApp">Enviar Mensaje por WhatsApp</button>
+
+  <script>
+    document.getElementById('sendWhatsApp').addEventListener('click', function() {
+      const phoneNumber = '542994707809'; // Reemplaza con el número de teléfono completo
+      const message = '¡Hola! Este es un mensaje automático desde javascript.';
+      
+      // Codificar el mensaje para URL
+      const encodedMessage = encodeURIComponent(message);
+      
+      // Construir la URL
+      const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+      
+      // Abrir la URL en una nueva pestaña o ventana
+      window.open(whatsappURL, '_blank');
+    });
+  </script>
+</body>
+</html>

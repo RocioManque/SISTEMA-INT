@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Google Sheets</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+    <h1>Agregar Nueva Fila a Google Sheets</h1>
+    
+    <form id="dataForm">
+        <input type="text" id="pas" placeholder="PAS" required>
+        <input type="text" id="cliente" placeholder="Cliente" required>
+        <input type="date" id="fechaIngreso" placeholder="Fecha de ingreso" required>
+        <input type="date" id="fechaInicio" placeholder="Fecha de inicio" required>
+        <input type="text" id="numeroReclamo" placeholder="Nº de Reclamo" required>
+        <input type="text" id="estado" placeholder="Estado" required>
+        <input type="text" id="ultimaActualizacion" placeholder="Última actualización" required>
+        <input type="text" id="tipoReclamo" placeholder="Tipo de reclamo" required>
+        <input type="number" id="monto" placeholder="Monto a reclamar" required>
+        <input type="text" id="compania" placeholder="Compañía a reclamar" required>
+        <button type="submit">Agregar Fila</button>
+    </form>
+    
+      <p>Sheets API Quickstart</p>
+
+      <!--Add buttons to initiate auth sequence and sign out-->
+      <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+      <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+  
+      <pre id="content" style="white-space: pre-wrap;"></pre>
+  
+
+
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">¡Atención!</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Se realizara la siguiente factura:
+              <br>
+              Emitida a: DROQUI ANDREA
+              <br>
+              Emitida Por: 
+              <br>
+              Por un monto Total: $ 786500
+              <br>
+              Detalle: Honorarios por gention en el caso GARRO MARIA ELENA contra RUS
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary" onclick="alertClick()">Enviar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <script async defer src="https://apis.google.com/js/api.js" id="gapi" ></script>
+      <script async defer src="https://accounts.google.com/gsi/client" id="gis"></script>
+      <!-- <script src="https://apis.google.com/js/api.js" async defer></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script> -->
+      <script async defer src="../../dist-assets/js/auth.js"></script>
+      <script async defer src="../../dist-assets/js/sheets.js"></script>
+</body>
+</html>

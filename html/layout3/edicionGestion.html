@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" dir="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Editando Caso</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="../../dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
+    <link href="../../dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../dist-assets/css/plugins/sweetalert2.min.css" />
+
+</head>
+
+<body class="text-left">
+    <div class="app-admin-wrap layout-horizontal-bar">
+        <div class="main-header">
+            <div class="logo"><img src="../../dist-assets/images/logo.png" alt="" /></div>
+            <div class="menu-toggle">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="d-flex align-items-center">
+               
+            </div>
+            <div style="margin: auto">
+                
+            </div>
+            <div class="header-part-right">  
+                <h4 class="mt-3 mr-3 " id="userNameDisplay"></h4> 
+                <a class="link-icon mr-1" href="../../html/sessions/signin.html" style="font-size:xx-large; color: brown;"><i class="fa-solid fa-power-off"></i></a>
+            </div>
+            
+        </div>
+        
+        <!-- header top menu end-->
+        <div class="horizontal-bar-wrap">
+            <div class="header-topnav">
+                <div class="container-fluid bar-views">
+                    <div class="topnav rtl-ps-none" id="" data-perfect-scrollbar="" data-suppress-scroll-x="true">
+                        <ul class="menu float-left">
+                            <li class="views" id="nuevoCaso">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Nuevo caso</label>
+                                        <a href="nuevoCaso.html"><i class="nav-icon mr-2 i-Library text-white"></i> <span class="text-white">Nuevo caso</span> </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosPendientes">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Casos pendientes</label><a href="casosPendientes.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Casos Pendientes</span></a>
+                                       
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosGestion">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Casos en Gestión</label>
+                                        <a href="casosEnGestion.html"><i class="nav-icon mr-2 i-Receipt text-white"></i><span class="text-white">Casos en Gestión</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="baseUnica">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Base única</label>
+                                        <a href="baseUnica.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Base única</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="estadisticas">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Estadísticas</label>
+                                        <a href="estadisticas.html"><i class="nav-icon mr-2 i-Bar-Chart-5 text-white"></i> <span class="text-white">Estadísticas</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="facturacion">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Facturación</label>
+                                        <a href="facturacion.html"><i class="nav-icon mr-2 i-Windows-2 text-white"></i><span class="text-white">Facturación</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosPas">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Mis Casos</label>
+                                        <a href="casosPas.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Mis Casos</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="novedades">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Novedades</label>
+                                        <a href="novedades.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Novedades</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- =============== Horizontal bar End ================-->
+        <div class="main-content-wrap d-flex flex-column">
+            <!-- ============ Body content start ============= -->
+            <div class="main-content">
+                <div class="breadcrumb">
+                </div>
+                <div class="separator-breadcrumb border-top"></div>
+                <div class="row mb-4">
+                    <div class="col-md-12 d-flex justify-content-end"> 
+                        <button onclick="handleAuthClick()">A</button>
+                    </div>
+                </div>
+                <div class="inbox-main-sidebar-container" data-sidebar-container="main">
+                    <div class="inbox-main-content" data-sidebar-content="main">
+                        <!-- SECONDARY SIDEBAR CONTAINER-->
+                        <div class="inbox-secondary-sidebar-container box-shadow-1" data-sidebar-container="secondary">
+                            <div data-sidebar-content="secondary">
+                                <div class="inbox-secondary-sidebar-content position-relative" style="min-height: 500px">
+                                    <div class="inbox-topbar box-shadow-1 perfect-scrollbar rtl-ps-none pl-3" data-suppress-scroll-y="true">
+                                        <a class="link-icon mr-3" id="desistido" onclick="desistido()"><i class="icon-regular i-Mail-Remove-x"></i> Desistido</a><a class="link-icon mr-3" id="facturacion" onclick="facturacion(event)" ><i class="icon-regular i-Mail-Remove-x"></i>Facturación</a><a class="link-icon mr-3" id="mediacion" onclick="mediacion(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Mediación</a><a class="link-icon mr-3" id="legales" onclick="legales(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Legales</a><a class="link-icon mr-3" id="saveChanges" onclick="actualizar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Actualizar</a><a class="link-icon mr-3" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a>
+
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Escribir..." id="actualizacion" style="height: 100px"></textarea>
+                                      </div>
+                                   <div>
+                                    <div class="form-check form-check-inline mt-5">
+                                        <label class="checkbox checkbox-outline-info">
+                                          
+                                        </label>
+                                      </div>
+                                   
+                                   </div>
+                                   
+                                   <div id="liveAlertPlaceholder"></div>
+                                   <!-- <div class="col-md-6 mb-4">
+                                            <form class="dropzone dropzone-area" id="button-select-upload" action="#">
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple="multiple" />
+                                                </div>
+                                                <div class="dz-message">Drop Files Here To Upload</div>
+                                            </form>
+                                </div> -->
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <textarea class="form-control" placeholder="Historial..." id="historial" style="height: 100px" disabled></textarea>
+                                  </div>
+                               <div>
+                               </div>
+                             <div class="">
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Teléfono</span></div>
+                                    <input class="form-control" id="telefono" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Mail</span></div>
+                                    <input class="form-control" id="email" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Observación</span></div>
+                                    <input class="form-control" id="obs" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Gestionado con</span>
+                                    </div>
+                                    <select class="form-control" id="gestionado" aria-describedby="basic-addon3">
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="opcion1">Compañia</option>
+                                        <option value="opcion2">Estudio</option>
+                                        <!-- Añade más opciones aquí según sea necesario -->
+                                    </select>
+                                    
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Estado</span>
+                                    </div>
+                                    <select class="form-control" id="estado" aria-describedby="basic-addon3">
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="Ingresado">Ingresado</option>
+                                        <option value="Falta documentación">Falta documentación</option>
+                                        <option value="Cía que no tomamos">Cía que no tomamos</option>
+                                        <option value="Faltante 3ro">Faltante 3ro</option>
+                                        <option value="Contactar">Contactar</option>
+                                        <option value="Cerrado">Cerrado</option>
+                                        <option value="Facturado">Facturado</option>
+                                        <option value="Cobrado">Cobrado</option>
+                                        <!-- Añade más opciones aquí según sea necesario -->
+                                    </select>
+                                    
+                                </div>
+                             </div>
+
+                        </div>
+                            </div>
+                         </div>
+                        </div>
+                    </div>
+                            </div>
+                            <!-- Secondary Inbox sidebar-->
+                            <div class="inbox-secondary-sidebar perfect-scrollbar rtl-ps-none" data-sidebar="secondary"><i class="sidebar-close i-Close" data-sidebar-toggle="secondary"></i>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >PAS</span></div>
+                                    <input class="form-control" id="pas" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Cliente</span></div>
+                                    <input class="form-control" id="cliente" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de ingreso</span></div>
+                                    <input class="form-control" id="ingreso" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de inicio</span></div>
+                                    <input class="form-control" id="inicio" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Nº de Reclamo</span></div>
+                                    <input class="form-control" id="reclamo" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Tipo de Reclamo</span>
+                                    </div>
+                                    <select class="form-control" id="tipoReclamo" aria-describedby="basic-addon3">
+                                        <option value="" disabled selected>Selecciona una opción</option>
+                                        <option value="Administrativo">Administrativo</option>
+                                        <option value="Mediación">Mediación</option>
+                                        <option value="Mediación Express">Mediación Express</option>
+                                        <!-- Añade más opciones aquí según sea necesario -->
+                                    </select>
+                                    
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Monto Reclamado</span></div>
+                                    <input class="form-control" id="montoReclamado" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Monto Cerrado</span></div>
+                                    <input class="form-control" id="montoCerrado" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Compañia a Reclamar</span></div>
+                                    <input class="form-control" id="ciaReclamo" type="text" aria-describedby="basic-addon3" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- MAIN INBOX SIDEBAR-->
+                </div>
+  
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const appendAlert = (message, type) => {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,  
+    '</div>'
+  ].join('')
+
+  alertPlaceholder.append(wrapper)
+}
+
+// const alertTrigger = document.getElementById('liveAlertBtn')
+// if (alertTrigger) {
+//   alertTrigger.addEventListener('click', () => {
+//     appendAlert('Información enviada exitosamente', 'success')
+//   })
+// }
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+        
+            if (userData) {
+                const permission = userData.permission; // Asumimos que este es un string con el permiso del usuario
+                const name = userData.name;
+                document.getElementById('userNameDisplay').innerText = `${userData.name}`;
+                // Ocultar todas las pestañas inicialmente
+                document.querySelectorAll('.views').forEach(view => {
+                    view.style.display = 'none'; // Ocultar todas las pestañas
+                });
+        
+                // Mostrar pestañas basadas en permisos
+                if (permission === 'super usuario') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosPendientes').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                    document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+                } else if (permission === 'ejecutivo') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                } else if (permission === 'mesa de entrada') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosPendientes').style.display = 'block';
+                } else if (permission === 'mediacion') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                }else if (permission === 'jefe de operaciones') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+
+                }else if (permission === 'PAS') {
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+
+                }
+            } else {
+                // Si no hay información de usuario, redirigir a login
+                window.location.href = 'signin.html';
+            }
+        });
+       
+        </script>
+    <!-- ============ Search UI End ============= -->
+    <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+    <script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../../dist-assets/js/scripts/script.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+    <script src="../../dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
+    <script src="../../dist-assets/js/plugins/sweetalert2.min.js"></script>
+    <script src="../../dist-assets/js/scripts/sweetalert.script.min.js"></script>
+    <script src="../../dist-../../dist-assets/js/scripts/sidebar.script.min.js"></script>
+    <script src="../../dist-assets/js/edicionGestion.js"></script>
+
+</body>
+
+</html>

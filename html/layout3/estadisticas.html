@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" dir="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>estadisticas</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
+    <link href="../../dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
+    <link href="../../dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body class="text-left">
+    <div class="app-admin-wrap layout-horizontal-bar">
+        <div class="main-header">
+            <div class="logo"><img src="../../dist-assets/images/logo.png" alt="" /></div>
+            <div class="menu-toggle">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="d-flex align-items-center">
+               
+            </div>
+            <div style="margin: auto"></div>
+            <div class="header-part-right">
+                <h4 class="mt-3 text-success mr-3" id="userNameDisplay"></h4>
+                <div class="header-part-right">  
+                    <h4 class="mt-3 mr-3 " id="userNameDisplay"></h4> 
+                    <a class="link-icon mr-1" href="../../html/sessions/signin.html" style="font-size:xx-large; color: brown;"><i class="fa-solid fa-power-off"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- header top menu end-->
+        <div class="horizontal-bar-wrap">
+            <div class="header-topnav">
+                <div class="container-fluid bar-views">
+                    <div class="topnav rtl-ps-none" id="" data-perfect-scrollbar="" data-suppress-scroll-x="true">
+                        <ul class="menu float-left">
+                            <li class="views" id="nuevoCaso">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Nuevo caso</label>
+                                        <a href="nuevoCaso.html"><i class="nav-icon mr-2 i-Library text-white"></i> <span class="text-white">Nuevo caso</span> </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosPendientes">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Casos pendientes</label><a href="casosPendientes.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Casos Pendientes</span></a>
+                                       
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosGestion">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Casos en Gestión</label>
+                                        <a href="casosEnGestion.html"><i class="nav-icon mr-2 i-Receipt text-white"></i><span class="text-white">Casos en Gestión</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="baseUnica">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Base única</label>
+                                        <a href="baseUnica.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Base única</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="estadisticas">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Estadísticas</label>
+                                        <a href="estadisticas.html"><i class="nav-icon mr-2 i-Bar-Chart-5 text-white"></i> <span class="text-white">Estadísticas</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="facturacion">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Facturación</label>
+                                        <a href="facturacion.html"><i class="nav-icon mr-2 i-Windows-2 text-white"></i><span class="text-white">Facturación</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosPas">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Mis Casos</label>
+                                        <a href="casosPas.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Mis Casos</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="novedades">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Novedades</label>
+                                        <a href="novedades.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Novedades</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- =============== Horizontal bar End ================-->
+        <div class="main-content-wrap d-flex flex-column">
+            <!-- ============ Body content start ============= -->
+            <div class="main-content">
+                <div class="breadcrumb">
+                    <h1>Estadisticas</h1>
+                </div>
+                <div class="separator-breadcrumb border-top"></div>
+                <!-- content goes here-->
+                <!-- section 1-->
+                <section class="ul-widget-stat-s1">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                                <div class="card-body text-center">
+                                    <div class="content">
+                                        <p class="text-muted mt-2 mb-0">Activos</p>
+                                        <p class="text-primary text-24 line-height-1 mb-2">10</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                                <div class="card-body text-center">
+                                    <div class="content">
+                                        <p class="text-muted mt-2 mb-0">Pendientes</p>
+                                        <p class="text-primary text-24 line-height-1 mb-2">3</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                                <div class="card-body text-center">
+                                    <div class="content">
+                                        <p class="text-muted mt-2 mb-0">Desistidos</p>
+                                        <p class="text-primary text-24 line-height-1 mb-2">1</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                                <div class="card-body text-center">
+                                    <div class="content">
+                                        <p class="text-muted mt-2 mb-0">Cobrados</p>
+                                        <p class="text-primary text-24 line-height-1 mb-2">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+                <!-- end:: section 1-->
+                <!-- section 2-->
+                <section class="ul-widget-stat-s2">
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3">
+                            <div class="card mb-4 o-hidden">
+                                <div class="card-body ul-card__widget-chart">
+                                    <div class="ul-widget__chart-info">
+                                        <h5 class="heading">Casos por ejecutivo</h5>
+                                        <div class="ul-widget__chart-number">
+                                            <h2 class="t-font-boldest">Histórico</h2><small class="text-muted"></small>
+                                        </div>
+                                    </div>
+                                    <div id="basicArea-chart4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="card mb-4 o-hidden">
+                                <div class="card-body ul-card__widget-chart">
+                                    <div class="ul-widget__chart-info">
+                                        <h5 class="heading text-20 line-height-1 mb-3"><i class="i-Like-2"></i> Casos en el año</h5>
+                                        <div class="ul-widget__chart-number">
+                                            <h6>201</h6>
+                                        </div>
+                                    </div>
+                                    <div id="basicArea-chart5"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="card-title">Basic Column chart</div>
+                                    <div id="basicColumn-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="ul-widget-stat-s3">
+                    <div class="row"> <!-- Contenedor de fila -->
+                        <div class="col-md-6 col-lg-4 col-sm-6"> <!-- Primer columna -->
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="card-title">Casos Abiertos</div>
+                                    <div id="multipleRadialBar"></div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6 col-lg-4 col-sm-6"> <!-- Segunda columna -->
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        Porcentaje de casos cobrados
+                                    </div>
+                                    <div id="strokedangularGauge"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 col-sm-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        Porcentaje de casos cerrados
+    
+                                    </div>
+                                    <div id="gradientRadial"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div><!-- Footer Start -->
+            <div class="flex-grow-1"></div>
+            <!-- fotter end -->
+        </div>
+    </div><!-- ============ Search UI Start ============= -->
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+        
+            if (userData) {
+                const permission = userData.permission; // Asumimos que este es un string con el permiso del usuario
+                const name = userData.name;
+                document.getElementById('userNameDisplay').innerText = `${userData.name}`;
+                // Ocultar todas las pestañas inicialmente
+                document.querySelectorAll('.views').forEach(view => {
+                    view.style.display = 'none'; // Ocultar todas las pestañas
+                });
+        
+                // Mostrar pestañas basadas en permisos
+                if (permission === 'super usuario') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosPendientes').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                    document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+                } else if (permission === 'ejecutivo') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                } else if (permission === 'mesa de entrada') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosPendientes').style.display = 'block';
+                } else if (permission === 'mediacion') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                }else if (permission === 'jefe de operaciones') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+
+                }else if (permission === 'PAS') {
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+
+                }
+            } else {
+                // Si no hay información de usuario, redirigir a login
+                window.location.href = 'signin.html';
+            }
+        });
+    </script>
+    <!-- ============ Search UI End ============= -->
+    <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+    <script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../../dist-assets/js/scripts/script.min.js"></script>
+    <script src="../../dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
+    <script src="../../dist-assets/js/plugins/apexcharts.min.js"></script>
+    <script src="../../dist-assets/js/plugins/echarts.min.js"></script>
+    <script src="../../dist-assets/js/scripts/echart.options.min.js"></script>
+    <script src="../../dist-assets/js/scripts/card.metrics.script.min.js"></script>
+    <script src="../../dist-assets/js/scripts/widgets-statistics.min.js"></script>
+    <script src="../../dist-assets/js/plugins/apexcharts.dataseries.js"></script>
+    <script src="../../dist-assets/js/scripts/apexRadialbarChart.script.min.js"></script>
+    <script src="../../dist-assets/js/scripts/apexColumnChart.script.min.js"></script>
+    <!-- <script src="../../dist-assets/js/estadisticas.js"></script> -->
+
+</body>
+
+</html>
