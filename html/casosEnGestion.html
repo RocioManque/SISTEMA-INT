@@ -5,27 +5,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Mis Casos</title>
+    <title>Mi casos</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
-    <link href="../../dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
-    <link href="../../dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../../dist-assets/css/plugins/datatables.min.css" />
-    <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
-    <script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
-    <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
+    <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
+    <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.6/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="/dist-assets/css/plugins/datatables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .full-width {
-            flex: 1; /* Permitir que la tabla ocupe todo el espacio disponible */
-        }
-    </style>
+
 </head>
 
 <body class="text-left">
-    
     <div class="app-admin-wrap layout-horizontal-bar">
         <div class="main-header">
-            <div class="logo"><img src="../../dist-assets/images/logo.png" alt="" /></div>
+            <div class="logo"><img src="/dist-assets/images/logo.png" alt="" /></div>
             <div class="menu-toggle">
                 <div></div>
                 <div></div>
@@ -37,7 +30,7 @@
             <div style="margin: auto"></div>
             <div class="header-part-right">  
                 <h4 class="mt-3 mr-3 " id="userNameDisplay"></h4> 
-                <a class="link-icon mr-1" href="../../html/sessions/signin.html" style="font-size:xx-large; color: brown;"><i class="fa-solid fa-power-off"></i></a>
+                <a class="link-icon mr-1" href="/index.html" style="font-size:xx-large; color: brown;"><i class="fa-solid fa-power-off"></i></a>
             </div>
         </div>
         <!-- header top menu end-->
@@ -57,7 +50,7 @@
                             <li class="views" id="casosPendientes">
                                 <div>
                                     <div>
-                                        <label class="toggle" for="drop-2">Casos pendientes</label><a href="casosPendientes.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Casos Pendientes</span></a>
+                                        <label class="toggle" for="drop-2">Mesa de Entrada</label><a href="casosPendientes.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Mesa de Entrada</span></a>
                                        
                                     </div>
                                 </div>
@@ -105,31 +98,13 @@
                             <li class="views" id="novedades">
                                 <div>
                                     <div>
-                                        <label class="toggle" for="drop-2">Novedades</label>
+                                        <label class="toggle" for="drop-2">Información Útil</label>
                                         <a href="novedades.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Novedades</span></a>
                                     </div>
                                 </div>
                             </li>
-                            <li class="views" id="whatsapp" style="float:right">
-                                <div>
-                                    <div>
-                                        <label class="toggle" for="drop-2">whatsapp</label>
-                                        <a href="https://api.whatsapp.com/send?phone=5491133032850&text=%C2%A1Hola!%20Te%20contacto%20desde%20la%20web%20"> <span class="text-white"><i class="fa-brands fa-whatsapp"></i></span></a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="views" id="linkedin" style="float:right">
-                                <div>
-                                    <div>
-                                        <label class="toggle" for="drop-2">linkedin</label>
-                                        <a href="https://www.linkedin.com/company/in-itinere-int/"> <span class="text-white"><i class="fa-brands fa-linkedin"></i></span></a>
-                                    </div>
-                                </div>
-                            </li>
                         </ul>
-                    
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -137,65 +112,62 @@
         <div class="main-content-wrap d-flex flex-column">
             <!-- ============ Body content start ============= -->
             <div class="main-content">
-                <div class="breadcrumb d-flex justify-content-between align-items-center">
+                <div class="breadcrumb">
                     <h1>Mis casos</h1>
-                    <div>
-                    <button id="btnExportar" class="btn btn-primary">
-                        <i class="fas fa-file-excel"></i> Exportar datos a Excel
-                    </button>
-                    <button id="showCardButton" class="btn btn-primary"><span class="text-white">Mi Ejecutivo</span> </button>
-                     </div>
                 </div>
                 <div class="separator-breadcrumb border-top"></div>
                 <div class="row mb-4">
+                    <div class="col-md-12">  
+                    </div>
                 </div>
                 <!-- end of row-->
-                <div class="">
-                    <div class="row no-gutters"> <!-- Usar no-gutters para eliminar el espacio entre columnas -->
-                        <!-- Columna para la tabla (margen izquierdo) -->
-                        <div class="col-md-9 mb-0 full-width"> <!-- Cambiar mb-4 a mb-0 -->
-                            <div class="card text-left">
-                                <div class="card-body p-2"> <!-- Ajustar el padding -->
-                                    <div class="table-responsive"> <!-- Contenedor scrolleable -->
-                                        <table class="display table table-striped table-bordered" id="zero_configuration_table" style="width:100%">
-                                            <thead>
-                                               
-                                            </thead>
-                                            <tbody>
-                                               
-                                                <!-- Agregar más filas según sea necesario -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                         <!-- Columna para la tarjeta (margen derecho) -->
-                         <div class="col-md-3 mb-0" id="executiveCard"> <!-- Cambiar mb-4 a mb-0 -->
-                            <div class="card bg-dark text-white o-hidden mb-0"> <!-- Cambiar mb-4 a mb-0 -->
-                                <img class="card-img" src="../../dist-assets/images/EJECUTIVO 1.jpeg" alt="Card image" />
-                                <div class="card-img-overlay">
-                                   
-                                    <div class="p-1 text-left card-footer font-weight-light d-flex justify-content-between">
-                                        <!-- Alinear a la izquierda -->
-                                        <h5 class="card-title mb-2 text-white mr-4">Marianela Soraire</h5>
-                                        
-                                        <!-- Alinear a la derecha -->
-                                        <h5 class="ml-12">
-                                            <a href="https://api.whatsapp.com/send?phone=5491160333712&text=%C2%A1Hola!%20Te%20contacto%20desde%20la%20web%20" style="color: azure; text-decoration: none;" 
-                                            onmouseover="this.style.color='#1c562d'" 
-                                            onmouseout="this.style.color='azure'">
-                                                Tel: +59 11 6033-3712
-                                            </a>
-                                        </h5>
-                                    </div>
+                <div class="row mb-4">
+                    <div class="col-md-12 mb-4">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive"> <!-- Contenedor scrolleable -->
+                                    <table class="display table table-striped table-bordered" id="zero_configuration_table" style="width:100%">
+                                        <thead>
+                                            <!-- Encabezados -->
+                                        </thead>
+                                        <tbody>
+                                            <!-- Cuerpo de la tabla -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                    <!-- end of col-->
+<!-- Modal -->
 
+<!-- <button class="btn btn-primary" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button> -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>PAS:</strong> <span id="modalPas"></span></p>
+                <p><strong>Cliente:</strong> <span id="modalCliente"></span></p>
+                <p><strong>Fecha de Ingreso:</strong> <span id="modalFechaIngreso"></span></p>
+                <p><strong>Fecha de Inicio:</strong> <span id="modalFechaInicio"></span></p>
+                <p><strong>Nº de Reclamo:</strong> <span id="modalReclamo"></span></p>
+                <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
+                <p><strong>Última Actualización:</strong> <span id="modalUltimaActualizacion"></span></p>
+                <p><strong>Tipo de Reclamo:</strong> <span id="modalTipoReclamo"></span></p>
+                <p><strong>Monto a Reclamar:</strong> <span id="modalMonto"></span></p>
+                <p><strong>Compañía a Reclamar:</strong> <span id="modalCompania"></span></p>
+              </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary ml-2" type="button">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
     </div><!-- ============ Search UI Start ============= -->
   <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -242,40 +214,26 @@
                 }else if (permission === 'PAS') {
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
-                    document.getElementById('whatsapp').style.display = 'block';
-                    document.getElementById('linkedin').style.display = 'block';
 
                 }
             } else {
                 // Si no hay información de usuario, redirigir a login
-                window.location.href = 'signin.html';
+                window.location.href = 'index.html';
             }
         });
-        
-        const $btnExportar = document.querySelector("#btnExportar"), 
-        $tabla = document.querySelector("#zero_configuration_table");
-
-    $btnExportar.addEventListener("click", function() {
-        let tableExport = new TableExport($tabla, {
-            exportButtons: false, // No queremos botones
-            filename: "Reporte de prueba", //Nombre del archivo de Excel
-            sheetname: "Reporte de prueba", //Título de la hoja
-        });
-        let datos = tableExport.getExportData();
-        let preferenciasDocumento = datos.zero_configuration_table.xlsx;
-        tableExport.export2file(preferenciasDocumento.data, preferenciasDocumento.mimeType, preferenciasDocumento.filename, preferenciasDocumento.fileExtension, preferenciasDocumento.merges, preferenciasDocumento.RTL, preferenciasDocumento.sheetname);
-    });
   </script>
     <!-- ============ Search UI End ============= -->
-    <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
-    <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
-    <script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../../dist-assets/js/scripts/script.min.js"></script>
-    <script src="../../dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
-    <script src="../../dist-assets/js/plugins/datatables.min.js"></script>
-    <script src="../../dist-assets/js/scripts/datatables.script.min.js"></script>
-    <script src="../../dist-assets/js/scripts/customizer.script.min.js"></script>
-    <script src="../../dist-assets/js/tablePas.js"></script>
+    <script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.6/dist/sweetalert2.all.min.js"></script>
+    <script src="/dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+    <script src="/dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/dist-assets/js/scripts/script.min.js"></script>
+    <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
+    <script src="/dist-assets/js/plugins/datatables.min.js"></script>
+    <script src="/dist-assets/js/scripts/datatables.script.min.js"></script>
+    <script src="/dist-assets/js/scripts/customizer.script.min.js"></script>
+   
+    <script src="/dist-assets/js/tablesGestion.js"></script>
 </body>
 
 </html>

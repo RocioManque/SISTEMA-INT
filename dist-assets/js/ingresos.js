@@ -4,7 +4,6 @@ const urls = [];
 const params = new URLSearchParams(window.location.search);
 
 const rowIndex = parseInt(params.get('row'), 10);
-console.log(rowIndex)
 const fechaIngreso = params.get('fechaIngreso');
 const pas = params.get('pas');
 const cliente = params.get('cliente');
@@ -27,6 +26,7 @@ const adjContratoSoc = params.get('adjContratoSoc');
 const tipoReclamo= params.get('tipoReclamo');
 const historial= params.get('historial');
 const estado= params.get('estado');
+const carpetaUrl= params.get('carpetaUrl');
 
 // Luego muestra o manipula estos datos en la página según lo necesites
 document.getElementById('ingreso').value = fechaIngreso;
@@ -86,7 +86,12 @@ if (adjContratoSoc === null || adjContratoSoc === '') { // Si está vacío o no 
 // document.getElementById('adjPresupuesto').value = adjPresupuesto;
 // document.getElementById('adjContratoSoc').value = adjContratoSoc;
 // Y así sucesivamente para otros campos
-
+//Segun el nombre del pas buscar su ejecutivo
+const spreadsheetId = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
+const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
+const range = 'sheet1'; // 
+const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+// URL de la API de Google Sheets
 const CLIENT_ID = '607561137784-rq84r06gop7p4hjo1nnv0q5re4fl2nff.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E';
 const DISCOVERY_DOCS = [
@@ -100,6 +105,47 @@ let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializa Select2 en el elemento select
+    $('#pasDropdown').select2({
+        placeholder: 'Seleccione un nombre',
+        allowClear: true,
+        width: '100%'
+    });
+
+    // Realiza la solicitud fetch para obtener datos dinámicos
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[2]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#pasDropdown').select2({
+                data: listaDinamica
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        
+   
+
+});
 // document.getElementById('authorize_button').style.visibility = 'hidden';
 // document.getElementById('signout_button').style.visibility = 'hidden';
 
@@ -165,6 +211,7 @@ function handleSignoutClick() {
     }
 }
 
+
 async function uploadFiles(e) {
     e.preventDefault();
     
@@ -200,12 +247,11 @@ async function uploadFiles(e) {
         }
     }
     console.log(urls)
-    await updateDataInSheetWithFiles(urls,(rowIndex+2));
+    await updateDataInSheetWithFiles(urls,rowIndex);
    // await saveDataToSheet();
   //  await saveDataToSheet2();
    // await saveFileURLsToSheet(urls); // Guardar todas las URLs en Google Sheets
 }
-
 async function uploadFile(file) {
     const metadata = {
         'name': file.name,
@@ -236,7 +282,10 @@ async function uploadFile(file) {
     }
     return null; // En caso de error
 }
+
+
 async function updateDataInSheetWithFiles(urls, targetRow) {
+
     // Datos para las columnas de A a H
     const valuesAtoH = [
         document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
@@ -281,7 +330,7 @@ async function updateDataInSheetWithFiles(urls, targetRow) {
             }),
             body: JSON.stringify(body)
         });
-
+console.log(response)
         if (response.ok) {
             const result = await response.json();
             console.log('Fila actualizada con éxito:', result);
@@ -295,19 +344,19 @@ async function updateDataInSheetWithFiles(urls, targetRow) {
 
 
 
-//Segun el nombre del pas buscar su ejecutivo
-const spreadsheetId = '1QzFSJiC-Aax_FmXePVAmu92CB_0cScvWQROeh0xi5rE';
-const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
-const range = 'sheet1'; // 
-const mensaje = document.getElementById('historial').value
-// URL de la API de Google Sheets
+
+
 
 document.getElementById('sendWhatsApp').addEventListener('click', function() {
-    console.log("entro")
-    const phoneNumber = '542994707809'; // Reemplaza con el número de teléfono completo
-    const message = `¡Buenos dias! Este es la ultima actualización de su Caso: ${mensaje}`;
+    const phoneForm = document.getElementById('telefono').value
+    const mensaje = document.getElementById('actualizacion').value;
+    const cliente = document.getElementById('cliente').value;
+    const pas = document.getElementById('pas').value;
+    console.log(mensaje)
+    const phoneNumber = phoneForm; // Reemplaza con el número de teléfono completo
+    const message = `Estimado/a ${cliente} nos comunicamos de IN ITINERE, servicio de gestión de siniestros del productor de seguros ${pas} para mantenerlo informado: ${mensaje}`;
     
-    // Codificar el mensaje para URL
+     // Codificar el mensaje para URL
     const encodedMessage = encodeURIComponent(message);
     
     // Construir la URL
@@ -316,7 +365,9 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
     // Abrir la URL en una nueva pestaña o ventana
     window.open(whatsappURL, '_blank');
   });
+
   async function updateRowInSheet(updatedValues, ranges) {
+    console.log("entró")
     console.log(ranges)
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con el ID de tu hoja de cálculo
     const range =`sheet1!${ranges}`;
@@ -349,122 +400,731 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
         console.error('Error al actualizar la fila:', error);
     }
 }
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-  function derivarAEjecutivo(e){
-    e.preventDefault();
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
+async function updateEjecutivo() {
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con el ID de tu hoja de cálculo
+    const range = `sheet1!C${rowIndex}`;
 
-      // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
-      const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
-console.log("NAMETOFIND",nameToFind)
-      // Filtrar por el nombre en la primera columna (suponiendo que 'pas' está en la columna 0)
-      const result = rows.filter(row => {
-          const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
-          if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
-      
-          const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
-         
-          
-          // Dividir el nombre completo en partes (nombre y apellido)
-          const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
-          console.log("Name Parts:", nameParts);
-      
-          // Dividir nameToFind en partes (nombre y apellido)
-          const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
-          console.log("NAMETOFIND", nameToFindParts);
-          // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
-          if (nameToFindParts.length > 1) {
-              // Compara nombre y apellido
-              return nameParts.length >= 2 &&
-                  nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
-                  nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase();   // Comparar apellido
-          } else {
-              // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
-              return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
-          }
-      });
-        console.log(result)
-      if (result.length > 0) {
-        // Encontramos el ejecutivo en la fila filtrada
-        const ejecutivo = result[0][15]; // Suponiendo que el 'ejecutivo' está en la segunda columna (índice 1)
-        const nroInterno = 'INT0001'
-        console.log('Ejecutivo encontrado:', ejecutivo);
-        saveDataToSheet2((rowIndex+2),ejecutivo,nroInterno);
-      } else {
-        console.log('No se encontró el ejecutivo para el PAS:');
-      }
-      
-    })
-    .catch(error => {
-      console.error('Error al obtener los datos:', error);
-    });
-   
-    const historialValue = document.getElementById('historial') ? document.getElementById('historial').value : "";
-    const actualizacionValue = document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "";
-    
-    const concatenatedValue = historialValue + " " + actualizacionValue;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
 
-    
-    // Extraer valores de los campos del formulario
-    const valuesAtoC = [
-        document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
-        document.getElementById('pas') ? document.getElementById('pas').value : "",
-       ejecutivo,
-    ];
-    const valuesEtoF = [
-        document.getElementById('cliente') ? document.getElementById('cliente').value : "",
-        document.getElementById('ciaReclamo') ? document.getElementById('ciaReclamo').value : "",
-    ];
-    const valuesHtoJ = [
-        document.getElementById('telefono') ? document.getElementById('telefono').value : "",
-        document.getElementById('email') ? document.getElementById('email').value : "",
-        document.getElementById('obs') ? document.getElementById('obs').value : "",
-    ];
+        // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
+        const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
 
-    // URLs de archivos adjuntos para llenar de K a X
-    // const filledUrls = urls.map(url => url || ''); // Reemplaza los valores vacíos con ''
-    // while (filledUrls.length < 11) {
-    //     filledUrls.push(''); // Asegura que haya exactamente 11 columnas en I:S
-    // }
+        // Filtrar por el nombre en la primera columna (suponiendo que 'pas' está en la columna 0)
+        const result = rows.filter(row => {
+            const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
+            if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
 
-    // Datos para las columnas de T a V
-    const valuesYtoZ= [
-        concatenatedValue || "",
-        document.getElementById('inicio') ? document.getElementById('inicio').value : "",
-    ];
-   
-    const valuesACtoAF = [
-        document.getElementById('estado') ? document.getElementById('estado').value : "",
-        document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
-        document.getElementById('montoReclamado') ? document.getElementById('montoReclamado').value : "",
-        document.getElementById('montoCerrado') ? document.getElementById('montoCerrado').value : "",
-       
-    ];
-    const valuesAW = [
-        document.getElementById('gestionado') ? document.getElementById('gestionado').value : "",
-       
-    ];
+            const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
 
-   const rangeesAtoB =  'A10:B10';
-   const rangeesEtoF =  'E10:F10';
-   const rangeesHtoJ =  'H10:J10';
-   const rangeesYtoZ =  'Y10:Z10';
-   const rangeesACtoAF =  'AC10:AF10';
-   const rangeesAW =  'AW10';
-updateRowInSheet( valuesAtoB,rangeesAtoB);
-updateRowInSheet(valuesEtoF, rangeesEtoF );
-updateRowInSheet(valuesHtoJ, rangeesHtoJ );
-updateRowInSheet(valuesYtoZ,rangeesYtoZ);
-updateRowInSheet( valuesACtoAF, rangeesACtoAF);
-updateRowInSheet( valuesAW, rangeesAW);
+            // Dividir el nombre completo en partes (nombre y apellido)
+            const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
 
+            // Dividir nameToFind en partes (nombre y apellido)
+            const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
 
+            // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
+            if (nameToFindParts.length > 1) {
+                // Compara nombre y apellido
+                return (
+                    nameParts.length >= 2 &&
+                    nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
+                    nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase()   // Comparar apellido
+                );
+            } else {
+                // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
+                return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
+            }
+        });
+
+        console.log(result);
+
+        if (result.length > 0) {
+            // Encontramos el ejecutivo en la fila filtrada
+            const ejecutivo = result[0][15]; // Suponiendo que el 'ejecutivo' está en la columna 15 (índice 15)
+            console.log('Ejecutivo encontrado:', ejecutivo);
+            const value = ejecutivo;
+            const body = {
+                values: [[value]], // Array de arrays con los valores a actualizar en la fila
+            };
+
+            try {
+                const updateResponse = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(body),
+                    }
+                );
+
+                if (updateResponse.ok) {
+                    const updateResult = await updateResponse.json();
+                    console.log('Fila actualizada con éxito:', updateResult);
+                } else {
+                    console.error('Error al actualizar la fila:', await updateResponse.text());
+                }
+            } catch (error) {
+                console.error('Error al actualizar la fila:', error);
+            }
+        }
+    } catch (error) {
+        console.error('Error al obtener los datos:', error);
+    }
 }
 
 
+async function obtenerUltimaFila(spreadsheetId) {
+    
+    const range = 'Sheet1!A:A'; // Lee toda la columna A para determinar cuántas filas tienen datos
+
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?majorDimension=ROWS`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Error al obtener los datos: ' + await response.text());
+        }
+
+        const data = await response.json();
+        const rows = data.values || [];
+
+        // El índice de la última fila con datos
+        const ultimaFila = rows.length;
+     
+
+        return ultimaFila;
+    } catch (error) {
+        console.error('Error al obtener la última fila:', error);
+        return null;
+    }
+}
+async function obtenerNuevoNumeroCaso() {
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // ID de tu hoja de cálculo
+    const range = 'Sheet1!D:D'; // Asumiendo que los números de caso están en la columna Z
+
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?majorDimension=COLUMNS`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Error al obtener los números de caso: ' + await response.text());
+        }
+
+        const data = await response.json();
+        const casos = data.values ? data.values[0] : []; // Obtener los valores de la columna Z
+        const ultimoNumero = casos[casos.length - 1]; // Último número de caso
+
+        // Incrementar el último número de caso
+        const nuevoNumero = incrementarNumeroCaso(ultimoNumero);
+        console.log('Nuevo número de caso:', nuevoNumero);
+
+        return nuevoNumero;
+    } catch (error) {
+        console.error('Error al obtener el nuevo número de caso:', error);
+        return 'INT00001'; // En caso de error, iniciar desde el primer número
+    }
+}
+
+function incrementarNumeroCaso(ultimoNumero) {
+    // Si el último número es algo como 'INT00020'
+    if (!ultimoNumero || !ultimoNumero.startsWith('INT')) {
+        return 'INT00001'; // Si no hay un último número válido, iniciar desde INT00001
+    }
+
+    // Extraer la parte numérica y convertirla en entero
+    const numeroActual = parseInt(ultimoNumero.substring(3), 10);
+    const nuevoNumero = numeroActual + 1;
+
+    // Formatear con ceros a la izquierda para mantener siempre 5 dígitos
+    const nuevoNumeroFormateado = String(nuevoNumero).padStart(5, '0');
+    return `INT${nuevoNumeroFormateado}`;
+}
+ async function derivarAEjecutivo(e){
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
+    const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
+    const nroInterno = await obtenerNuevoNumeroCaso()
+    const ejecutivoEncontrado = await encontrarEjecutivo()
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    // Supongamos que tienes valores para las columnas a actualizar
+    const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
+    const pas = document.getElementById('pas').value;
+    const cliente = document.getElementById('cliente').value;
+    const ciaReclamada = document.getElementById('ciaReclamar').value;
+    const dominio = document.getElementById('dominio').value;
+    const telefonoCliente = document.getElementById('telefono').value;
+    const emailCliente = document.getElementById('email').value;
+    const observaciones = document.getElementById('obs').value;
+    const historial = document.getElementById('historial').value;
+    const estado = document.getElementById('estado').value;
+    const tipoReclamo = document.getElementById('tipoReclamo').value;
+    const adjuntosUrl = carpetaUrl
+    
+    
+    // Crea la solicitud BatchUpdate
+    const batchUpdateBody = {
+        requests: [
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: IndexNuevaFila - 1,
+                    endRowIndex: IndexNuevaFila,
+                    startColumnIndex: 0, 
+                    endColumnIndex: 10 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(fechaIngreso) } },
+                                { userEnteredValue: { stringValue: String(pas) } },         
+                                { userEnteredValue: { stringValue: String(ejecutivoEncontrado) } }, 
+                                { userEnteredValue: { stringValue: String(nroInterno) } },  
+                                { userEnteredValue: { stringValue: String(cliente) } },  
+                                { userEnteredValue: { stringValue: String(ciaReclamada) } },
+                                { userEnteredValue: { stringValue: String(dominio) } }, 
+                                { userEnteredValue: { stringValue: String(telefonoCliente) } },  
+                                { userEnteredValue: { stringValue: String(emailCliente) } },  
+                                { userEnteredValue: { stringValue: String(observaciones) } }       
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 24, // Es el indice primero
+                        endColumnIndex: 25 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(historial) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 28, // Es el indice primero
+                        endColumnIndex: 30 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(estado) } },          
+                                { userEnteredValue: { stringValue: String(tipoReclamo) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 53, // Es el indice primero
+                        endColumnIndex: 54 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(adjuntosUrl) } },          
+                                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            }
+        ]
+    };
+
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchUpdateBody),
+            }
+        );
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Actualización múltiple realizada con éxito:', result);
+        } else {
+            console.error('Error en la actualización múltiple:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error en la actualización múltiple:', error);
+    }
+}
+
+async function encontrarEjecutivo() {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
+
+        // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
+        const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
+
+        const result = rows.filter(row => {
+            const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
+            if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
+
+            const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
+
+            // Dividir el nombre completo en partes (nombre y apellido)
+            const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
+
+            // Dividir nameToFind en partes (nombre y apellido)
+            const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
+
+            // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
+            if (nameToFindParts.length > 1) {
+                // Compara nombre y apellido
+                return nameParts.length >= 2 &&
+                    nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
+                    nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase();   // Comparar apellido
+            } else {
+                // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
+                return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
+            }
+        });
+
+        if (result.length > 0) {
+            // Encontramos el ejecutivo en la fila filtrada
+            const ejecutivo = result[0][15]; // Suponiendo que el 'ejecutivo' está en la columna 15
+            return ejecutivo; // Retorna el valor de 'ejecutivo'
+        } else {
+            return null; // Retorna null si no se encontró
+        }
+    } catch (error) {
+        console.error('Error al buscar el ejecutivo:', error);
+        return null; // Retorna null en caso de error
+    }
+}
+
+    
+    // e.preventDefault();
+    // fetch(url)
+    // .then(response => response.json())
+    // .then(data => {
+    //   const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
+
+    //   // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
+    //   const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
+    //   // Filtrar por el nombre en la primera columna (suponiendo que 'pas' está en la columna 0)
+    //   const result = rows.filter(row => {
+    //       const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
+    //       if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
+      
+    //       const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
+
+    //       // Dividir el nombre completo en partes (nombre y apellido)
+    //       const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
+      
+    //       // Dividir nameToFind en partes (nombre y apellido)
+    //       const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
+    //       // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
+    //       if (nameToFindParts.length > 1) {
+    //           // Compara nombre y apellido
+    //           return nameParts.length >= 2 &&
+    //               nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
+    //               nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase();   // Comparar apellido
+    //       } else {
+    //           // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
+    //           return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
+    //       }
+    //   });
+    //     console.log(result)
+    //   if (result.length > 0) {
+    //     // Encontramos el ejecutivo en la fila filtrada
+    //     const ejecutivo = result[0][15]; // Suponiendo que el 'ejecutivo' está en la segunda columna (índice 1)
+    //     const nroInterno = 'INT0009'
+    //     console.log('Ejecutivo encontrado:', ejecutivo);
+
+    //     const historialValue = document.getElementById('historial') ? document.getElementById('historial').value : "";
+    //     const actualizacionValue = document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "";
+        
+    //     const concatenatedValue = historialValue + " " + actualizacionValue;
+    
+        
+    //     // Extraer valores de los campos del formulario
+    //     const valuesAtoC = [
+    //         document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
+    //         document.getElementById('pas') ? document.getElementById('pas').value : "",
+    //        ejecutivo,
+    //     ];
+    //     const valuesEtoJ = [
+    //         document.getElementById('cliente') ? document.getElementById('cliente').value : "",
+    //         document.getElementById('ciaReclamo') ? document.getElementById('ciaReclamo').value : "",
+    //         document.getElementById('dominio') ? document.getElementById('dominio').value : "",
+    //         document.getElementById('telefono') ? document.getElementById('telefono').value : "",
+    //         document.getElementById('email') ? document.getElementById('email').value : "",
+    //         document.getElementById('obs') ? document.getElementById('obs').value : "",
+    //     ];
+    
+    //     // URLs de archivos adjuntos para llenar de K a X
+    //     // const filledUrls = urls.map(url => url || ''); // Reemplaza los valores vacíos con ''
+    //     // while (filledUrls.length < 11) {
+    //     //     filledUrls.push(''); // Asegura que haya exactamente 11 columnas en I:S
+    //     // }
+    
+    //     // Datos para las columnas de T a V
+    //     const valuesY= [
+    //         concatenatedValue || "",
+    //     ];
+       
+    //     const valuesACtoAD = [
+    //         document.getElementById('estado') ? document.getElementById('estado').value : "",
+    //         document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
+           
+    //     ];
+    
+    //    const rangeesAtoB = `A:C`;
+    //    const rangeesEtoF = `E:J`;
+    //    const rangeesHtoJ = `Y:Y`;
+    //    const rangeesACtoAF = `AC:AD`;
+    // updateRowInSheet(valuesAtoC,rangeesAtoB);
+    // updateRowInSheet(valuesEtoJ, rangeesEtoF );
+    // updateRowInSheet(valuesY, rangeesHtoJ );
+    // updateRowInSheet( valuesACtoAD, rangeesACtoAF);
+
+    //    // saveDataToSheet2((rowIndex+2),ejecutivo,nroInterno);
+    //   } else {
+    //     console.log('No se encontró el ejecutivo para el PAS:');
+    //   }
+      
+    // })
+    // .catch(error => {
+    //   console.error('Error al obtener los datos:', error);
+    // });
+
+
+
+// async function legales(e) {
+//     e.preventDefault();
+//     fetch(url)
+//     .then(response => response.json())
+//     .then(data => {
+//       const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
+
+//       // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
+//       const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
+//       // Filtrar por el nombre en la primera columna (suponiendo que 'pas' está en la columna 0)
+//       const result = rows.filter(row => {
+//           const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
+//           if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
+      
+//           const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
+
+//           // Dividir el nombre completo en partes (nombre y apellido)
+//           const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
+      
+//           // Dividir nameToFind en partes (nombre y apellido)
+//           const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
+//           // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
+//           if (nameToFindParts.length > 1) {
+//               // Compara nombre y apellido
+//               return nameParts.length >= 2 &&
+//                   nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
+//                   nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase();   // Comparar apellido
+//           } else {
+//               // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
+//               return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
+//           }
+//       });
+//         console.log(result)
+//       if (result.length > 0) {
+//         // Encontramos el ejecutivo en la fila filtrada
+//         const ejecutivo = 'LEGALES' // Suponiendo que el 'ejecutivo' está en la segunda columna (índice 1)
+//         const nroInterno = 'INT0009'
+//         console.log('Ejecutivo encontrado:', ejecutivo);
+
+//         const historialValue = document.getElementById('historial') ? document.getElementById('historial').value : "";
+//         const actualizacionValue = document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "";
+        
+//         const concatenatedValue = historialValue + " " + actualizacionValue;
+    
+        
+//         // Extraer valores de los campos del formulario
+//         const valuesAtoC = [
+//             document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
+//             document.getElementById('pas') ? document.getElementById('pas').value : "",
+//            ejecutivo,
+//         ];
+//         const valuesEtoJ = [
+//             document.getElementById('cliente') ? document.getElementById('cliente').value : "",
+//             document.getElementById('ciaReclamo') ? document.getElementById('ciaReclamo').value : "",
+//             document.getElementById('dominio') ? document.getElementById('dominio').value : "",
+//             document.getElementById('telefono') ? document.getElementById('telefono').value : "",
+//             document.getElementById('email') ? document.getElementById('email').value : "",
+//             document.getElementById('obs') ? document.getElementById('obs').value : "",
+//         ];
+    
+//         // URLs de archivos adjuntos para llenar de K a X
+//         // const filledUrls = urls.map(url => url || ''); // Reemplaza los valores vacíos con ''
+//         // while (filledUrls.length < 11) {
+//         //     filledUrls.push(''); // Asegura que haya exactamente 11 columnas en I:S
+//         // }
+    
+//         // Datos para las columnas de T a V
+//         const valuesY= [
+//             concatenatedValue || "",
+//         ];
+       
+//         const valuesACtoAD = [
+//             document.getElementById('estado') ? document.getElementById('estado').value : "",
+//             document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
+           
+//         ];
+    
+//        const rangeesAtoB = `A:C`;
+//        const rangeesEtoF = `E:J`;
+//        const rangeesHtoJ = `Y:Y`;
+//        const rangeesACtoAF = `AC:AD`;
+//     updateRowInSheet(valuesAtoC,rangeesAtoB);
+//     updateRowInSheet(valuesEtoJ, rangeesEtoF );
+//     updateRowInSheet(valuesY, rangeesHtoJ );
+//     updateRowInSheet( valuesACtoAD, rangeesACtoAF);
+
+//        // saveDataToSheet2((rowIndex+2),ejecutivo,nroInterno);
+//       } else {
+//         console.log('No se encontró el ejecutivo para el PAS:');
+//       }
+      
+//     })
+//     .catch(error => {
+//       console.error('Error al obtener los datos:', error);
+//     });
+// }
+
+// async function desistido(e) {
+//     e.preventDefault();
+//     fetch(url)
+//     .then(response => response.json())
+//     .then(data => {
+//       const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
+
+//       // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
+//       const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
+//       // Filtrar por el nombre en la primera columna (suponiendo que 'pas' está en la columna 0)
+//       const result = rows.filter(row => {
+//           const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
+//           if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
+      
+//           const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
+
+//           // Dividir el nombre completo en partes (nombre y apellido)
+//           const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
+      
+//           // Dividir nameToFind en partes (nombre y apellido)
+//           const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
+//           // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
+//           if (nameToFindParts.length > 1) {
+//               // Compara nombre y apellido
+//               return nameParts.length >= 2 &&
+//                   nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
+//                   nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase();   // Comparar apellido
+//           } else {
+//               // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
+//               return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
+//           }
+//       });
+//         console.log(result)
+//       if (result.length > 0) {
+//         // Encontramos el ejecutivo en la fila filtrada
+//         const ejecutivo = result[0][15]; // Suponiendo que el 'ejecutivo' está en la segunda columna (índice 1)
+//         const nroInterno = 'INT0009'
+//         console.log('Ejecutivo encontrado:', ejecutivo);
+
+//         const historialValue = document.getElementById('historial') ? document.getElementById('historial').value : "";
+//         const actualizacionValue = document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "";
+        
+//         const concatenatedValue = historialValue + " " + actualizacionValue;
+//         const estadoCambio = 'desistido'
+        
+//         // Extraer valores de los campos del formulario
+//         const valuesAtoC = [
+//             document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
+//             document.getElementById('pas') ? document.getElementById('pas').value : "",
+//            ejecutivo,
+//         ];
+//         const valuesEtoJ = [
+//             document.getElementById('cliente') ? document.getElementById('cliente').value : "",
+//             document.getElementById('ciaReclamo') ? document.getElementById('ciaReclamo').value : "",
+//             document.getElementById('dominio') ? document.getElementById('dominio').value : "",
+//             document.getElementById('telefono') ? document.getElementById('telefono').value : "",
+//             document.getElementById('email') ? document.getElementById('email').value : "",
+//             document.getElementById('obs') ? document.getElementById('obs').value : "",
+//         ];
+//         const valuesY= [
+//             concatenatedValue || "",
+//         ];
+       
+//         const valuesACtoAD = [
+//             estadoCambio,
+//             document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
+           
+//         ];
+    
+//        const rangeesAtoB = `A:C`;
+//        const rangeesEtoF = `E:J`;
+//        const rangeesHtoJ = `Y:Y`;
+//        const rangeesACtoAF = `AC:AD`;
+//     updateRowInSheet(valuesAtoC,rangeesAtoB);
+//     updateRowInSheet(valuesEtoJ, rangeesEtoF );
+//     updateRowInSheet(valuesY, rangeesHtoJ );
+//     updateRowInSheet( valuesACtoAD, rangeesACtoAF);
+
+//        // saveDataToSheet2((rowIndex+2),ejecutivo,nroInterno);
+//       } else {
+//         console.log('No se encontró el ejecutivo para el PAS:');
+//       }
+      
+//     })
+//     .catch(error => {
+//       console.error('Error al obtener los datos:', error);
+//     });
+    
+// }
+// async function mediacion(e) {
+//     e.preventDefault();
+//     fetch(url)
+//     .then(response => response.json())
+//     .then(data => {
+//       const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
+
+//       // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
+//       const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
+//       // Filtrar por el nombre en la primera columna (suponiendo que 'pas' está en la columna 0)
+//       const result = rows.filter(row => {
+//           const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
+//           if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
+      
+//           const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
+
+//           // Dividir el nombre completo en partes (nombre y apellido)
+//           const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
+      
+//           // Dividir nameToFind en partes (nombre y apellido)
+//           const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
+//           // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
+//           if (nameToFindParts.length > 1) {
+//               // Compara nombre y apellido
+//               return nameParts.length >= 2 &&
+//                   nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
+//                   nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase();   // Comparar apellido
+//           } else {
+//               // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
+//               return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
+//           }
+//       });
+//         console.log(result)
+//       if (result.length > 0) {
+//         // Encontramos el ejecutivo en la fila filtrada
+//         const ejecutivo = result[0][15]; // Suponiendo que el 'ejecutivo' está en la segunda columna (índice 1)
+//         const nroInterno = 'INT0009'
+//         console.log('Ejecutivo encontrado:', ejecutivo);
+
+//         const historialValue = document.getElementById('historial') ? document.getElementById('historial').value : "";
+//         const actualizacionValue = document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "";
+        
+//         const concatenatedValue = historialValue + " " + actualizacionValue;
+//         const estadoCambio = 'desistido'
+        
+//         // Extraer valores de los campos del formulario
+//         const valuesAtoC = [
+//             document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
+//             document.getElementById('pas') ? document.getElementById('pas').value : "",
+//            ejecutivo,
+//         ];
+//         const valuesEtoJ = [
+//             document.getElementById('cliente') ? document.getElementById('cliente').value : "",
+//             document.getElementById('ciaReclamo') ? document.getElementById('ciaReclamo').value : "",
+//             document.getElementById('dominio') ? document.getElementById('dominio').value : "",
+//             document.getElementById('telefono') ? document.getElementById('telefono').value : "",
+//             document.getElementById('email') ? document.getElementById('email').value : "",
+//             document.getElementById('obs') ? document.getElementById('obs').value : "",
+//         ];
+//         const valuesY= [
+//             concatenatedValue || "",
+//         ];
+       
+//         const valuesACtoAD = [
+//             estadoCambio,
+//             document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
+           
+//         ];
+    
+//        const rangeesAtoB = `A:C`;
+//        const rangeesEtoF = `E:J`;
+//        const rangeesHtoJ = `Y:Y`;
+//        const rangeesACtoAF = `AC:AD`;
+//     updateRowInSheet(valuesAtoC,rangeesAtoB);
+//     updateRowInSheet(valuesEtoJ, rangeesEtoF );
+//     updateRowInSheet(valuesY, rangeesHtoJ );
+//     updateRowInSheet( valuesACtoAD, rangeesACtoAF);
+
+//        // saveDataToSheet2((rowIndex+2),ejecutivo,nroInterno);
+//       } else {
+//         console.log('No se encontró el ejecutivo para el PAS:');
+//       }
+      
+//     })
+//     .catch(error => {
+//       console.error('Error al obtener los datos:', error);
+//     });
+    
+// }
 // $('#derivado').on('click', function() {
 //     fetch(url)
 //       .then(response => response.json())

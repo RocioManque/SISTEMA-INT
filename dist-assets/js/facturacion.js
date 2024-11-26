@@ -131,5 +131,5 @@ $(document).ready(function() {
         window.close();
     }
     // Abrir en nueva pestaña pasando la información en la URL
-    window.location.href =`../../html/layout3/editarFacturacion.html?${urlParams.toString()}`;
+    window.location.href =`../../html/editarFacturacion.html?${urlParams.toString()}`;
   }

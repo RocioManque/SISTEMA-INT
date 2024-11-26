@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" dir="">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>estadisticas</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
+    <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
+    <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        #dismissedChart,#activeVsClosedChart,#casesByCompanyChart {
+          max-width: 400px; /* Ajusta el ancho máximo */
+          max-height: 400px; /* Ajusta la altura máxima */
+          margin-left: 200px;
+        }
+      </style>
+</head>
+
+<body >
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title"> Casos ingresados por mes</div>
+                    <canvas id="casesByMonthChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Casos cerrados por mes</div>
+                    <canvas id="closedCasesByMonthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title"> Promedio Anual de Casos</div>
+                    <canvas id="promedioAnualCasosChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Casos Desistidos vs Casos Cobrados</div>
+                    <canvas id="dismissedChart"  width="200" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title"> Promedio dias del caso</div>
+                    <canvas id="averageTimeChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title"> Activos vs Cerrados</div>
+                    <canvas id="activeVsClosedChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title"> Casos por ejecutivo</div>
+                    <canvas id="casesByExecutiveChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title"> Casos por Compañia</div>
+                    <canvas id="casesByCompanyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title">Total facturado por Mes </div>
+                    <canvas id="facturadoPorMesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="card-title"> Total facturado por ejecutivo</div>
+                    <canvas id="facturadoPorEjecutivoChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+   <!-- ============ Search UI Start ============= -->
+   <script src="https://apis.google.com/js/api.js" async defer></script>
+   <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+   <script>
+      
+   </script>
+   <script src="https://apis.google.com/js/api.js"></script>
+   <!-- Llamadas a `gapiLoaded` y `gisLoaded` cuando se cargan los scripts -->
+   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+    <!-- ============ Search UI End ============= -->
+    <script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="/dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+    <script src="/dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/dist-assets/js/scripts/script.min.js"></script>
+    <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/dist-assets/js/estadisticas.js"></script>
+    <!-- <script src="/dist-assets/js/estadisticas.js"></script> -->
+
+</body>
+
+</html>

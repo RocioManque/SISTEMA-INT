@@ -6,94 +6,138 @@ const range = 'sheet1'; //
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
 $(document).ready(function() {
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const rows = data.values//.slice(1); // Remueve encabezados
-      console.log(rows)
-      const userData = JSON.parse(localStorage.getItem('userData'));
-      const nombreEjecutivo = userData.name.toUpperCase();
-      console.log('ejecutivo', nombreEjecutivo)
-        // Separa el nombre y apellido (asumiendo que están separados por un espacio)
-        const [nombre, apellido] = nombreEjecutivo.split(" ");
-console.log(nombre)
-        // Filtra las filas antes de construir selectedRows
-        const selectedRows = rows
-          .filter(row => {
-              // Convierte el nombre del cliente a mayúsculas y compara
-              return (row[2] || "").toUpperCase() === nombre || (row[1] || "").toUpperCase() === apellido;
-          })
-          .map((row) => [
-        row[1] || "",   // PAS
-        row[4] || "",   // Cliente
-        row[9] || "",  // Fecha de ingreso
-        row[10] || "",  // Fecha de inicio
-        row[0] || "",   // Nº de Reclamo
-        row[25] || "",   // Estado
-        row[3] || "",   // Ultima actualización
-        row[28] || "",   // Tipo de reclamo
-        row[9] || "",  // Monto a reclamar
-        row[24] || "" ,   // Compañía a reclamar
-        row[29] || "" ,   // Compañía a reclamar
-        row[30] || "" ,   // Compañía a reclamar
-        row[31] || "" ,   // Compañía a reclamar
-        row[5] || "" ,   // Compañía a reclamar
-        row[48] || "" ,   // Compañía a reclamar
-        row[53] || "" ,   // Compañía a reclamar
-      ]);
-      console.log(selectedRows)
-      $('#zero_configuration_table').DataTable({
-        data: selectedRows,
-        columns: [
-            { title: "PAS" },
-            { title: "Cliente" },
-            { title: "Tel. Cliente" },
-            { title: "Mail Cliente" },
-            { title: "Fecha de ingreso" },
-            { title: "Fecha de inicio" },
-            { title: "Nº interno" },
-            { title: "Estado" },
-            { title: "Obsevación" },
-            { title: "Informe/Historial"},
-            { title: "Tipo de reclamo" },
-            { title: "Monto a reclamar" },
-            { title: "Monto cerrado" },
-            { title: "Compañía a reclamar" },
-            { title: "Gestionado con.." },
-            { title: "Url Adjuntos"},
-            { title: "Acciones", render: function(data, type, row, meta) {
-                return `<button class="btn btn-primary" type="button" onclick="editarFila(${meta.row})">Editar</button>`;
-            }}
-            
-        ],
-        createdRow: function(row, data, dataIndex) {
-            // Aplica clases dependiendo del estado de la reclamación
-            if (data[5] === 'FALTA DOCUMENTACIÓN') {
-                $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
-            } else if (data[5] === 'INGRESADO') {
-                $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
-            } else if (data[5] === 'DESISTIMIENTO') {
-                $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
-            }
-        }
-    });
-        $('#zero_configuration_table').on('click', '.btn-primary', function() {
-            const rowIndex = $(this).data('row');
-            const rowData = selectedRows[rowIndex];
+ // Asegúrate de que Swal esté definido
+ if (typeof Swal !== 'undefined') {
+  const lastUpdateDate = new Date("2024-11-15"); // Fecha de ejemplo
+  const currentDate = new Date();
+  
+  const daysDifference = getDaysDifference(lastUpdateDate, currentDate);
+  
+  if (daysDifference >= 7) {
+      Swal.fire({
+          title: '¡Actualización Pendiente!',
+          text: 'Han pasado 7 días desde la última actualización. Por favor, actualiza la información.',
+          icon: 'warning',
+          confirmButtonText: 'Entendido'
+      });
+  }
+} else {
+  console.error('SweetAlert2 no está cargado.');
+}
+
+
+// Función para calcular la diferencia de días
+function getDaysDifference(date1, date2) {
+const diffTime = Math.abs(date2 - date1);
+return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+// Si han pasado 7 días desde la última actualización, muestra una alerta
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    const rows = data.values; // Aquí obtienes todas las filas
+    console.log(rows);
     
-            // Llenar el modal con los datos específicos de la fila
-            $('#modalPas').text(rowData[0]);
-            $('#modalCliente').text(rowData[1]);
-            $('#modalFechaIngreso').text(rowData[2]);
-            $('#modalFechaInicio').text(rowData[3]);
-            $('#modalReclamo').text(rowData[4]);
-            $('#modalEstado').text(rowData[5]);
-            $('#modalUltimaActualizacion').text(rowData[6]);
-            $('#modalTipoReclamo').text(rowData[7]);
-            $('#modalMonto').text(rowData[8]);
-            $('#modalCompania').text(rowData[9]);
-          });
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const nombreEjecutivo = userData.name.toUpperCase();
+    console.log('ejecutivo', nombreEjecutivo);
+
+    // Separa el nombre y apellido (asumiendo que están separados por un espacio)
+    const [nombre, apellido] = nombreEjecutivo.split(" ");
+    console.log(nombre);
+
+    // Filtra las filas antes de construir selectedRows
+    const selectedRows = rows
+      .map((row, index) => {
+        // Añade la fila visible en la hoja (índice + 1)
+        const numeroFila = index + 1; 
+
+        // Convierte el nombre del cliente a mayúsculas y compara
+        const nombreCliente = (row[2] || "").toUpperCase();
+        const apellidoCliente = (row[1] || "").toUpperCase();
+        
+        if (nombreCliente === nombre || apellidoCliente === apellido) {
+          return [
+            numeroFila,       // Número de fila en Google Sheets
+            row[1] || "",     // PAS
+            row[4] || "",     // Cliente
+            row[7] || "",     // Fecha de ingreso
+            row[8] || "",    // Fecha de inicio
+            row[0] || "",     // Nº de Reclamo
+            row[25] || "",    // Estado
+            row[3] || "",     // Última actualización
+            row[28] || "",    // Tipo de reclamo
+            row[9] || "",     // Monto a reclamar
+            row[24] || "",    // Compañía a reclamar
+            row[29] || "",    // Compañía a reclamar
+            row[30] || "",    // Compañía a reclamar
+            row[31] || "",    // Compañía a reclamar
+            row[5] || "",     // Compañía a reclamar
+            row[48] || "",    // Compañía a reclamar
+            row[53] || "",     // Compañía a reclamar
+            row[54] || "",     // Compañía a reclamar
+            row[55] || ""     // Compañía a reclamar
+          ];
+        }
       })
+      .filter(row => row !== undefined); // Filtra filas vacías resultantes
+
+    console.log(selectedRows);
+
+    // Inicializa la DataTable con las filas seleccionadas
+    $('#zero_configuration_table').DataTable({
+      data: selectedRows,
+      columns: [
+        { title: "Nº" }, // Nueva columna para el número de fila
+        { title: "PAS" },
+        { title: "Cliente" },
+        { title: "Tel. Cliente" },
+        { title: "Mail Cliente" },
+        { title: "Fecha de ingreso" },
+        { title: "Fecha de inicio" },
+        { title: "Nº interno" },
+        { title: "Estado" },
+        { title: "Obsevación" },
+        { title: "Informe/Historial" },
+        { title: "Tipo de reclamo" },
+        { title: "Monto a reclamar" },
+        { title: "Monto cerrado" },
+        { title: "Compañía a reclamar" },
+        { title: "Gestionado con.." },
+        { 
+          title: "Url Adjuntos",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<a href="${data}" target="_blank">Ver Adjuntos</a>` : '';
+          }
+        },
+        { 
+          title: "Url Facturas",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<a href="${data}" target="_blank">Ver Facturas</a>` : '';
+          }
+        },
+        { title: "Ultima actualización" },
+        {
+          title: "Acciones",
+          render: function(data, type, row, meta) {
+            return `<button class="btn btn-primary" type="button" onclick="editarFila(${meta.row})">Editar</button>`;
+          }
+        }
+      ],
+      createdRow: function(row, data, dataIndex) {
+        // Aplica clases dependiendo del estado de la reclamación
+        if (data[28] === 'FACTURACION') {
+          $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
+        } else if (data[28] === 'COBRADO') {
+          $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
+        } else if (data[28] === 'DESISTIMIENTO') {
+          $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
+        }
+      }
+    });
+  })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
   });
   function editarFila(rowIndex) {
@@ -101,27 +145,27 @@ console.log(nombre)
     
     // Construir la URL con los datos de la fila
     const urlParams = new URLSearchParams({
-        row:rowIndex,
-        pas: rowData[0],
-        cliente: rowData[1],
-        telefonoCliente: rowData[2],
-        mailCliente: rowData[3],
-        fechaIngreso: rowData[4],
-        fechaInicio: rowData[5],
-        numeroInterno: rowData[6],
-        estado: rowData[7],
-        observacion: rowData[8],
-        informeHistorial: rowData[9],
-        tipoReclamo: rowData[10],
-        montoReclamar: rowData[11],
-        montoCerrado: rowData[12],
-        companiaReclamar: rowData[13],
-        gestionadoCon: rowData[14]
+        row:rowData[0],
+        pas: rowData[1],
+        cliente: rowData[2],
+        telefonoCliente: rowData[3],
+        mailCliente: rowData[4],
+        fechaIngreso: rowData[5],
+        fechaInicio: rowData[6],
+        numeroInterno: rowData[7],
+        estado: rowData[8],
+        observacion: rowData[9],
+        informeHistorial: rowData[10],
+        tipoReclamo: rowData[11],
+        montoReclamar: rowData[12],
+        montoCerrado: rowData[13],
+        companiaReclamar: rowData[14],
+        gestionadoCon: rowData[15]
     });
 
     if (window.opener) {
         window.close();
     }
     // Abrir en nueva pestaña pasando la información en la URL
-    window.location.href =`../../html/layout3/edicionGestion.html?${urlParams.toString()}`;
+    window.location.href =`../../html/edicionGestion.html?${urlParams.toString()}`;
   }

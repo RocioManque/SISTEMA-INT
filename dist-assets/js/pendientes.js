@@ -7,38 +7,48 @@ const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/valu
 
 $(document).ready(function() {
     fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const headers = data.values[0]; // Encabezados de la primera fila
-        const rows = data.values.slice(1); // Datos excluyendo los encabezados
-            console.log(rows)
-        // Configurar el truncado
-        const truncateText = (text, length = 20) => {
-            return text && text.length > length ? text.substring(0, length) + '...' : text;
-        };
+  .then(response => response.json())
+  .then(data => {
+    const headers = data.values[0]; // Encabezados de la primera fila
+    const rows = data.values.slice(1); // Datos excluyendo los encabezados
+    console.log(rows);
 
-        // Construir columnas dinámicamente usando los encabezados con truncado
-        const columns = headers.map(header => ({
-            title: header,
-            defaultContent: "",
-            render: function(data, type, row) {
-                return truncateText(data); // Aplicar truncado a todas las columnas
-            }
-        }));
+    // Añadir el número de fila como primera columna en cada fila
+    const rowsWithRowNumbers = rows.map((row, index) => [index + 2, ...row]); // Índice + 2 porque `data.values` incluye encabezado y es base 0
 
-        // Agregar la columna para el botón de edición
-        columns.push({
-            title: "Acciones",
-            render: function(data, type, row, meta) {
-                return `<button class="btn btn-primary" onclick="editarFila(${meta.row})">Editar</button>`;
-            }
-        });
+    // Agregar un encabezado para la nueva columna (Número de Fila)
+    const columns = [{ title: "Nº" }];
 
-        // Inicializar DataTable
-        $('#zero_configuration_table').DataTable({
-            data: rows,
-            columns: columns
-        });
+    // Configurar el truncado
+    const truncateText = (text, length = 20) => {
+      return text && text.length > length ? text.substring(0, length) + '...' : text;
+    };
+
+    // Construir columnas dinámicamente usando los encabezados con truncado
+    const dataColumns = headers.map(header => ({
+      title: header,
+      defaultContent: "",
+      render: function(data, type, row) {
+        return truncateText(data); // Aplicar truncado a todas las columnas
+      }
+    }));
+
+    // Añadir columnas dinámicas después del número de fila
+    columns.push(...dataColumns);
+
+    // Agregar la columna para el botón de edición
+    columns.push({
+      title: "Acciones",
+      render: function(data, type, row, meta) {
+        return `<button class="btn btn-primary" onclick="editarFila(${meta.row})">Editar</button>`;
+      }
+    });
+
+    // Inicializa la DataTable con las filas y columnas generadas dinámicamente
+    $('#zero_configuration_table').DataTable({
+      data: rowsWithRowNumbers,
+      columns: columns
+    });
       })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
 });
@@ -48,32 +58,33 @@ $(document).ready(function() {
     // Construir la URL con los datos de la fila
     const urlParams = new URLSearchParams({
         
-        row:rowIndex,
-        fechaIngreso: rowData[0] || "",
-    pas: rowData[1] || "",
-    cliente: rowData[2] || "",
-    dominio: rowData[3] || "",
-    companiaReclamar: rowData[4] || "",
-    telefonoCliente: rowData[5] || "",
-    mailCliente: rowData[6] || "",
-    observacion: rowData[7] || "",
-    adjDniFrente: rowData[8] || "",
-    adjDniDorso: rowData[9] || "",
-    adjRegistroFrente: rowData[10] || "",
-    adjRegistroDorso: rowData[11] || "",
-    adjCedulaVerdeFrente: rowData[12] || "",
-    adjCedulaVerdeDorso: rowData[13] || "",
-    adjDenunciaAdm: rowData[14] || "",
-    adjCertCobertura: rowData[15] || "",
-    adjFotoSiniestro: rowData[16] || "",
-    adjPresupuesto: rowData[17] || "",
-    adjContratoSoc: rowData[18] || "",
-    tipoReclamo: rowData[19] || "",
-    historial: rowData[20] || "",
-    estado: rowData[21] || "",
+        row:rowData[0],
+    fechaIngreso: rowData[1] || "",
+    pas: rowData[2] || "",
+    cliente: rowData[3] || "",
+    dominio: rowData[4] || "",
+    companiaReclamar: rowData[5] || "",
+    telefonoCliente: rowData[6] || "",
+    mailCliente: rowData[7] || "",
+    observacion: rowData[8] || "",
+    adjDniFrente: rowData[9] || "",
+    adjDniDorso: rowData[10] || "",
+    adjRegistroFrente: rowData[11] || "",
+    adjRegistroDorso: rowData[12] || "",
+    adjCedulaVerdeFrente: rowData[13] || "",
+    adjCedulaVerdeDorso: rowData[14] || "",
+    adjDenunciaAdm: rowData[15] || "",
+    adjCertCobertura: rowData[16] || "",
+    adjFotoSiniestro: rowData[17] || "",
+    adjPresupuesto: rowData[18] || "",
+    adjContratoSoc: rowData[19] || "",
+    tipoReclamo: rowData[20] || "",
+    historial: rowData[21] || "",
+    estado: rowData[22] || "",
+    carpetaUrl: rowData[23] || "",
 
     });
     
     // Abrir en nueva pestaña pasando la información en la URL
-    window.location.href =`../../html/layout3/edicionIngresos.html?${urlParams.toString()}`;
+    window.location.href =`../../html/edicionIngresos.html?${urlParams.toString()}`;
   }

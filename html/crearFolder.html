@@ -281,7 +281,7 @@ async function createFolderInDynamicParent(parentFolderName, newFolderName) {
         // 1. Buscar la carpeta padre en Drive por nombre
         const parentResponse = await gapi.client.drive.files.list({
             q: `name='${parentFolderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-            fields: 'files(id, name)'
+            fields: 'files(id, name, webViewLink)'
            
         });
  console.log('parentResponse',parentResponse)
@@ -320,31 +320,8 @@ async function createFolderInDynamicParent(parentFolderName, newFolderName) {
 }
 
 function createFolder(){
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const rows = data.values;
-            console.log(rows);
-            const selectedRows = rows.slice(1)
-           
-          .map(row => {
-     
-              return row[2] ;
-          })
-          console.log(selectedRows)
-          selectedRows.forEach(name => {
-                if (name) {
-                    createFolderInDynamicParent("Pas", name);
-                }
-            });
-      
-        })
-        .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
+    
+    createFolderInDynamicParent("STELLA MARIS ROUGIER (DROQUI ANDREA)", "pasPrueba");
 
    
     //    createFolderInDynamicParent("Pas", "SIGUIENTE PAS")

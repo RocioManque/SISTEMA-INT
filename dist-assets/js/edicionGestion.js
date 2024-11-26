@@ -74,6 +74,8 @@ function handleSignoutClick() {
 }
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
+const rowIndex = params.get('row')
+console.log(rowIndex)
 const pas = params.get('pas');
 const cliente = params.get('cliente');
 const telefonoCliente = params.get('telefonoCliente');
@@ -125,7 +127,7 @@ document.getElementById('historial').value = informeHistorial;
 async function updateRowInSheet(updatedValues, ranges) {
     console.log(ranges)
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con el ID de tu hoja de cálculo
-    const range =`sheet1!${ranges}`;
+    const range =`Sheet1!${ranges}`;
     console.log(typeof(range)) // Modifica según el rango necesario
 
     const body = {
@@ -200,12 +202,12 @@ function actualizar(e){
        
     ];
 
-   const rangeesAtoB =  'A10:B10';
-   const rangeesEtoF =  'E10:F10';
-   const rangeesHtoJ =  'H10:J10';
-   const rangeesYtoZ =  'Y10:Z10';
-   const rangeesACtoAF =  'AC10:AF10';
-   const rangeesAW =  'AW10';
+   const rangeesAtoB =  `A${rowIndex}:B${rowIndex}`;
+   const rangeesEtoF =  `E${rowIndex}:F${rowIndex}`;
+   const rangeesHtoJ =  `H${rowIndex}:J${rowIndex}`;
+   const rangeesYtoZ =  `Y${rowIndex}:Z${rowIndex}`;
+   const rangeesACtoAF = `AC${rowIndex}:AF${rowIndex}`;
+   const rangeesAW =  `AW${rowIndex}`;
 updateRowInSheet( valuesAtoB,rangeesAtoB);
 updateRowInSheet(valuesEtoF, rangeesEtoF );
 updateRowInSheet(valuesHtoJ, rangeesHtoJ );
@@ -217,13 +219,13 @@ updateRowInSheet( valuesAW, rangeesAW);
 }
 //enviar whatsapp 
 document.getElementById('sendWhatsApp').addEventListener('click', function() {
-    const historialValue = document.getElementById('historial') ? document.getElementById('historial').value : "";
-    const actualizacionValue = document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "";
-    
-    const concatenatedValue = historialValue + " " + actualizacionValue;
-    const mensaje = concatenatedValue;
-    const phoneNumber = '542994707809'; // Reemplaza con el número de teléfono completo
-    const message = `¡Buenos dias! Este es la ultima actualización de su Caso: ${mensaje}`;
+    const phoneForm = document.getElementById('telefono').value
+    const mensaje = document.getElementById('actualizacion').value;
+    const cliente = document.getElementById('cliente').value;
+    const pas = document.getElementById('pas').value;
+    console.log(mensaje)
+    const phoneNumber = phoneForm; // Reemplaza con el número de teléfono completo
+    const message = `Estimado/a ${cliente} nos comunicamos de IN ITINERE, servicio de gestión de siniestros del productor de seguros ${pas} para mantenerlo informado: ${mensaje}`;
     
     // Codificar el mensaje para URL
     const encodedMessage = encodeURIComponent(message);
@@ -237,12 +239,13 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
 
 //legales
 function legales(e){
+    const index= rowIndex; 
     e.preventDefault();
-    const responsable = "LEGALES";
+    const responsable = "legales";
     const valuesC = [
         responsable,   
     ];
-   const rangeesC =  'C11';
+   const rangeesC =  'C:10';
     updateRowInSheet( valuesC,rangeesC);
 }
 
@@ -253,7 +256,7 @@ function facturacion(e){
     const valuesAC = [
         estado,   
     ];
-   const rangeesAC =  'AC11';
+   const rangeesAC =  'AC:10';
     updateRowInSheet( valuesAC,rangeesAC);
 }
 
@@ -265,7 +268,7 @@ function desistido(e){
     const valuesAC = [
         estado,   
     ];
-   const rangeesAC =  'AC11';
+   const rangeesAC =  'AC:10';
     updateRowInSheet( valuesAC,rangeesAC);
 }
 
@@ -277,7 +280,7 @@ function mediacion(e){
     const valuesC = [
         ejecutivo,   
     ];
-   const rangeesC =  'C11';
+   const rangeesC =  'C:10';
     updateRowInSheet( valuesC,rangeesC);
 }
 

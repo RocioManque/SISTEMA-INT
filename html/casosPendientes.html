@@ -5,37 +5,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Novedades</title>
+    <title>Mesa de entrada</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
-    <link href="../../dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
-    <link href="../../dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
+    <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/dist-assets/css/plugins/datatables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-
-    <style>
-        .card {
-            margin-bottom: 20px;
-        }
-        .card-title {
-            font-size: 1.25rem;
-            color: #333;
-        }
-        .card-body {
-            padding: 15px;
-        }
-        .card-footer {
-            background-color: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-        }
-    </style>
-     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="text-left">
     <div class="app-admin-wrap layout-horizontal-bar">
         <div class="main-header">
-            <div class="logo"><img src="../../dist-assets/images/logo.png" alt="" /></div>
+            <div class="logo"><img src="/dist-assets/images/logo.png" alt="" /></div>
             <div class="menu-toggle">
                 <div></div>
                 <div></div>
@@ -47,7 +29,7 @@
             <div style="margin: auto"></div>
             <div class="header-part-right">  
                 <h4 class="mt-3 mr-3 " id="userNameDisplay"></h4> 
-                <a class="link-icon mr-1" href="../../html/sessions/signin.html" style="font-size:xx-large; color: brown;"><i class="fa-solid fa-power-off"></i></a>
+                <a class="link-icon mr-1" href="/index.html" style="font-size:xx-large; color: brown;"><i class="fa-solid fa-power-off"></i></a>
             </div>
         </div>
         <!-- header top menu end-->
@@ -67,7 +49,7 @@
                             <li class="views" id="casosPendientes">
                                 <div>
                                     <div>
-                                        <label class="toggle" for="drop-2">Casos pendientes</label><a href="casosPendientes.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Casos Pendientes</span></a>
+                                        <label class="toggle" for="drop-2">Mesa de Entrada</label><a href="casosPendientes.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Mesa de Entrada</span></a>
                                        
                                     </div>
                                 </div>
@@ -115,24 +97,8 @@
                             <li class="views" id="novedades">
                                 <div>
                                     <div>
-                                        <label class="toggle" for="drop-2">Novedades</label>
+                                        <label class="toggle" for="drop-2">Información Útil</label>
                                         <a href="novedades.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Novedades</span></a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="views" id="whatsapp" style="float:right">
-                                <div>
-                                    <div>
-                                        <label class="toggle" for="drop-2">whatsapp</label>
-                                        <a href="https://api.whatsapp.com/send?phone=5491133032850&text=%C2%A1Hola!%20Te%20contacto%20desde%20la%20web%20"> <span class="text-white"><i class="fa-brands fa-whatsapp"></i></span></a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="views" id="linkedin" style="float:right">
-                                <div>
-                                    <div>
-                                        <label class="toggle" for="drop-2">linkedin</label>
-                                        <a href="https://www.linkedin.com/company/in-itinere-int/"> <span class="text-white"><i class="fa-brands fa-linkedin"></i></span></a>
                                     </div>
                                 </div>
                             </li>
@@ -146,20 +112,42 @@
             <!-- ============ Body content start ============= -->
             <div class="main-content">
                 <div class="breadcrumb">
-                Lo ultimo en In itinere              
+                    <h1>Mesa de Entrada</h1>
                 </div>
                 <div class="separator-breadcrumb border-top"></div>
-                <div class="col-md-12 d-flex justify-content-end"> 
-                    <button id="authorize_button" class="btn btn-secondary" onclick="handleAuthClick()">A</button>
+                <div class="row mb-4">
+                    <div class="col-md-12">  
+                    </div>
                 </div>
-                <div class="container mt-5">
+                <!-- end of row-->
+                <div class="row mb-4">
+                    <div class="col-md-12 mb-4">
+                        <div class="card text-left">
+                            <div class="card-body">
+                                <div class="table-responsive"> <!-- Contenedor scrolleable -->
+                                    <table class="display table table-striped table-bordered" id="zero_configuration_table" style="width:100%">
+                                        <thead>
+                                           
+                                        </thead>
+                                        <tbody>
+                                            <!-- Cuerpo de la tabla -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                    <!-- end of col-->
 
-                    <div id="novedadesContainer" class="row mt-4"></div>
-                </div>
+
+<!-- <button class="btn btn-primary" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button> -->
 
     </div>
-    <script>
-            document.addEventListener('DOMContentLoaded', () => {
+    <!-- ============ Search UI Start ============= -->
+  <script>
+        document.addEventListener('DOMContentLoaded', () => {
             const userData = JSON.parse(localStorage.getItem('userData'));
         
             if (userData) {
@@ -203,28 +191,24 @@
                 }else if (permission === 'PAS') {
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
-                    document.getElementById('whatsapp').style.display = 'block';
-                    document.getElementById('linkedin').style.display = 'block';
 
                 }
             } else {
                 // Si no hay información de usuario, redirigir a login
-                window.location.href = 'signin.html';
+                window.location.href = 'index.html';
             }
         });
-    </script>
+  </script>
     <!-- ============ Search UI End ============= -->
-    <script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
-    <script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
-    <script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../../dist-assets/js/scripts/script.min.js"></script>
-    <script src="../../dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-    <script src="../../dist-assets/js/novedades.js"></script>
-
-
+    <script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="/dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+    <script src="/dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/dist-assets/js/scripts/script.min.js"></script>
+    <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
+    <script src="/dist-assets/js/plugins/datatables.min.js"></script>
+    <script src="/dist-assets/js/scripts/datatables.script.min.js"></script>
+    <script src="/dist-assets/js/scripts/customizer.script.min.js"></script>
+    <script src="/dist-assets/js/pendientes.js"></script>
 </body>
 
 </html>

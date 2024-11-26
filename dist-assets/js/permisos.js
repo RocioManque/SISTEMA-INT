@@ -11,16 +11,16 @@ $(document).ready(function() {
     $('#login').on('click', function() {
         // Obtiene los valores del formularioCUIT
 
-        // Llama a la función fetchData y pasa los valores del usuario
+       
         fetchData();
     });
 });
     
 function fetchData() {
-    console.log('entra')
+
     const user = $('#user').val(); // Email del formulario
 const pass = $('#pass').val(); // CUIT del formulario
-console.log('encuentra valores')
+
 
     const findUser1 = (rows1) => {
         return rows1.find(row => {
@@ -40,7 +40,7 @@ console.log('encuentra valores')
         console.log(user,pass)
         return rows2.find(row => {
             const rowUser  = (row[0] || ""); // Suponiendo que el email está en la columna 1
-            const rowPass = row[4] || ""; // Suponiendo que el CUIT está en la columna 3
+            const rowPass = row[4] || ""; // Suponiendo que el CUIT está en la columna 4
             
             return rowUser  === user && rowPass === pass;
         
@@ -52,12 +52,10 @@ console.log('encuentra valores')
         .then(data => {
             const rows1 = data[0].values; 
             const rows2 = data[1].values; 
-    console.log(rows1)
-    console.log(rows2)
 
             // Busca el usuario en ambas pestañas
             const user = findUser1(rows1) || findUser2(rows2);//
-console.log(user)
+
 
             if (user) {
 
@@ -67,9 +65,14 @@ console.log(user)
                         permission: user[3], 
                     };
                     console.log(userData)
-                   
                     localStorage.setItem('userData', JSON.stringify(userData));
-                    window.location.href = '/html/layout3/casosEnGestion.html';
+
+                    if(userData.permission === 'mesa de entrada'){
+                    
+                    window.location.href = '/html/casosPendientes.html';
+                    }else{
+                     window.location.href = '/html/casosEnGestion.html';
+                    }
 
                 }else{
                     const userData = {
@@ -78,14 +81,14 @@ console.log(user)
                       
                     };
                     localStorage.setItem('userData', JSON.stringify(userData));
-                    window.location.href = '/html/layout3/casosPas.html';
+                    window.location.href = '/html/casosPas.html';
                 }
-              alert('usuario registrado') 
+  
             }else{
-                alert('El usuario no existe')
+                   alert('El usuario no existe')
             }
         })
-        .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
+        .catch(error => console.error('Error al cargar', error));
 }
 // });
     // });
