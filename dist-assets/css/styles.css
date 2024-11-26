@@ -1,0 +1,88 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Header */
+.header {
+    background-color: #1c562d;
+    padding: 15px 0;
+    color: #fff;
+}
+
+.header .logo {
+    width: 120px;
+}
+
+.header .login-btn {
+    background-color: #fcfcfd;
+    color: #15aa6d;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.header .login-btn:hover {
+    background-color: #d9d9d9;
+}
+
+/* Main Content */
+.main-content {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.main-content h1 {
+    font-size: 2.5rem;
+    color: #1c562d;
+    margin-bottom: 20px;
+}
+
+.main-content p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Footer */
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;     
+    left: 0;       
+    width: 100%;     
+    z-index: 1000;  
+}
+
+
+.footer .social-links a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer .social-links a:hover {
+    text-decoration: underline;
+}
+
+.footer .contact-info p {
+    margin: 5px 0;
+}

@@ -1,42 +1,34 @@
 <!DOCTYPE html>
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Int Oficina Virtual</title>
-    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
-    <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="/dist-assets/css/styles.css">
 </head>
-<div class="auth-layout-wrap" style="background-image: url(../../dist-assets/images/photo-wide-4.jpg)">
-    <div class="auth-content">
-        <div class="card o-hidden">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="p-4">
-                        <div class="auth-logo text-center mb-4"><img src="../../dist-assets/images/logo.png" alt=""></div>
-                        <h1 class="mb-3 text-18"></h1>
-                        <form>
-                            <div class="form-group">
-                                <label for="email">Usuario</label>
-                                <input class="form-control form-control-rounded" id="user" type="text">
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Contraseña</label>
-                                <input class="form-control form-control-rounded" id="pass" type="password">
-                            </div>
-                            <button class="btn btn-rounded btn-primary btn-block mt-4" type="button" id="login">Acceder</button>
-                        </form>
-                       
-                    </div>
-                </div>
-                <div class="col-md-6 text-center" style="background-size: cover;background-image: url(../../dist-assets/images/photo-long-3.jpg)">
-                    <div class="pr-3 auth-right"><h1>Oficina Virtual</h1></div>
-                </div>
-            </div>
+<body>
+    <header class="header">
+        <div class="container">
+            <img src="/dist-assets/images/logo.png" alt="Logo" class="logo">
+           <a href="/html/session/login.html"><button class="login-btn">Iniciar Sesión</button></a> 
         </div>
-    </div>
-</div>
-<script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
-<script src="/dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
-<script src="/dist-assets/js/permisos.js"></script>
+    </header>
+
+    <main class="main-content">   
+        <h1>Web en desarrollo</h1>
+        <p>Estamos trabajando para ofrecerle una mejor experiencia</p>
+    </main>
+
+    <footer class="footer">
+        <div class="social-links">
+            <a href="https://facebook.com" target="_blank">Facebook</a>
+            <a href="https://twitter.com" target="_blank">Twitter</a>
+            <a href="https://instagram.com" target="_blank">Instagram</a>
+        </div>
+        <div class="contact-info">
+            <p>Contacto: int int@int.com</p>
+            <p>Teléfono: +54 123 456 7890</p>
+        </div>
+    </footer>
+</body>
+</html>
