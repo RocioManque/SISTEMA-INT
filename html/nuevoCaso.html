@@ -119,9 +119,9 @@
             <!-- ============ Body content start ============= -->
             <div class="main-content">
                 <div class="row mb-4">
-                    <div class="col-md-12 d-flex justify-content-end"> 
+                    <!-- <div class="col-md-12 d-flex justify-content-end"> 
                         <button id="authorize_button" class="btn btn-secondary" onclick="handleAuthClick()">A</button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="inbox-main-sidebar-container" data-sidebar-container="main">
                     <div class="inbox-main-content" data-sidebar-content="main">
@@ -348,14 +348,9 @@ const DISCOVERY_DOCS = [
     'https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest'
 ];
 const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets';
-const SPREADSHEET_ID = '1vnJXUhAGGcI8xt-83_T2K_TzJNqhz2nYdcMhilSqkWY';  // Reemplaza con tu ID de hoja de cálculo
-
 let tokenClient;
 let gapiInited = false;
 let gisInited = false;
-
-// document.getElementById('authorize_button').style.visibility = 'hidden';
-// document.getElementById('signout_button').style.visibility = 'hidden';
 
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
@@ -367,37 +362,62 @@ async function initializeGapiClient() {
         discoveryDocs: DISCOVERY_DOCS,
     });
     gapiInited = true;
-    maybeEnableButtons();
+
+    // Intentar autenticar automáticamente
+    attemptSilentAuth();
 }
 
 function gisLoaded() {
     tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
-        callback: '',
+        callback: async (resp) => {
+            if (resp.error !== undefined) {
+                console.error('Error durante la autenticación:', resp.error);
+                return;
+            }
+        }
     });
     gisInited = true;
-    maybeEnableButtons();
 }
 
-function maybeEnableButtons() {
-    if (gapiInited && gisInited) {
-        document.getElementById('authorize_button').style.visibility = 'visible';
+async function attemptSilentAuth() {
+    const storedToken = localStorage.getItem('google_access_token');
+
+    if (storedToken) {
+        // Establecer el token almacenado en el cliente de gapi
+        gapi.client.setToken({ access_token: storedToken });
+        try {
+            // Intentar un llamado de prueba para verificar si el token sigue siendo válido
+    
+            console.log('Autenticación silenciosa exitosa.');
+            return;
+        } catch (err) {
+            console.error('Token expirado o inválido. Reautenticando...', err);
+        }
     }
+
+    // Si el token no es válido o no existe, solicitar autenticación
+    handleAuthClick();
 }
 
 function handleAuthClick() {
     tokenClient.callback = async (resp) => {
         if (resp.error !== undefined) {
-            throw (resp);
+            console.error('Error durante la autenticación:', resp.error);
+            return;
         }
-        document.getElementById('signout_button').style.visibility = 'hidden';
-        document.getElementById('authorize_button').innerText = 'hidden';
-        await listFiles();
+
+        // Almacenar el token en localStorage
+        const accessToken = gapi.client.getToken().access_token;
+        localStorage.setItem('google_access_token', accessToken);
+
+        console.log('Token guardado en localStorage.');
+
     };
 
     if (gapi.client.getToken() === null) {
-        tokenClient.requestAccessToken({ prompt: 'consent' });
+        tokenClient.requestAccessToken({ prompt: '' }); // Autenticación silenciosa
     } else {
         tokenClient.requestAccessToken({ prompt: '' });
     }
@@ -406,14 +426,13 @@ function handleAuthClick() {
 function handleSignoutClick() {
     const token = gapi.client.getToken();
     if (token !== null) {
-        google.accounts.oauth2.revoke(token.access_token);
-        gapi.client.setToken('');
-        document.getElementById('content').innerText = '';
-        document.getElementById('authorize_button').innerText = 'Authorize';
-        document.getElementById('signout_button').style.visibility = 'hidden';
+        google.accounts.oauth2.revoke(token.access_token, () => {
+            gapi.client.setToken('');
+            localStorage.removeItem('google_access_token'); // Eliminar el token almacenado
+            console.log('Sesión cerrada.');
+        });
     }
 }
-
 const spreadsheetId = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'sheet1'; // 

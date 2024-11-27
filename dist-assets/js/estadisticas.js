@@ -135,6 +135,7 @@ async function getMonthlyCasesData(year) {
     
         // Calcular los promedios
         const averageCasesPerMonth = totalCases / 12;
+        
         const averageClosedCasesPerMonth = totalClosedCases / 12;
     
         console.log('Promedio de casos ingresados por mes:', averageCasesPerMonth);

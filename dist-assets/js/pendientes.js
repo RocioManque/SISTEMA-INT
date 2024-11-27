@@ -6,7 +6,7 @@ const range = 'Respuestas de formulario 1'; //
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
 $(document).ready(function() {
-    fetch(url)
+  fetch(url)
   .then(response => response.json())
   .then(data => {
     const headers = data.values[0]; // Encabezados de la primera fila
@@ -14,7 +14,7 @@ $(document).ready(function() {
     console.log(rows);
 
     // Añadir el número de fila como primera columna en cada fila
-    const rowsWithRowNumbers = rows.map((row, index) => [index + 2, ...row]); // Índice + 2 porque `data.values` incluye encabezado y es base 0
+    const rowsWithRowNumbers = rows.map((row, index) => [index + 2, ...row]);
 
     // Agregar un encabezado para la nueva columna (Número de Fila)
     const columns = [{ title: "Nº" }];
@@ -24,14 +24,30 @@ $(document).ready(function() {
       return text && text.length > length ? text.substring(0, length) + '...' : text;
     };
 
-    // Construir columnas dinámicamente usando los encabezados con truncado
-    const dataColumns = headers.map(header => ({
-      title: header,
-      defaultContent: "",
-      render: function(data, type, row) {
-        return truncateText(data); // Aplicar truncado a todas las columnas
+    // Construir columnas dinámicamente usando los encabezados
+    const dataColumns = headers.map((header, columnIndex) => {
+      // Si el encabezado es "URL Adjuntos", definir render personalizado
+      if (header === "url carpeta") {
+        return {
+          title: header,
+          defaultContent: "",
+          render: function(data, type, row) {
+            return data
+              ? `<a href="${data}" target="_blank" rel="noopener noreferrer">${truncateText(data)}</a>`
+              : ""; // Si no hay URL, dejar vacío
+          }
+        };
       }
-    }));
+
+      // Render general para las demás columnas con truncado
+      return {
+        title: header,
+        defaultContent: "",
+        render: function(data, type, row) {
+          return truncateText(data);
+        }
+      };
+    });
 
     // Añadir columnas dinámicas después del número de fila
     columns.push(...dataColumns);
@@ -43,7 +59,6 @@ $(document).ready(function() {
         return `<button class="btn btn-primary" onclick="editarFila(${meta.row})">Editar</button>`;
       }
     });
-
     // Inicializa la DataTable con las filas y columnas generadas dinámicamente
     $('#zero_configuration_table').DataTable({
       data: rowsWithRowNumbers,
