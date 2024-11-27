@@ -1,6 +1,3 @@
-
-
-
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
 const rowIndex = params.get('row')

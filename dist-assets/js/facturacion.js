@@ -103,6 +103,7 @@ $(document).ready(function() {
     
     // Construir la URL con los datos de la fila
     const urlParams = new URLSearchParams({
+
         caso: rowData[0],
         plan: rowData[1],
         estado: rowData[2],
@@ -110,12 +111,12 @@ $(document).ready(function() {
         nroReclamoCia: rowData[4],
         montoReclamado: rowData[5],
         montoCerrado: rowData[6],
-        FechaDePago: rowData[7],
-        FechaFacturacion: rowData[8],
-        FacturadoPor: rowData[9],
-        Consultores: rowData[10],
-        ComisionPas: rowData[11],
-        TotalFacturadoSinIva: rowData[12],
+        fechaDePago: rowData[7],
+        fechaFacturacion: rowData[8],
+        facturadoPor: rowData[9],
+        consultores: rowData[10],
+        comisionPas: rowData[11],
+        totalFacturadoSinIva: rowData[12],
         nroFactura: rowData[13],
         iva: rowData[14],
         totalFacturadoConIva: rowData[15],

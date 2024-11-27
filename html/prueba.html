@@ -1,0 +1,152 @@
+<div class="inbox-main-sidebar-container" data-sidebar-container="main">
+    <div class="inbox-main-content" data-sidebar-content="main">
+        <!-- SECONDARY SIDEBAR CONTAINER-->
+        <div class="inbox-secondary-sidebar-container box-shadow-1" data-sidebar-container="secondary">
+            <div data-sidebar-content="secondary">
+                <div class="inbox-secondary-sidebar-content position-relative" style="min-height: 500px">
+                    <div class="inbox-topbar box-shadow-1 perfect-scrollbar rtl-ps-none pl-3" data-suppress-scroll-y="true">
+                     <a class="link-icon mr-3" id="facturar" onclick="facturar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Facturar</a><a class="link-icon mr-3" id="saveChanges" onclick="actualizar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Actualizar</a><a class="link-icon mr-3" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a>
+
+                    </div>
+                    <div class="row">
+                    <div class="col-md-6">
+                    <div class="form-floating">
+                        <div class="">
+                            <div class="input-group mt-2 mb-3">
+                                <div class="input-group-prepend "><span class="input-group-text" >Total facturado sin IVA</span></div>
+                                <input class="form-control" id="facturadoSinIva" type="text" aria-describedby="basic-addon3" />
+                            </div>
+                            <div class="input-group mt-2 mb-3">
+                                <div class="input-group-prepend "><span class="input-group-text" >Nro de factura/Comprobante</span></div>
+                                <input class="form-control" id="nroFactura" type="text" aria-describedby="basic-addon3" />
+                            </div>
+                            <div class="input-group mt-2 mb-3">
+                                <div class="input-group-prepend "><span class="input-group-text" >IVA</span></div>
+                                <input class="form-control" id="iva" type="text" aria-describedby="basic-addon3" />
+                            </div>
+                            <div class="input-group mt-2 mb-3">
+                                <div class="input-group-prepend "><span class="input-group-text" >Total facturado con IVA</span></div>
+                                <input class="form-control" id="facturadoConIva" type="text" aria-describedby="basic-addon3" />
+                            </div>
+                            <div class="input-group mt-2 mb-3">
+                                <div class="input-group-prepend "><span class="input-group-text" >Fecha de Pago Comisión</span></div>
+                                <input class="form-control" id="fechaPagoComision" type="text" aria-describedby="basic-addon3" />
+                            </div>
+                            <div class="input-group mt-2 mb-3">
+                                <div class="input-group-prepend "><span class="input-group-text" >Total Percibido</span></div>
+                                <input class="form-control" id="totalPercibido" type="text" aria-describedby="basic-addon3" />
+                            </div>
+                         </div>
+                      </div>
+                   <div>
+                    <div class="form-check form-check-inline mt-5">
+                        <label class="checkbox checkbox-outline-info">
+                          
+                        </label>
+                      </div>
+                   
+                   </div>
+                   
+                   <div id="liveAlertPlaceholder"></div>
+                   <!-- <div class="col-md-6 mb-4">
+                            <form class="dropzone dropzone-area" id="button-select-upload" action="#">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple="multiple" />
+                                </div>
+                                <div class="dz-message">Drop Files Here To Upload</div>
+                            </form>
+                </div> -->
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                  </div>
+               <div>
+               </div>
+             <div class="">
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Consultores</span></div>
+                    <input class="form-control" id="consultores" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Comisión Pas</span></div>
+                    <input class="form-control" id="comisionPas" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Retención IVA</span></div>
+                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Retención Ganancia</span></div>
+                    <input class="form-control" id="retencionGanancia" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Retención IIBB Compañia</span></div>
+                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Retención IIBB Banco</span></div>
+                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Gastos estructura</span></div>
+                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
+                </div>
+             </div>
+
+        </div>
+            </div>
+         </div>
+        </div>
+    </div>
+            </div>
+            <!-- Secondary Inbox sidebar-->
+            <div class="inbox-secondary-sidebar perfect-scrollbar rtl-ps-none" data-sidebar="secondary"><i class="sidebar-close i-Close" data-sidebar-toggle="secondary"></i>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >CASO</span></div>
+                    <input class="form-control" id="caso" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >plan INT</span></div>
+                    <input class="form-control" id="plan" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Nro de Reclamo CIA</span></div>
+                    <input class="form-control" id="nroReclamo" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Facturado Por</span></div>
+                    <input class="form-control" id="facturadoPor" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de Pago</span></div>
+                    <input class="form-control" id="reclamo" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" >Tipo de Reclamo</span>
+                    </div>
+                    <select class="form-control" id="tipoReclamo" aria-describedby="basic-addon3">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="Administrativo">Administrativo</option>
+                        <option value="Mediación">Mediación</option>
+                        <option value="Mediación Express">Mediación Express</option>
+                        <!-- Añade más opciones aquí según sea necesario -->
+                    </select>
+                    
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Monto Reclamado</span></div>
+                    <input class="form-control" id="montoReclamado" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Monto Cerrado</span></div>
+                    <input class="form-control" id="montoCerrado" type="text" aria-describedby="basic-addon3" />
+                </div>
+                <div class="input-group mt-2 mb-3">
+                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de facturación</span></div>
+                    <input class="form-control" id="fechaFactura" type="text" aria-describedby="basic-addon3" />
+                </div>
+
+            </div>
+        </div>
