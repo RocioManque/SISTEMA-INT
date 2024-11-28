@@ -1,7 +1,6 @@
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
 const rowIndex = params.get('row')
-console.log(rowIndex)
 const pas = params.get('pas');
 const cliente = params.get('cliente');
 const telefonoCliente = params.get('telefonoCliente');
@@ -9,6 +8,10 @@ const mailCliente = params.get('mailCliente');
 const fechaIngreso = params.get('fechaIngreso');
 const fechaInicio = params.get('fechaInicio');
 const numeroInterno = params.get('numeroInterno');
+const planInt = params.get('planInt');
+console.log(planInt)
+const numeroReclamoCia = params.get('numeroReclamoCia');
+console.log(numeroReclamoCia)
 const estado = params.get('estado');
 const observacion = params.get('observacion');
 const informeHistorial = params.get('informeHistorial');
@@ -37,6 +40,8 @@ document.getElementById('cliente').value = cliente;
 document.getElementById('ingreso').value = fechaIngreso;
 fechaInicio === '' ? document.getElementById('inicio').value = formattedDate : document.getElementById('inicio').value = fechaInicio ;
 document.getElementById('reclamo').value = numeroInterno;
+document.getElementById('reclamoCia').value = numeroReclamoCia;
+document.getElementById('planInt').value = planInt;
 document.getElementById('tipoReclamo').value = tipoReclamo;
 document.getElementById('montoReclamado').value = montoReclamar;
 document.getElementById('montoCerrado').value = montoCerrado;
@@ -83,65 +88,176 @@ async function updateRowInSheet(updatedValues, ranges) {
         console.error('Error al actualizar la fila:', error);
     }
 }
-function actualizar(e){
-    e.preventDefault();
-    const historialValue = document.getElementById('historial') ? document.getElementById('historial').value : "";
-    const actualizacionValue = document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "";
+async function actualizar(e){
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; 
+    const today = new Date();
+  const day = String(today.getDate()).padStart(2, '0'); // Asegura dos dígitos para el día
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
+  const year = today.getFullYear();
+const fechaHoy = `${day}/${month}/${year}`;
+    // Supongamos que tienes valores para las columnas a actualizar
+    const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
+    const nroInterno = document.getElementById('reclamo').value;
+    const pas = document.getElementById('pas').value;
+    const cliente = document.getElementById('cliente').value;
+    const ciaReclamada = document.getElementById('ciaReclamo').value;
+    const telefonoCliente = document.getElementById('telefono').value;
+    const emailCliente = document.getElementById('email').value;
+    const observaciones = document.getElementById('obs').value;
+    const historial = document.getElementById('historial').value;
+    const fechaInicio = document.getElementById('inicio').value;
+    const planInt = document.getElementById('planInt').value;
+    const nroReclamoCia = document.getElementById('reclamoCia').value;
+    const estado = document.getElementById('estado').value;
+    const tipoReclamo = document.getElementById('tipoReclamo').value;
+    const montoReclamado = document.getElementById('montoReclamado').value;
+    const montoCerrado = document.getElementById('montoCerrado').value;
+    const ultimaActualizacion = fechaHoy
     
-    const concatenatedValue = historialValue + " " + actualizacionValue;
-    // Extraer valores de los campos del formulario
-    const valuesAtoB = [
-        document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
-        document.getElementById('pas') ? document.getElementById('pas').value : "",
-    ];
-    const valuesEtoF = [
-        document.getElementById('cliente') ? document.getElementById('cliente').value : "",
-        document.getElementById('ciaReclamo') ? document.getElementById('ciaReclamo').value : "",
-    ];
-    const valuesHtoJ = [
-        document.getElementById('telefono') ? document.getElementById('telefono').value : "",
-        document.getElementById('email') ? document.getElementById('email').value : "",
-        document.getElementById('obs') ? document.getElementById('obs').value : "",
-    ];
+    
+    // Crea la solicitud BatchUpdate
+    const batchUpdateBody = {
+        requests: [
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: rowIndex - 1,
+                    endRowIndex: rowIndex,
+                    startColumnIndex: 0, 
+                    endColumnIndex: 2 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(fechaIngreso) } },
+                                { userEnteredValue: { stringValue: String(pas) } },            
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: rowIndex - 1,
+                    endRowIndex: rowIndex,
+                    startColumnIndex: 3, 
+                    endColumnIndex: 6, 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(nroInterno) } },  
+                                { userEnteredValue: { stringValue: String(cliente) } },  
+                                { userEnteredValue: { stringValue: String(ciaReclamada) } },       
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: rowIndex - 1,
+                    endRowIndex: rowIndex,
+                    startColumnIndex: 7, 
+                    endColumnIndex: 10 
+                },
+                    rows: [
+                        {
+                            values: [   
+                                { userEnteredValue: { stringValue: String(telefonoCliente) } },  
+                                { userEnteredValue: { stringValue: String(emailCliente) } },  
+                                { userEnteredValue: { stringValue: String(observaciones) } }       
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: rowIndex - 1,
+                        endRowIndex: rowIndex,
+                        startColumnIndex: 24, // Es el indice primero
+                        endColumnIndex: 32 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(historial) } },
+                                { userEnteredValue: { stringValue: String(fechaInicio) } },
+                                { userEnteredValue: { stringValue: String(planInt) } },
+                                { userEnteredValue: { stringValue: String(nroReclamoCia) } },
+                                { userEnteredValue: { stringValue: String(estado) } },          
+                                { userEnteredValue: { stringValue: String(tipoReclamo) } },          
+                                { userEnteredValue: { stringValue: String(montoReclamado) } },          
+                                { userEnteredValue: { stringValue: String(montoCerrado) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: rowIndex - 1,
+                        endRowIndex: rowIndex,
+                        startColumnIndex: 55, // Es el indice primero
+                        endColumnIndex: 56 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(ultimaActualizacion) } },          
+                                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            }
+        ]
+    };
 
-    // URLs de archivos adjuntos para llenar de K a X
-    // const filledUrls = urls.map(url => url || ''); // Reemplaza los valores vacíos con ''
-    // while (filledUrls.length < 11) {
-    //     filledUrls.push(''); // Asegura que haya exactamente 11 columnas en I:S
-    // }
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchUpdateBody),
+            }
+        );
 
-    // Datos para las columnas de T a V
-    const valuesYtoZ= [
-        concatenatedValue || "",
-        document.getElementById('inicio') ? document.getElementById('inicio').value : "",
-    ];
-   
-    const valuesACtoAF = [
-        document.getElementById('estado') ? document.getElementById('estado').value : "",
-        document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
-        document.getElementById('montoReclamado') ? document.getElementById('montoReclamado').value : "",
-        document.getElementById('montoCerrado') ? document.getElementById('montoCerrado').value : "",
-       
-    ];
-    const valuesAW = [
-        document.getElementById('gestionado') ? document.getElementById('gestionado').value : "",
-       
-    ];
-
-   const rangeesAtoB =  `A${rowIndex}:B${rowIndex}`;
-   const rangeesEtoF =  `E${rowIndex}:F${rowIndex}`;
-   const rangeesHtoJ =  `H${rowIndex}:J${rowIndex}`;
-   const rangeesYtoZ =  `Y${rowIndex}:Z${rowIndex}`;
-   const rangeesACtoAF = `AC${rowIndex}:AF${rowIndex}`;
-   const rangeesAW =  `AW${rowIndex}`;
-updateRowInSheet( valuesAtoB,rangeesAtoB);
-updateRowInSheet(valuesEtoF, rangeesEtoF );
-updateRowInSheet(valuesHtoJ, rangeesHtoJ );
-updateRowInSheet(valuesYtoZ,rangeesYtoZ);
-updateRowInSheet( valuesACtoAF, rangeesACtoAF);
-updateRowInSheet( valuesAW, rangeesAW);
-
-
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Actualización múltiple realizada con éxito:', result);
+        } else {
+            console.error('Error en la actualización múltiple:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error en la actualización múltiple:', error);
+    }
 }
 //enviar whatsapp 
 document.getElementById('sendWhatsApp').addEventListener('click', function() {
@@ -164,25 +280,57 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
   });
 
 //legales
-function legales(e){
-    const index= rowIndex; 
-    e.preventDefault();
-    const responsable = "legales";
-    const valuesC = [
-        responsable,   
-    ];
-   const rangeesC =  'C:10';
-    updateRowInSheet( valuesC,rangeesC);
-}
 
+function legales(e){
+    e.preventDefault();
+    return gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI',
+        range: 'sheet2',
+      }).then(response => {
+        const rows = response.result.values;
+    
+        if (!rows || rows.length === 0) {
+          console.warn("No se encontraron datos en la hoja.");
+       
+        }
+    
+        // Obtener índice de columnas basado en la primera fila (encabezados)
+        const headers = rows[0];
+        const nameIndex = headers.indexOf("Nombre y Apellido");
+        const permissionIndex = headers.indexOf("permisos");
+    
+        if (nameIndex === -1 || permissionIndex === -1) {
+          console.error("No se encontraron las columnas 'nombre' o 'permiso' en la hoja.");
+   
+        }
+    
+        // Filtrar y obtener nombres con el permiso indicado
+        const resultado = rows
+          .slice(1) // Omitir encabezados
+          .filter(row => row[permissionIndex] === 'LEGALES') // Filtrar por permiso
+          .map(row => row[nameIndex]); // Obtener solo los nombres
+
+          console.log('resultado',resultado[0])
+          const valuesC = [
+            resultado[0],   
+        ];
+       const rangeesC =  `C${rowIndex}:C${rowIndex}`;
+        updateRowInSheet( valuesC,rangeesC);
+        
+      }).catch(error => {
+        console.error("Error al leer datos de Google Sheets:", error);
+       
+      });
+   
+}
 //facturacion
 function facturacion(e){
     e.preventDefault();
-    const estado = "facturacion";
+    const estado = "FACTURACION";
     const valuesAC = [
         estado,   
     ];
-   const rangeesAC =  'AC:10';
+   const rangeesAC =  `AC${rowIndex}:AC${rowIndex}`;
     updateRowInSheet( valuesAC,rangeesAC);
 }
 
@@ -194,7 +342,7 @@ function desistido(e){
     const valuesAC = [
         estado,   
     ];
-   const rangeesAC =  'AC:10';
+   const rangeesAC =  `AC${rowIndex}:AC${rowIndex}`;
     updateRowInSheet( valuesAC,rangeesAC);
 }
 
@@ -206,7 +354,7 @@ function mediacion(e){
     const valuesC = [
         ejecutivo,   
     ];
-   const rangeesC =  'C:10';
+   const rangeesC =  `C${rowIndex}:C${rowIndex}`;
     updateRowInSheet( valuesC,rangeesC);
 }
 

@@ -66,6 +66,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             row[0] || "",     // Nº de Reclamo
             row[25] || "",    // Estado
             row[3] || "",     // Última actualización
+            row[26] || "",    // Tipo de reclamo
+            row[27] || "",    // Tipo de reclamo
             row[28] || "",    // Tipo de reclamo
             row[9] || "",     // Monto a reclamar
             row[24] || "",    // Compañía a reclamar
@@ -96,6 +98,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         { title: "Fecha de ingreso" },
         { title: "Fecha de inicio" },
         { title: "Nº interno" },
+        { title: "Plan INT" },
+        { title: "Nº reclamo cia" },
         { title: "Estado" },
         { title: "Obsevación" },
         { title: "Informe/Historial" },
@@ -153,14 +157,16 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         fechaIngreso: rowData[5],
         fechaInicio: rowData[6],
         numeroInterno: rowData[7],
-        estado: rowData[8],
-        observacion: rowData[9],
-        informeHistorial: rowData[10],
-        tipoReclamo: rowData[11],
-        montoReclamar: rowData[12],
-        montoCerrado: rowData[13],
-        companiaReclamar: rowData[14],
-        gestionadoCon: rowData[15]
+        planInt: rowData[8],
+        numeroReclamoCia: rowData[9],
+        estado: rowData[10],
+        observacion: rowData[11],
+        informeHistorial: rowData[12],
+        tipoReclamo: rowData[13],
+        montoReclamar: rowData[14],
+        montoCerrado: rowData[15],
+        companiaReclamar: rowData[16],
+        gestionadoCon: rowData[17]
     });
 
     if (window.opener) {

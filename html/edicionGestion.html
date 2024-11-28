@@ -184,8 +184,8 @@
                                     </div>
                                     <select class="form-control" id="gestionado" aria-describedby="basic-addon3">
                                         <option value="" disabled selected>Selecciona una opción</option>
-                                        <option value="opcion1">Compañia</option>
-                                        <option value="opcion2">Estudio</option>
+                                        <option value="COMPAÑIA">COMPAÑIA</option>
+                                        <option value="ESTUDIO">ESTUDIO</option>
                                         <!-- Añade más opciones aquí según sea necesario -->
                                     </select>
                                     
@@ -237,8 +237,16 @@
                                     <input class="form-control" id="inicio" type="text" aria-describedby="basic-addon3" />
                                 </div>
                                 <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >Nº de Reclamo</span></div>
+                                    <div class="input-group-prepend "><span class="input-group-text" >Nº Interno</span></div>
                                     <input class="form-control" id="reclamo" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Plan INT</span></div>
+                                    <input class="form-control" id="planInt" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Nº de Reclamo Cia</span></div>
+                                    <input class="form-control" id="reclamoCia" type="text" aria-describedby="basic-addon3" />
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend">
@@ -339,6 +347,12 @@ const appendAlert = (message, type) => {
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
 
+                }else if (permission === 'LEGALES') {
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                }else if (permission === 'FACTURACION') {
+                    document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
                 }
             } else {
                 // Si no hay información de usuario, redirigir a login

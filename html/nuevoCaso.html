@@ -336,6 +336,12 @@
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
 
+                }else if (permission === 'LEGALES') {
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                }else if (permission === 'FACTURACION') {
+                    document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
                 }
             } else {
                 // Si no hay información de usuario, redirigir a login

@@ -39,8 +39,8 @@ const pass = $('#pass').val(); // CUIT del formulario
         const pass = $('#pass').val(); // CUIT del formulario
         console.log(user,pass)
         return rows2.find(row => {
-            const rowUser  = (row[0] || ""); // Suponiendo que el email está en la columna 1
-            const rowPass = row[4] || ""; // Suponiendo que el CUIT está en la columna 4
+            const rowUser  = (row[2] || ""); // Suponiendo que el email está en la columna 1
+            const rowPass = row[1] || ""; // Suponiendo que el CUIT está en la columna 4
             
             return rowUser  === user && rowPass === pass;
         

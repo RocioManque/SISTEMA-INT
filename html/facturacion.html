@@ -232,13 +232,13 @@
                         <div class="bordered p-2 mb-3">
                             <div class="row">
                                 <div class="col-4">
-                                    <p><strong>Período Facturado Desde:</strong> 21/11/2024</p>
+                                    <p><strong>Período Facturado Desde:</strong> </p>
                                 </div>
                                 <div class="col-4">
-                                    <p><strong>Hasta:</strong> 21/11/2024</p>
+                                    <p><strong>Hasta:</strong> </p>
                                 </div>
                                 <div class="col-4">
-                                    <p><strong>Fecha de Vto. para el pago:</strong> 22/11/2024</p>
+                                    <p><strong>Fecha de Vto. para el pago:</strong> </p>
                                 </div>
                             </div>
                         </div>
@@ -247,13 +247,13 @@
                         <div class="bordered p-2 mb-3">
                             <div class="row">
                                 <div class="col-6">
-                                    <p><strong>CUIT: 30500036911</strong></p>
-                                    <p><strong>Apellido y Nombre / Razón Social: COMPAÑIA DE SEGUROS LA MERCANTIL ANDINA S.A.</strong></p>
-                                    <p><strong>Condición frente al IVA:</strong> IVA Responsable Inscripto</p>
+                                    <p><strong>CUIT:</strong></p>
+                                    <p><strong>Apellido y Nombre / Razón Social: </strong></p>
+                                    <p><strong>Condición frente al IVA:</strong> </p>
                                 </div>
                                 <div class="col-6">
-                                    <p><strong>Domicilio: Italia 646 - Rosario Norte, Santa Fe</strong></p>
-                                    <p><strong>Condición de venta:</strong> Contado</p>
+                                    <p><strong>Domicilio: </strong></p>
+                                    <p><strong>Condición de venta:</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -277,12 +277,12 @@
                                     <tr>
                                         <td class="center-text">1.00</td>
                                         <td class="center-text">HONORARIOS PROFESIONALES
-                                            RECLAMO VITASSE JUAN MANUEL contra MERCANTIL ANDINA</td>
+                                            </td>
                                         <td class="center-text">1.00</td>
                                         <td class="center-text">unidades</td>
-                                        <td class="center-text">786.500</td>
                                         <td class="center-text">0.00</td>
-                                        <td class="center-text">786.500</td>
+                                        <td class="center-text">0.00</td>
+                                        <td class="center-text">0.00</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -295,9 +295,9 @@
                                     <p>&nbsp;</p>
                                 </div>
                                 <div class="col-4">
-                                    <p><strong>Subtotal:</strong> $786.500</p>
+                                    <p><strong>Subtotal:</strong> $0.00</p>
                                     <p><strong>Importe Otros Tributos:</strong> $0.00</p>
-                                    <p><strong>Importe Total:</strong> $786.500</p>
+                                    <p><strong>Importe Total:</strong> $0.00</p>
                                 </div>
                             </div>
                         </div>
@@ -310,8 +310,8 @@
                                     <p>Comprobante Autorizado</p>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <p><strong>CAE N°: 74479855547823</strong></p>
-                                    <p><strong>Fecha de Vto. de CAE: 30/11/2024</strong></p>
+                                    <p><strong>CAE N°: </strong></p>
+                                    <p><strong>Fecha de Vto. de CAE: </strong></p>
                                 </div>
                             </div>
                         </div>
@@ -372,6 +372,12 @@
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
 
+                }else if (permission === 'LEGALES') {
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                }else if (permission === 'FACTURACION') {
+                    document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
                 }
             } else {
                 // Si no hay información de usuario, redirigir a login

@@ -633,7 +633,441 @@ async function encontrarEjecutivo() {
         return null; // Retorna null en caso de error
     }
 }
+async function legales(e){
+    
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
+    const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
+    const nroInterno = await obtenerNuevoNumeroCaso()
+    const ejecutivoEncontrado = await encontrarEjecutivo()
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    // Supongamos que tienes valores para las columnas a actualizar
+    const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
+    const pas = document.getElementById('pas').value;
+    const cliente = document.getElementById('cliente').value;
+    const ciaReclamada = document.getElementById('ciaReclamar').value;
+    const dominio = document.getElementById('dominio').value;
+    const telefonoCliente = document.getElementById('telefono').value;
+    const emailCliente = document.getElementById('email').value;
+    const observaciones = document.getElementById('obs').value;
+    const historial = document.getElementById('historial').value;
+    const estado = document.getElementById('estado').value;
+    const tipoReclamo = document.getElementById('tipoReclamo').value;
+    const adjuntosUrl = carpetaUrl
+    
+    
+    // Crea la solicitud BatchUpdate
+    const batchUpdateBody = {
+        requests: [
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: IndexNuevaFila - 1,
+                    endRowIndex: IndexNuevaFila,
+                    startColumnIndex: 0, 
+                    endColumnIndex: 10 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(fechaIngreso) } },
+                                { userEnteredValue: { stringValue: String(pas) } },         
+                                { userEnteredValue: { stringValue: String(ejecutivoEncontrado) } }, 
+                                { userEnteredValue: { stringValue: String(nroInterno) } },  
+                                { userEnteredValue: { stringValue: String(cliente) } },  
+                                { userEnteredValue: { stringValue: String(ciaReclamada) } },
+                                { userEnteredValue: { stringValue: String(dominio) } }, 
+                                { userEnteredValue: { stringValue: String(telefonoCliente) } },  
+                                { userEnteredValue: { stringValue: String(emailCliente) } },  
+                                { userEnteredValue: { stringValue: String(observaciones) } }       
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 24, // Es el indice primero
+                        endColumnIndex: 25 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(historial) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 28, // Es el indice primero
+                        endColumnIndex: 30 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(estado) } },          
+                                { userEnteredValue: { stringValue: String(tipoReclamo) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 53, // Es el indice primero
+                        endColumnIndex: 54 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(adjuntosUrl) } },          
+                                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            }
+        ]
+    };
 
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchUpdateBody),
+            }
+        );
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Actualización múltiple realizada con éxito:', result);
+        } else {
+            console.error('Error en la actualización múltiple:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error en la actualización múltiple:', error);
+    }
+}
+async function desistido(e){
+    
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
+    const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
+    const nroInterno = await obtenerNuevoNumeroCaso()
+    const ejecutivoEncontrado = await encontrarEjecutivo()
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    // Supongamos que tienes valores para las columnas a actualizar
+    const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
+    const pas = document.getElementById('pas').value;
+    const cliente = document.getElementById('cliente').value;
+    const ciaReclamada = document.getElementById('ciaReclamar').value;
+    const dominio = document.getElementById('dominio').value;
+    const telefonoCliente = document.getElementById('telefono').value;
+    const emailCliente = document.getElementById('email').value;
+    const observaciones = document.getElementById('obs').value;
+    const historial = document.getElementById('historial').value;
+    const estado = 'DESISTIDO';
+    const tipoReclamo = document.getElementById('tipoReclamo').value;
+    const adjuntosUrl = carpetaUrl
+    
+    
+    // Crea la solicitud BatchUpdate
+    const batchUpdateBody = {
+        requests: [
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: IndexNuevaFila - 1,
+                    endRowIndex: IndexNuevaFila,
+                    startColumnIndex: 0, 
+                    endColumnIndex: 10 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(fechaIngreso) } },
+                                { userEnteredValue: { stringValue: String(pas) } },         
+                                { userEnteredValue: { stringValue: String(ejecutivoEncontrado) } }, 
+                                { userEnteredValue: { stringValue: String(nroInterno) } },  
+                                { userEnteredValue: { stringValue: String(cliente) } },  
+                                { userEnteredValue: { stringValue: String(ciaReclamada) } },
+                                { userEnteredValue: { stringValue: String(dominio) } }, 
+                                { userEnteredValue: { stringValue: String(telefonoCliente) } },  
+                                { userEnteredValue: { stringValue: String(emailCliente) } },  
+                                { userEnteredValue: { stringValue: String(observaciones) } }       
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 24, // Es el indice primero
+                        endColumnIndex: 25 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(historial) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 28, // Es el indice primero
+                        endColumnIndex: 30 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(estado) } },          
+                                { userEnteredValue: { stringValue: String(tipoReclamo) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 53, // Es el indice primero
+                        endColumnIndex: 54 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(adjuntosUrl) } },          
+                                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            }
+        ]
+    };
+
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchUpdateBody),
+            }
+        );
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Actualización múltiple realizada con éxito:', result);
+        } else {
+            console.error('Error en la actualización múltiple:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error en la actualización múltiple:', error);
+    }
+}
+async function mediacion(e){
+    
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
+    const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
+    const nroInterno = await obtenerNuevoNumeroCaso()
+    const ejecutivoEncontrado = 'MARIANELA'
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    // Supongamos que tienes valores para las columnas a actualizar
+    const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
+    const pas = document.getElementById('pas').value;
+    const cliente = document.getElementById('cliente').value;
+    const ciaReclamada = document.getElementById('ciaReclamar').value;
+    const dominio = document.getElementById('dominio').value;
+    const telefonoCliente = document.getElementById('telefono').value;
+    const emailCliente = document.getElementById('email').value;
+    const observaciones = document.getElementById('obs').value;
+    const historial = document.getElementById('historial').value;
+    const estado = document.getElementById('estado').value;
+    const tipoReclamo = document.getElementById('tipoReclamo').value;
+    const adjuntosUrl = carpetaUrl
+    
+    
+    // Crea la solicitud BatchUpdate
+    const batchUpdateBody = {
+        requests: [
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: IndexNuevaFila - 1,
+                    endRowIndex: IndexNuevaFila,
+                    startColumnIndex: 0, 
+                    endColumnIndex: 10 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(fechaIngreso) } },
+                                { userEnteredValue: { stringValue: String(pas) } },         
+                                { userEnteredValue: { stringValue: String(ejecutivoEncontrado) } }, 
+                                { userEnteredValue: { stringValue: String(nroInterno) } },  
+                                { userEnteredValue: { stringValue: String(cliente) } },  
+                                { userEnteredValue: { stringValue: String(ciaReclamada) } },
+                                { userEnteredValue: { stringValue: String(dominio) } }, 
+                                { userEnteredValue: { stringValue: String(telefonoCliente) } },  
+                                { userEnteredValue: { stringValue: String(emailCliente) } },  
+                                { userEnteredValue: { stringValue: String(observaciones) } }       
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 24, // Es el indice primero
+                        endColumnIndex: 25 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(historial) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 28, // Es el indice primero
+                        endColumnIndex: 30 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(estado) } },          
+                                { userEnteredValue: { stringValue: String(tipoReclamo) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 53, // Es el indice primero
+                        endColumnIndex: 54 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(adjuntosUrl) } },          
+                                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            }
+        ]
+    };
+
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchUpdateBody),
+            }
+        );
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Actualización múltiple realizada con éxito:', result);
+        } else {
+            console.error('Error en la actualización múltiple:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error en la actualización múltiple:', error);
+    }
+}
     
     // e.preventDefault();
     // fetch(url)
