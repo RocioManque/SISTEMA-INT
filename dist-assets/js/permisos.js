@@ -11,7 +11,7 @@ $(document).ready(function() {
     $('#login').on('click', function() {
         // Obtiene los valores del formularioCUIT
 
-       
+        clearStoredToken();
         fetchData();
     });
 });
@@ -89,6 +89,9 @@ const pass = $('#pass').val(); // CUIT del formulario
             }
         })
         .catch(error => console.error('Error al cargar', error));
+}
+function clearStoredToken() {
+    localStorage.removeItem('google_access_token');
 }
 // });
     // });

@@ -30,7 +30,7 @@ const carpetaUrl= params.get('carpetaUrl');
 
 // Luego muestra o manipula estos datos en la página según lo necesites
 document.getElementById('ingreso').value = fechaIngreso;
-document.getElementById('pas').value = pas;
+document.getElementById('pasDropdown').value = pas;
 document.getElementById('cliente').value = cliente;
 document.getElementById('dominio').value = dominio;
 document.getElementById('ciaReclamar').value = companiaReclamar;
@@ -171,7 +171,7 @@ async function updateDataInSheetWithFiles(urls, targetRow) {
     // Datos para las columnas de A a H
     const valuesAtoH = [
         document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
-        document.getElementById('pas') ? document.getElementById('pas').value : "",
+        document.getElementById('pasDropdown') ? document.getElementById('pasDropdown').value : "",
         document.getElementById('cliente') ? document.getElementById('cliente').value : "",
         document.getElementById('dominio') ? document.getElementById('dominio').value : "",
         document.getElementById('ciaReclamar') ? document.getElementById('ciaReclamar').value : "",
@@ -230,10 +230,11 @@ console.log(response)
 
 
 document.getElementById('sendWhatsApp').addEventListener('click', function() {
+    console.log('entra')
     const phoneForm = document.getElementById('telefono').value
     const mensaje = document.getElementById('actualizacion').value;
     const cliente = document.getElementById('cliente').value;
-    const pas = document.getElementById('pas').value;
+    const pas = document.getElementById('pasDropdown').value;
     console.log(mensaje)
     const phoneNumber = phoneForm; // Reemplaza con el número de teléfono completo
     const message = `Estimado/a ${cliente} nos comunicamos de IN ITINERE, servicio de gestión de siniestros del productor de seguros ${pas} para mantenerlo informado: ${mensaje}`;
@@ -292,7 +293,7 @@ async function updateEjecutivo() {
         const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
 
         // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
-        const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
+        const nameToFind = document.getElementById('pasDropdown').value; // El nombre que quieres buscar (sin apellido)
 
         // Filtrar por el nombre en la primera columna (suponiendo que 'pas' está en la columna 0)
         const result = rows.filter(row => {
@@ -349,6 +350,7 @@ async function updateEjecutivo() {
                     const updateResult = await updateResponse.json();
                     console.log('Fila actualizada con éxito:', updateResult);
                 } else {
+                    
                     console.error('Error al actualizar la fila:', await updateResponse.text());
                 }
             } catch (error) {
@@ -451,7 +453,7 @@ function incrementarNumeroCaso(ultimoNumero) {
     const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
-    const pas = document.getElementById('pas').value;
+    const pas = document.getElementById('pasDropdown').value;
     const cliente = document.getElementById('cliente').value;
     const ciaReclamada = document.getElementById('ciaReclamar').value;
     const dominio = document.getElementById('dominio').value;
@@ -462,6 +464,7 @@ function incrementarNumeroCaso(ultimoNumero) {
     const estado = document.getElementById('estado').value;
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
+    const caso = cliente + ' contra ' + ciaReclamada
     
     
     // Crea la solicitud BatchUpdate
@@ -546,6 +549,27 @@ function incrementarNumeroCaso(ultimoNumero) {
                         sheetId: '454305688',
                         startRowIndex: IndexNuevaFila - 1,
                         endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 35, // Es el indice primero
+                        endColumnIndex: 36 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(caso) } },                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
                         startColumnIndex: 53, // Es el indice primero
                         endColumnIndex: 54 // Es el indice posterior
                     },
@@ -579,11 +603,33 @@ function incrementarNumeroCaso(ultimoNumero) {
 
         if (response.ok) {
             const result = await response.json();
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se actualizó correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosPendientes.html';
+                }
+              });
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'El caso no pudo Actualizarse correctamente.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
             console.error('Error en la actualización múltiple:', await response.text());
         }
     } catch (error) {
+        Swal.fire({
+            title: '¡ERROR!',
+            text: 'El caso no pudo Actualizarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
         console.error('Error en la actualización múltiple:', error);
     }
 }
@@ -595,7 +641,7 @@ async function encontrarEjecutivo() {
         const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
 
         // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
-        const nameToFind = document.getElementById('pas').value; // El nombre que quieres buscar (sin apellido)
+        const nameToFind = document.getElementById('pasDropdown').value; // El nombre que quieres buscar (sin apellido)
 
         const result = rows.filter(row => {
             const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
@@ -642,7 +688,7 @@ async function legales(e){
     const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
-    const pas = document.getElementById('pas').value;
+    const pas = document.getElementById('pasDropdown').value;
     const cliente = document.getElementById('cliente').value;
     const ciaReclamada = document.getElementById('ciaReclamar').value;
     const dominio = document.getElementById('dominio').value;
@@ -653,6 +699,7 @@ async function legales(e){
     const estado = document.getElementById('estado').value;
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
+    const caso = cliente + ' contra ' + ciaReclamada
     
     
     // Crea la solicitud BatchUpdate
@@ -737,6 +784,27 @@ async function legales(e){
                         sheetId: '454305688',
                         startRowIndex: IndexNuevaFila - 1,
                         endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 35, // Es el indice primero
+                        endColumnIndex: 36 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(caso) } },                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
                         startColumnIndex: 53, // Es el indice primero
                         endColumnIndex: 54 // Es el indice posterior
                     },
@@ -770,11 +838,33 @@ async function legales(e){
 
         if (response.ok) {
             const result = await response.json();
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se actualizó correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosPendientes.html';
+                }
+              });
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'El caso no pudo Actualizarse correctamente.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
             console.error('Error en la actualización múltiple:', await response.text());
         }
     } catch (error) {
+        Swal.fire({
+            title: '¡ERROR!',
+            text: 'El caso no pudo Actualizarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
         console.error('Error en la actualización múltiple:', error);
     }
 }
@@ -787,7 +877,7 @@ async function desistido(e){
     const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
-    const pas = document.getElementById('pas').value;
+    const pas = document.getElementById('pasDropdown').value;
     const cliente = document.getElementById('cliente').value;
     const ciaReclamada = document.getElementById('ciaReclamar').value;
     const dominio = document.getElementById('dominio').value;
@@ -798,7 +888,7 @@ async function desistido(e){
     const estado = 'DESISTIDO';
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
-    
+    const caso = cliente + ' contra ' + ciaReclamada
     
     // Crea la solicitud BatchUpdate
     const batchUpdateBody = {
@@ -882,6 +972,27 @@ async function desistido(e){
                         sheetId: '454305688',
                         startRowIndex: IndexNuevaFila - 1,
                         endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 35, // Es el indice primero
+                        endColumnIndex: 36 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(caso) } },                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
                         startColumnIndex: 53, // Es el indice primero
                         endColumnIndex: 54 // Es el indice posterior
                     },
@@ -915,11 +1026,33 @@ async function desistido(e){
 
         if (response.ok) {
             const result = await response.json();
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se actualizó correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosPendientes.html';
+                }
+              });
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'El caso no pudo Actualizarse correctamente.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
             console.error('Error en la actualización múltiple:', await response.text());
         }
     } catch (error) {
+        Swal.fire({
+            title: '¡ERROR!',
+            text: 'El caso no pudo Actualizarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
         console.error('Error en la actualización múltiple:', error);
     }
 }
@@ -932,7 +1065,7 @@ async function mediacion(e){
     const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
-    const pas = document.getElementById('pas').value;
+    const pas = document.getElementById('pasDropdown').value;
     const cliente = document.getElementById('cliente').value;
     const ciaReclamada = document.getElementById('ciaReclamar').value;
     const dominio = document.getElementById('dominio').value;
@@ -943,7 +1076,7 @@ async function mediacion(e){
     const estado = document.getElementById('estado').value;
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
-    
+    const caso = cliente + ' contra ' + ciaReclamada
     
     // Crea la solicitud BatchUpdate
     const batchUpdateBody = {
@@ -1027,6 +1160,27 @@ async function mediacion(e){
                         sheetId: '454305688',
                         startRowIndex: IndexNuevaFila - 1,
                         endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 35, // Es el indice primero
+                        endColumnIndex: 36 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(caso) } },                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
                         startColumnIndex: 53, // Es el indice primero
                         endColumnIndex: 54 // Es el indice posterior
                     },
@@ -1060,11 +1214,33 @@ async function mediacion(e){
 
         if (response.ok) {
             const result = await response.json();
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se actualizó correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosPendientes.html';
+                }
+              });
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'El caso no pudo Actualizarse correctamente.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
             console.error('Error en la actualización múltiple:', await response.text());
         }
     } catch (error) {
+        Swal.fire({
+            title: '¡ERROR!',
+            text: 'El caso no pudo Actualizarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
         console.error('Error en la actualización múltiple:', error);
     }
 }

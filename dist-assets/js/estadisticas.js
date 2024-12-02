@@ -294,8 +294,6 @@ async function getMonthlyCasesData(year) {
     })
 
 }
-
-
 async function renderCharts(casesByMonth, closedCasesByMonth,averageCasesPerMonth,averageClosedCasesPerMonth,dismissedCases,successfulCases,averageTimeToClose,activeCases,closedCases,casesByExecutive,casesByCompany,facturadoPorMes,facturadoPorEjecutivo) {
     
     // Configuración para el gráfico de casos ingresados por mes

@@ -10,6 +10,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
     <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -215,25 +216,12 @@
                                     <div class="input-group-prepend "><span class="input-group-text" >Observación</span></div>
                                     <input class="form-control" id="obs" type="text" aria-describedby="basic-addon3" />
                                 </div>
-                                <div class="input-group mt-2 mb-3">
+                                <div class="input-group mt-2 mb-3 mt-4">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Estado</span>
+                                        <span class="input-group-text">Estado</span>
                                     </div>
-                                    <select class="form-control" id="estado" aria-describedby="basic-addon3">
-                                        <option value="" disabled selected>Selecciona una opción</option>
-                                        <option value="INGRESADO">INGRESADO</option>
-                                        <option value="FALTA DOCUMENTACIÓN">FALTA DOCUMENTACIÓN</option>
-                                        <option value="RECHAZADO">RECHAZADO</option>
-                                        <option value="SIN DENUNCIA TERCERO">SIN DENUNCIA 3º</option>
-                                        <option value="CONSIDERANDO OFRECIMIENTO COMPAÑIA">CONSIDERANDO OFRECIMIENTO COMPAÑIA</option>
-                                        <option value="CONTACTAR">CONTACTAR</option>
-                                        <option value="CERRADO">CERRADO</option>
-                                        <option value="A.CERRADO/FACTURADO ">A.CERRADO/FACTURADO </option>
-                                        <option value="COBRADO">COBRADO</option>
-                                        <option value="CASO DADO DE BAJA">CASO DADO DE BAJA</option>
-                                        <!-- Añade más opciones aquí según sea necesario -->
-                                    </select>
-                                    
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="estado"></select>
                                 </div>
                              </div>
 
@@ -245,9 +233,12 @@
                             </div>
                             <!-- Secondary Inbox sidebar-->
                             <div class="inbox-secondary-sidebar perfect-scrollbar rtl-ps-none" data-sidebar="secondary"><i class="sidebar-close i-Close" data-sidebar-toggle="secondary"></i>
-                                <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >PAS</span></div>
-                                    <input class="form-control" id="pas" type="text" aria-describedby="basic-addon3" />
+                                <div class="input-group mt-2 mb-3 mt-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">PAS</span>
+                                    </div>
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="pasDropdown"></select>
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Cliente</span></div>
@@ -261,22 +252,19 @@
                                     <div class="input-group-prepend "><span class="input-group-text" >Dominio</span></div>
                                     <input class="form-control" id="dominio" type="text" aria-describedby="basic-addon3" />
                                 </div>
-                                <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >Compañia a Reclamar</span></div>
-                                    <input class="form-control" id="ciaReclamar" type="text" aria-describedby="basic-addon3" />
-                                </div>
-                                <div class="input-group mt-2 mb-3">
+                                <div class="input-group mt-2 mb-3 mt-4">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Tipo de Reclamo</span>
+                                        <span class="input-group-text">CIA a Reclamar</span>
                                     </div>
-                                    <select class="form-control" id="tipoReclamo" aria-describedby="basic-addon3">
-                                        <option value="" disabled selected>Selecciona una opción</option>
-                                        <option value="Administrativo">Administrativo</option>
-                                        <option value="Mediación">Mediación</option>
-                                        <option value="Mediación Express">Mediación Express</option>
-                                        <!-- Añade más opciones aquí según sea necesario -->
-                                    </select>
-                                    
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="ciaReclamar"></select>
+                                </div>
+                                <div class="input-group mt-2 mb-3 mt-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Tipo de Reclamo</span>
+                                    </div>
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="tipoReclamo"></select>
                                 </div>
 
                             </div>
@@ -376,49 +364,6 @@ let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     // Inicializa Select2 en el elemento select
-//     $('#pasDropdown').select2({
-//         placeholder: 'Seleccione un nombre',
-//         allowClear: true,
-//         width: '100%'
-//     });
-
-//     // Realiza la solicitud fetch para obtener datos dinámicos
-//     fetch(url)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error(`HTTP error! status: ${response.status}`);
-//             }
-//             return response.json();
-//         })
-//         .then(data => {
-//             const rows = data.values;
-//             console.log(rows);
-
-//             // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
-//             const selectedRows = rows.slice(1).map(row => row[2]);
-            
-//             // Prepara la lista dinámica en el formato que Select2 espera (id y text)
-//             const listaDinamica = selectedRows.map((nombre, index) => ({
-//                 id: nombre,
-//                 text: nombre
-//             }));
-
-//             console.log('Lista Dinámica:', listaDinamica);
-
-//             // Cargar la lista dinámica en el dropdown
-//             $('#pasDropdown').select2({
-//                 data: listaDinamica
-//             });
-//         })
-//         .catch(error => console.error('Error al cargar datos', error));
-        
-   
-
-// });
-// document.getElementById('authorize_button').style.visibility = 'hidden';
-// document.getElementById('signout_button').style.visibility = 'hidden';
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
 }
@@ -513,9 +458,164 @@ function retrieveToken() {
 function clearStoredToken() {
     localStorage.removeItem('google_access_token');
 }
+
+const spreadsheetId0 = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
+const spreadsheetId2 = '1FdJtx_Dr8dgvC-9HWfckT8qzHm8BikoSbV9EORXSEb8';
+const apiKey2 = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
+const range0 = 'sheet1'; // 
+const range2 = 'Hoja 1'; // 
+const range3 = 'Hoja 2'; // 
+const range4 = 'Hoja 3'; // 
+
+// URL de la API de Google Sheets
+const url0 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId0}/values/${range0}?key=${apiKey2}`;
+const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range2}?key=${apiKey2}`;
+const url3 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range3}?key=${apiKey2}`;
+const url4 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range4}?key=${apiKey2}`;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializa Select2 en el elemento select
+    $('#pasDropdown').select2({
+        placeholder: 'Seleccione un nombre',
+        allowClear: true,
+        width: '100%'
+    });
+    $('#ciaReclamar').select2({
+        placeholder: 'Seleccione un nombre',
+        allowClear: true,
+        width: '100%'
+    });
+    $('#tipoReclamo').select2({
+        placeholder: 'Seleccione un nombre',
+        allowClear: true,
+        width: '90%'
+    });
+    $('#estado').select2({
+        placeholder: 'Seleccione un nombre',
+        
+        width: '100%'
+    });
+
+    // Realiza la solicitud fetch para obtener datos dinámicos
+    fetch(url0)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[2]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#pasDropdown').select2({
+                data: listaDinamica
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        
+       fetch(url2)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica2 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica2);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#ciaReclamar').select2({
+                data: listaDinamica2
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        fetch(url3)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica3 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica3);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#estado').select2({
+                data: listaDinamica3
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        fetch(url4)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica3 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica3);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#tipoReclamo').select2({
+                data: listaDinamica3
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+
+});
         </script>
     <!-- ============ Search UI End ============= -->
     <script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="/dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
     <script src="/dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
@@ -524,7 +624,6 @@ function clearStoredToken() {
     <script src="/dist-assets/js/scripts/script.min.js"></script>
     <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
     <script src="/dist-assets/js/scripts/sidebar.script.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="/dist-assets/js/ingresos.js"></script>
 
 </body>

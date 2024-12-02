@@ -10,7 +10,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
     <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/dist-assets/css/plugins/sweetalert2.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -199,6 +199,7 @@
                                     <textarea class="form-control" placeholder="Historial..." id="historial" style="height: 100px" disabled></textarea>
                                   </div>
                                <div>
+                                <!-- que las compañias se cargen dinamicamente desde la base -->
                                </div>
                              <div class="">
                                 <div class="input-group mt-2 mb-3">
@@ -213,25 +214,12 @@
                                     <div class="input-group-prepend "><span class="input-group-text" >Observación</span></div>
                                     <input class="form-control" id="obs" type="text" aria-describedby="basic-addon3" />
                                 </div>
-                                <div class="input-group mt-2 mb-3">
+                                <div class="input-group mt-2 mb-3 mt-4">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Estado</span>
+                                        <span class="input-group-text">Estado</span>
                                     </div>
-                                    <select class="form-control" id="estado" aria-describedby="basic-addon3">
-                                        <option value="" disabled selected>Selecciona una opción</option>
-                                        <option value="INGRESADO">INGRESADO</option>
-                                        <option value="FALTA DOCUMENTACIÓN">FALTA DOCUMENTACIÓN</option>
-                                        <option value="RECHAZADO">RECHAZADO</option>
-                                        <option value="SIN DENUNCIA TERCERO">SIN DENUNCIA 3º</option>
-                                        <option value="CONSIDERANDO OFRECIMIENTO COMPAÑIA">CONSIDERANDO OFRECIMIENTO COMPAÑIA</option>
-                                        <option value="CONTACTAR">CONTACTAR</option>
-                                        <option value="CERRADO">CERRADO</option>
-                                        <option value="A.CERRADO/FACTURADO ">A.CERRADO/FACTURADO </option>
-                                        <option value="COBRADO">COBRADO</option>
-                                        <option value="CASO DADO DE BAJA">CASO DADO DE BAJA</option>
-                                        <!-- Añade más opciones aquí según sea necesario -->
-                                    </select>
-                                    
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="estado"></select>
                                 </div>
                              </div>
 
@@ -262,22 +250,19 @@
                                     <div class="input-group-prepend "><span class="input-group-text" >Dominio</span></div>
                                     <input class="form-control" id="dominio" type="text" aria-describedby="basic-addon3" />
                                 </div>
-                                <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >Compañia a Reclamar</span></div>
-                                    <input class="form-control" id="ciaReclamar" type="text" aria-describedby="basic-addon3" />
-                                </div>
-                                <div class="input-group mt-2 mb-3">
+                                <div class="input-group mt-2 mb-3 mt-4">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Tipo de Reclamo</span>
+                                        <span class="input-group-text">CIA a Reclamar</span>
                                     </div>
-                                    <select class="form-control" id="tipoReclamo" aria-describedby="basic-addon3">
-                                        <option value="" disabled selected>Selecciona una opción</option>
-                                        <option value="ADMINISTRATIVO">ADMINISTRATIVO</option>
-                                        <option value="MEDIACIÓN">MEDIACIÓN</option>
-                                        <option value="MEDIACIÓN EXPRESS">MEDIACIÓN EXPRESS</option>
-                                        <!-- Añade más opciones aquí según sea necesario -->
-                                    </select>
-                                    
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="ciaReclamar"></select>
+                                </div>
+                                <div class="input-group mt-2 mb-3 mt-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Tipo de Reclamo</span>
+                                    </div>
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="tipoReclamo"></select>
                                 </div>
 
                             </div>
@@ -442,11 +427,18 @@ function handleSignoutClick() {
     }
 }
 const spreadsheetId = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
+const spreadsheetId2 = '1FdJtx_Dr8dgvC-9HWfckT8qzHm8BikoSbV9EORXSEb8';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'sheet1'; // 
+const range2 = 'Hoja 1'; // 
+const range3 = 'Hoja 2'; // 
+const range4 = 'Hoja 3'; // 
 
 // URL de la API de Google Sheets
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range2}?key=${apiKey}`;
+const url3 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range3}?key=${apiKey}`;
+const url4 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range4}?key=${apiKey}`;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializa Select2 en el elemento select
@@ -486,7 +478,90 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error al cargar datos', error));
         
-   
+       fetch(url2)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica2 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica2);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#ciaReclamar').select2({
+                data: listaDinamica2
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        fetch(url3)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica3 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica3);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#estado').select2({
+                data: listaDinamica3
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        fetch(url4)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica3 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica3);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#tipoReclamo').select2({
+                data: listaDinamica3
+            });
+        })
+        .catch(error => console.error('Error al cargar datos', error));
 
 });
 
@@ -672,11 +747,33 @@ async function saveDataToSheetWithFiles(urls,folderUrl) {
         if (response.ok) {
            // await createFolderInDynamicParent()
             const result = await response.json();
+            Swal.fire({
+  title: '¡Éxito!',
+  text: 'El caso se guardo correctamente.',
+  icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+  confirmButtonText: 'Aceptar',
+}).then((result) => {
+  if (result.isConfirmed) {
+    window.location.href = '/html/casosPendientes.html';
+  }
+});
             console.log('Fila guardada con éxito:', result);
         } else {
+            Swal.fire({
+  title: '¡ERROR!',
+  text: 'El caso no pudo guardarse.',
+  icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+  confirmButtonText: 'Aceptar'
+})
             console.error('Error al guardar la fila:', response.statusText);
         }
     } catch (error) {
+        Swal.fire({
+  title: '¡ERROR!',
+  text: 'El caso no pudo guardarse.',
+  icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+  confirmButtonText: 'Aceptar'
+});
         console.error('Error al guardar la fila:', error);
     }
 }
@@ -828,8 +925,6 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
     <script src="https://apis.google.com/js/api.js"></script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-    <script src="/dist-assets/js/plugins/sweetalert2.min.js"></script>
-    <script src="/dist-assets/js/scripts/sweetalert.script.min.js"></script>
     <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
     <script src="/dist-assets/js/scripts/sidebar.script.min.js"></script> 
   

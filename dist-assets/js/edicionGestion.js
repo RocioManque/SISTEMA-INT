@@ -45,7 +45,7 @@ document.getElementById('planInt').value = planInt;
 document.getElementById('tipoReclamo').value = tipoReclamo;
 document.getElementById('montoReclamado').value = montoReclamar;
 document.getElementById('montoCerrado').value = montoCerrado;
-document.getElementById('ciaReclamo').value = companiaReclamar;
+document.getElementById('ciaReclamar').value = companiaReclamar;
 document.getElementById('estado').value = estado;
 document.getElementById('gestionado').value = gestionadoCon;
 document.getElementById('obs').value = observacion;
@@ -79,12 +79,34 @@ async function updateRowInSheet(updatedValues, ranges) {
         );
 
         if (response.ok) {
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se actualizó correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosEnGestion.html';
+                }
+              });
             const result = await response.json();
             console.log('Fila actualizada con éxito:', result);
         } else {
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'El caso no pudo Actualizarse correctamente.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
             console.error('Error al actualizar la fila:', await response.text());
         }
     } catch (error) {
+        Swal.fire({
+            title: '¡ERROR!',
+            text: 'El caso no pudo Actualizarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
         console.error('Error al actualizar la fila:', error);
     }
 }
@@ -100,7 +122,7 @@ const fechaHoy = `${day}/${month}/${year}`;
     const nroInterno = document.getElementById('reclamo').value;
     const pas = document.getElementById('pas').value;
     const cliente = document.getElementById('cliente').value;
-    const ciaReclamada = document.getElementById('ciaReclamo').value;
+    const ciaReclamada = document.getElementById('ciaReclamar').value;
     const telefonoCliente = document.getElementById('telefono').value;
     const emailCliente = document.getElementById('email').value;
     const observaciones = document.getElementById('obs').value;
@@ -251,11 +273,33 @@ const fechaHoy = `${day}/${month}/${year}`;
 
         if (response.ok) {
             const result = await response.json();
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se actualizó correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosEnGestion.html';
+                }
+              });
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'El caso no pudo Actualizarse correctamente.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
             console.error('Error en la actualización múltiple:', await response.text());
         }
     } catch (error) {
+        Swal.fire({
+            title: '¡ERROR!',
+            text: 'El caso no pudo Actualizarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
         console.error('Error en la actualización múltiple:', error);
     }
 }

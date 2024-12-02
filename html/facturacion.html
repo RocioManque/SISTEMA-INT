@@ -203,8 +203,8 @@
                             </div>
                             <div class="col-4 text-right">
                                 <p>Punto de Venta: <strong>00001</strong></p>
-                                <p>Comp. Nro: <strong>00000010</strong></p>
-                                <p>Fecha de Emisión: <strong>20/11/2024</strong></p>
+                                <p>Comp. Nro: <strong><span id="Comprobante"></span></strong></p>
+                                <p>Fecha de Emisión: <strong><span id="fechaEmision"></span></strong></p>
                             </div>
                         </div>
                 
@@ -232,13 +232,13 @@
                         <div class="bordered p-2 mb-3">
                             <div class="row">
                                 <div class="col-4">
-                                    <p><strong>Período Facturado Desde:</strong> </p>
+                                    <p><strong>Período Facturado Desde: </strong><span id="facturadoDesde"></span> </p>
                                 </div>
                                 <div class="col-4">
-                                    <p><strong>Hasta:</strong> </p>
+                                    <p><strong>Hasta:<span id="facturadoHasta"></span></strong> </p>
                                 </div>
                                 <div class="col-4">
-                                    <p><strong>Fecha de Vto. para el pago:</strong> </p>
+                                    <p><strong>Fecha de Vto. para el pago:</strong><span id="vtoPagoFactura"></span> </p>
                                 </div>
                             </div>
                         </div>
@@ -247,13 +247,13 @@
                         <div class="bordered p-2 mb-3">
                             <div class="row">
                                 <div class="col-6">
-                                    <p><strong>CUIT:</strong></p>
-                                    <p><strong>Apellido y Nombre / Razón Social: </strong></p>
-                                    <p><strong>Condición frente al IVA:</strong> </p>
+                                    <p><strong>CUIT: <span id="cuitEmpresa"></span></strong></p>
+                                    <p><strong>Apellido y Nombre / Razón Social: </strong><span id="razonSocial"></span></p>
+                                    <p><strong>Condición frente al IVA:</strong> <span id="condicionIva"></span></p>
                                 </div>
                                 <div class="col-6">
-                                    <p><strong>Domicilio: </strong></p>
-                                    <p><strong>Condición de venta:</strong></p>
+                                    <p><strong>Domicilio: </strong><span id="domicilioCia"></span></p>
+                                    <p><strong>Condición de venta: </strong><span id="condicionVenta"></span></p>
                                 </div>
                             </div>
                         </div>
@@ -276,13 +276,14 @@
                                 <tbody>
                                     <tr>
                                         <td class="center-text">1.00</td>
-                                        <td class="center-text">HONORARIOS PROFESIONALES
+                                        <td class="center-text">HONORARIOS PROFESIONALES RECLAMO <span id="casoProducto"></span>
                                             </td>
                                         <td class="center-text">1.00</td>
                                         <td class="center-text">unidades</td>
+                                        <td class="center-text"><span id="precioUnitario"></span></td>
                                         <td class="center-text">0.00</td>
                                         <td class="center-text">0.00</td>
-                                        <td class="center-text">0.00</td>
+                                        <td class="center-text"><span id="subtotal"></span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -295,9 +296,9 @@
                                     <p>&nbsp;</p>
                                 </div>
                                 <div class="col-4">
-                                    <p><strong>Subtotal:</strong> $0.00</p>
-                                    <p><strong>Importe Otros Tributos:</strong> $0.00</p>
-                                    <p><strong>Importe Total:</strong> $0.00</p>
+                                    <p><strong>Subtotal:$<span id="subtotalFinal"></span></strong></p>
+                                    <p><strong>Importe Otros Tributos: $0.00</strong></p>
+                                    <p><strong>Importe Total:$ <span id="importeTotal"></span></strong></p>
                                 </div>
                             </div>
                         </div>
@@ -305,13 +306,16 @@
                         <!-- Información del CAE -->
                         <div class="bordered p-2 mt-3">
                             <div class="row">
+                                <div class="col-8">
+                                    <img src="/dist-assets/images/afip-qr.png" alt="">
+                                </div>
                                 <div class="col-6">
-                                    <p class="bold">AFIP</p>
+                                    <p class="bold">ARCA</p>
                                     <p>Comprobante Autorizado</p>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <p><strong>CAE N°: </strong></p>
-                                    <p><strong>Fecha de Vto. de CAE: </strong></p>
+                                    <p><strong>CAE N°: </strong> <span id="nroCAE"></span></p>
+                                    <p><strong>Fecha de Vto. de CAE: </strong> <span id="fechaVtoCAE"></span></p>
                                 </div>
                             </div>
                         </div>

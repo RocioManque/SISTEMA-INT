@@ -149,9 +149,9 @@
                 Lo ultimo en In itinere              
                 </div>
                 <div class="separator-breadcrumb border-top"></div>
-                <div class="col-md-12 d-flex justify-content-end"> 
+                <!-- <div class="col-md-12 d-flex justify-content-end"> 
                     <button id="authorize_button" class="btn btn-secondary" onclick="handleAuthClick()">A</button>
-                </div>
+                </div> -->
                 <div class="container mt-5">
 
                     <div id="novedadesContainer" class="row mt-4"></div>
@@ -161,7 +161,6 @@
     <script>
             document.addEventListener('DOMContentLoaded', () => {
             const userData = JSON.parse(localStorage.getItem('userData'));
-        
             if (userData) {
                 const permission = userData.permission; // Asumimos que este es un string con el permiso del usuario
                 const name = userData.name;
@@ -217,7 +216,10 @@
                 // Si no hay información de usuario, redirigir a login
                 window.location.href = 'index.html';
             }
+
+            listFiles();
         });
+      
     </script>
     <!-- ============ Search UI End ============= -->
     <script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>

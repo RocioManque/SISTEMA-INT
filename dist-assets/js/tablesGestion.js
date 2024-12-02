@@ -1,3 +1,4 @@
+
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'sheet1'; // 
@@ -7,23 +8,7 @@ const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/valu
 
 $(document).ready(function() {
  // Asegúrate de que Swal esté definido
- if (typeof Swal !== 'undefined') {
-  const lastUpdateDate = new Date("2024-11-15"); // Fecha de ejemplo
-  const currentDate = new Date();
-  
-  const daysDifference = getDaysDifference(lastUpdateDate, currentDate);
-  
-  if (daysDifference >= 7) {
-      Swal.fire({
-          title: '¡Actualización Pendiente!',
-          text: 'Han pasado 7 días desde la última actualización. Por favor, actualiza la información.',
-          icon: 'warning',
-          confirmButtonText: 'Entendido'
-      });
-  }
-} else {
-  console.error('SweetAlert2 no está cargado.');
-}
+ 
 
 
 // Función para calcular la diferencia de días
@@ -40,49 +25,84 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     const userData = JSON.parse(localStorage.getItem('userData'));
     const nombreEjecutivo = userData.name.toUpperCase();
+    const permiso = userData.permission;  // Asumiendo que tienes un campo 'permission' en userData
     console.log('ejecutivo', nombreEjecutivo);
+    console.log('permiso', permiso);
 
     // Separa el nombre y apellido (asumiendo que están separados por un espacio)
     const [nombre, apellido] = nombreEjecutivo.split(" ");
     console.log(nombre);
 
-    // Filtra las filas antes de construir selectedRows
-    const selectedRows = rows
-      .map((row, index) => {
-        // Añade la fila visible en la hoja (índice + 1)
-        const numeroFila = index + 1; 
+    // Si el usuario es un superusuario, mostrar todos los casos
+    let selectedRows = [];
 
-        // Convierte el nombre del cliente a mayúsculas y compara
-        const nombreCliente = (row[2] || "").toUpperCase();
-        const apellidoCliente = (row[1] || "").toUpperCase();
-        
-        if (nombreCliente === nombre || apellidoCliente === apellido) {
-          return [
-            numeroFila,       // Número de fila en Google Sheets
-            row[1] || "",     // PAS
-            row[4] || "",     // Cliente
-            row[7] || "",     // Fecha de ingreso
-            row[8] || "",    // Fecha de inicio
-            row[0] || "",     // Nº de Reclamo
-            row[25] || "",    // Estado
-            row[3] || "",     // Última actualización
-            row[26] || "",    // Tipo de reclamo
-            row[27] || "",    // Tipo de reclamo
-            row[28] || "",    // Tipo de reclamo
-            row[9] || "",     // Monto a reclamar
-            row[24] || "",    // Compañía a reclamar
-            row[29] || "",    // Compañía a reclamar
-            row[30] || "",    // Compañía a reclamar
-            row[31] || "",    // Compañía a reclamar
-            row[5] || "",     // Compañía a reclamar
-            row[48] || "",    // Compañía a reclamar
-            row[53] || "",     // Compañía a reclamar
-            row[54] || "",     // Compañía a reclamar
-            row[55] || ""     // Compañía a reclamar
-          ];
-        }
-      })
-      .filter(row => row !== undefined); // Filtra filas vacías resultantes
+    if (permiso === "super usuario") {
+      selectedRows = rows.map((row, index) => {
+        // Añade la fila visible en la hoja (índice + 1)
+        const numeroFila = index + 1;
+        return [
+          numeroFila,       // Número de fila en Google Sheets
+          row[1] || "",     // PAS
+          row[4] || "",     // Cliente
+          row[7] || "",     // Fecha de ingreso
+          row[8] || "",    // Fecha de inicio
+          row[0] || "",     // Nº de Reclamo
+          row[25] || "",    // Estado
+          row[3] || "",     // Última actualización
+          row[26] || "",    // Tipo de reclamo
+          row[27] || "",    // Tipo de reclamo
+          row[28] || "",    // Tipo de reclamo
+          row[9] || "",     // Monto a reclamar
+          row[24] || "",    // Compañía a reclamar
+          row[29] || "",    // Compañía a reclamar
+          row[30] || "",    // Compañía a reclamar
+          row[31] || "",    // Compañía a reclamar
+          row[5] || "",     // Compañía a reclamar
+          row[48] || "",    // Compañía a reclamar
+          row[53] || "",     // Compañía a reclamar
+          row[54] || "",     // Compañía a reclamar
+          row[55] || ""     // Compañía a reclamar
+        ];
+      });
+    } else {
+      // Si no es superusuario, filtra por el ejecutivo
+      selectedRows = rows
+        .map((row, index) => {
+          // Añade la fila visible en la hoja (índice + 1)
+          const numeroFila = index + 1;
+
+          // Convierte el nombre del cliente a mayúsculas y compara
+          const nombreCliente = (row[2] || "").toUpperCase();
+          const apellidoCliente = (row[1] || "").toUpperCase();
+
+          if (nombreCliente === nombre || apellidoCliente === apellido) {
+            return [
+              numeroFila,       // Número de fila en Google Sheets
+              row[1] || "",     // PAS
+              row[4] || "",     // Cliente
+              row[7] || "",     // Fecha de ingreso
+              row[8] || "",    // Fecha de inicio
+              row[0] || "",     // Nº de Reclamo
+              row[25] || "",    // Estado
+              row[3] || "",     // Última actualización
+              row[26] || "",    // Tipo de reclamo
+              row[27] || "",    // Tipo de reclamo
+              row[28] || "",    // Tipo de reclamo
+              row[9] || "",     // Monto a reclamar
+              row[24] || "",    // Compañía a reclamar
+              row[29] || "",    // Compañía a reclamar
+              row[30] || "",    // Compañía a reclamar
+              row[31] || "",    // Compañía a reclamar
+              row[5] || "",     // Compañía a reclamar
+              row[48] || "",    // Compañía a reclamar
+              row[53] || "",     // Compañía a reclamar
+              row[54] || "",     // Compañía a reclamar
+              row[55] || ""     // Compañía a reclamar
+            ];
+          }
+        })
+        .filter(row => row !== undefined); // Filtra filas vacías resultantes
+    }
 
     console.log(selectedRows);
 
@@ -101,7 +121,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         { title: "Plan INT" },
         { title: "Nº reclamo cia" },
         { title: "Estado" },
-        { title: "Obsevación" },
+        { title: "Observación" },
         { title: "Informe/Historial" },
         { title: "Tipo de reclamo" },
         { title: "Monto a reclamar" },
@@ -131,12 +151,36 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         }
       ],
       createdRow: function(row, data, dataIndex) {
-        // Aplica clases dependiendo del estado de la reclamación
-        if (data[28] === 'FACTURACION') {
+        const lastUpdateDate = data[20];
+        const parts = lastUpdateDate.split('/');
+        
+        // Asegúrate de que la fecha tenga el formato correcto
+        const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        
+        // Calculamos la fecha actual
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);  // Aseguramos que solo se compare la fecha, no la hora
+        // Calculamos la diferencia en días
+        const daysDifference = getDaysDifference(newDate, currentDate);
+        
+        console.log('daysDifference', daysDifference);  // Verifica que la diferencia de días sea correcta
+        
+        // Si la diferencia es mayor a 7 días, asignamos la clase 'table-danger'
+        if (daysDifference > 7) {
+          console.log('Fila con más de 7 días de diferencia', data[20], daysDifference);
+          $(row).addClass('table-danger');
+             Swal.fire({
+                    title: '¡Actualización Pendiente!',
+                    text: 'Han pasado 7 días desde la última actualización. Por favor, actualiza la información.',
+                    icon: 'warning',
+                    confirmButtonText: 'Entendido'
+                });
+             // Clase de Bootstrap para fila roja
+        }else if (data[10] === 'FACTURACION') {
           $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
-        } else if (data[28] === 'COBRADO') {
+        } else if (data[10] === 'COBRADO') {
           $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
-        } else if (data[28] === 'DESISTIMIENTO') {
+        } else if (data[10] === 'DESISTIDO') {
           $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
         }
       }

@@ -20,99 +20,276 @@
 </head>
 
 <body >
-<div class="main-content">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title"> Casos ingresados por mes</div>
-                    <canvas id="casesByMonthChart"></canvas>
+  
+    <div class="app-admin-wrap layout-horizontal-bar">
+        <div class="main-header">
+            <div class="logo"><img src="/dist-assets/images/logo.png" alt="" /></div>
+            <div class="menu-toggle">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="d-flex align-items-center">
+               
+            </div>
+            <div style="margin: auto"></div>
+            <div class="header-part-right">  
+                <h4 class="mt-3 mr-3 " id="userNameDisplay"></h4> 
+                <a class="link-icon mr-1" href="/index.html" style="font-size:xx-large; color: brown;"><i class="fa-solid fa-power-off"></i></a>
+            </div>
+        </div>
+        <!-- header top menu end-->
+        <div class="horizontal-bar-wrap">
+            <div class="header-topnav">
+                <div class="container-fluid bar-views">
+                    <div class="topnav rtl-ps-none" id="" data-perfect-scrollbar="" data-suppress-scroll-x="true">
+                        <ul class="menu float-left">
+                            <li class="views" id="nuevoCaso">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Nuevo caso</label>
+                                        <a href="nuevoCaso.html"><i class="nav-icon mr-2 i-Library text-white"></i> <span class="text-white">Nuevo caso</span> </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosPendientes">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Mesa de Entrada</label><a href="casosPendientes.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Mesa de Entrada</span></a>
+                                       
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosGestion">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Casos en Gestión</label>
+                                        <a href="casosEnGestion.html"><i class="nav-icon mr-2 i-Receipt text-white"></i><span class="text-white">Casos en Gestión</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="baseUnica">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Base única</label>
+                                        <a href="baseUnica.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Base única</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="estadisticas">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Estadísticas</label>
+                                        <a href="estadisticas.html"><i class="nav-icon mr-2 i-Bar-Chart-5 text-white"></i> <span class="text-white">Estadísticas</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="facturacion">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Facturación</label>
+                                        <a href="facturacion.html"><i class="nav-icon mr-2 i-Windows-2 text-white"></i><span class="text-white">Facturación</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="casosPas">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Mis Casos</label>
+                                        <a href="casosPas.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Mis Casos</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="novedades">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Información Útil</label>
+                                        <a href="novedades.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Novedades</span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="whatsapp" style="float:right">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">whatsapp</label>
+                                        <a href="https://api.whatsapp.com/send?phone=5491133032850&text=%C2%A1Hola!%20Te%20contacto%20desde%20la%20web%20"> <span class="text-white"><i class="fa-brands fa-whatsapp"></i></span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="views" id="linkedin" style="float:right">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">linkedin</label>
+                                        <a href="https://www.linkedin.com/company/in-itinere-int/"> <span class="text-white"><i class="fa-brands fa-linkedin"></i></span></a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    
+                    </div>
+                    
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title">Casos cerrados por mes</div>
-                    <canvas id="closedCasesByMonthChart"></canvas>
+        <!-- =============== Horizontal bar End ================-->
+        <div class="main-content-wrap d-flex flex-column">
+            <!-- ============ Body content start ============= -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title"> Casos ingresados por mes</div>
+                                <canvas id="casesByMonthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title">Casos cerrados por mes</div>
+                                <canvas id="closedCasesByMonthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title"> Promedio Anual de Casos</div>
-                    <canvas id="promedioAnualCasosChart"></canvas>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title"> Promedio Anual de Casos</div>
+                                <canvas id="promedioAnualCasosChart"></canvas> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title">Casos Desistidos vs Casos Cobrados</div>
+                                <canvas id="dismissedChart"  width="200" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title">Casos Desistidos vs Casos Cobrados</div>
-                    <canvas id="dismissedChart"  width="200" height="200"></canvas>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title"> Promedio dias del caso</div>
+                                <canvas id="averageTimeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title"> Activos vs Cerrados</div>
+                                <canvas id="activeVsClosedChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title"> Promedio dias del caso</div>
-                    <canvas id="averageTimeChart"></canvas>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title"> Casos por ejecutivo</div>
+                                <canvas id="casesByExecutiveChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title"> Casos por Compañia</div>
+                                <canvas id="casesByCompanyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title"> Activos vs Cerrados</div>
-                    <canvas id="activeVsClosedChart"></canvas>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title">Total facturado por Mes </div>
+                                <canvas id="facturadoPorMesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card-title"> Total facturado por ejecutivo</div>
+                                <canvas id="facturadoPorEjecutivoChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title"> Casos por ejecutivo</div>
-                    <canvas id="casesByExecutiveChart"></canvas>
+                    <!-- MAIN INBOX SIDEBAR-->
                 </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title"> Casos por Compañia</div>
-                    <canvas id="casesByCompanyChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title">Total facturado por Mes </div>
-                    <canvas id="facturadoPorMesChart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="card-title"> Total facturado por ejecutivo</div>
-                    <canvas id="facturadoPorEjecutivoChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
+  <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+        
+            if (userData) {
+                const permission = userData.permission; // Asumimos que este es un string con el permiso del usuario
+                const name = userData.name;
+                document.getElementById('userNameDisplay').innerText = `${userData.name}`;
+                // Ocultar todas las pestañas inicialmente
+                document.querySelectorAll('.views').forEach(view => {
+                    view.style.display = 'none'; // Ocultar todas las pestañas
+                });
+        
+                // Mostrar pestañas basadas en permisos
+                if (permission === 'super usuario') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosPendientes').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                    document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+                } else if (permission === 'ejecutivo') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                } else if (permission === 'mesa de entrada') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosPendientes').style.display = 'block';
+                } else if (permission === 'mediacion') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                }else if (permission === 'jefe de operaciones') {
+                    document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
 
-</div>
+                }else if (permission === 'PAS') {
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+                    document.getElementById('whatsapp').style.display = 'block';
+                    document.getElementById('linkedin').style.display = 'block';
+
+                }else if (permission === 'LEGALES') {
+                    document.getElementById('casosGestion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
+                }else if (permission === 'FACTURACION') {
+                    document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('estadisticas').style.display = 'block';
+                }
+            } else {
+                // Si no hay información de usuario, redirigir a login
+                window.location.href = 'index.html';
+            }
+        });
+  </script>
    <!-- ============ Search UI Start ============= -->
    <script src="https://apis.google.com/js/api.js" async defer></script>
    <script src="https://accounts.google.com/gsi/client" async defer></script>

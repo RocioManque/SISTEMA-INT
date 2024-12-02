@@ -10,8 +10,9 @@
     <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
     <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/dist-assets/css/plugins/sweetalert2.min.css" />
+
 
 </head>
 
@@ -131,7 +132,7 @@
                             <div data-sidebar-content="secondary">
                                 <div class="inbox-secondary-sidebar-content position-relative" style="min-height: 500px">
                                     <div class="inbox-topbar box-shadow-1 perfect-scrollbar rtl-ps-none pl-3" data-suppress-scroll-y="true">
-                                     <a class="link-icon mr-3" id="facturar" onclick="facturar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Facturar</a><a class="link-icon mr-3" id="saveChanges" onclick="actualizar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Actualizar</a><a class="link-icon mr-3" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a>
+                                     <a class="link-icon mr-3" id="saveChanges" onclick="actualizar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Actualizar</a>
                 
                                     </div>
                                     <div class="row">
@@ -208,15 +209,15 @@
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Retención IIBB Compañia</span></div>
-                                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
+                                    <input class="form-control" id="retencionIBBcompania" type="text" aria-describedby="basic-addon3" />
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Retención IIBB Banco</span></div>
-                                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
+                                    <input class="form-control" id="retencionIBBbanco" type="text" aria-describedby="basic-addon3" />
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Gastos estructura</span></div>
-                                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
+                                    <input class="form-control" id="gastosEstructura" type="text" aria-describedby="basic-addon3" />
                                 </div>
                              </div>
                 
@@ -275,24 +276,8 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-const appendAlert = (message, type) => {
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = [
-    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-    `   <div>${message}</div>`,  
-    '</div>'
-  ].join('')
 
-  alertPlaceholder.append(wrapper)
-}
 
-// const alertTrigger = document.getElementById('liveAlertBtn')
-// if (alertTrigger) {
-//   alertTrigger.addEventListener('click', () => {
-//     appendAlert('Información enviada exitosamente', 'success')
-//   })
-// }
         document.addEventListener('DOMContentLoaded', () => {
             const userData = JSON.parse(localStorage.getItem('userData'));
         
@@ -350,7 +335,7 @@ const appendAlert = (message, type) => {
                 window.location.href = 'index.html';
             }
         });
-        const CLIENT_ID = '607561137784-rq84r06gop7p4hjo1nnv0q5re4fl2nff.apps.googleusercontent.com';
+const CLIENT_ID = '607561137784-rq84r06gop7p4hjo1nnv0q5re4fl2nff.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E';
 const DISCOVERY_DOCS = [
     'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
@@ -362,49 +347,6 @@ let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     // Inicializa Select2 en el elemento select
-//     $('#pasDropdown').select2({
-//         placeholder: 'Seleccione un nombre',
-//         allowClear: true,
-//         width: '100%'
-//     });
-
-//     // Realiza la solicitud fetch para obtener datos dinámicos
-//     fetch(url)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error(`HTTP error! status: ${response.status}`);
-//             }
-//             return response.json();
-//         })
-//         .then(data => {
-//             const rows = data.values;
-//             console.log(rows);
-
-//             // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
-//             const selectedRows = rows.slice(1).map(row => row[2]);
-            
-//             // Prepara la lista dinámica en el formato que Select2 espera (id y text)
-//             const listaDinamica = selectedRows.map((nombre, index) => ({
-//                 id: nombre,
-//                 text: nombre
-//             }));
-
-//             console.log('Lista Dinámica:', listaDinamica);
-
-//             // Cargar la lista dinámica en el dropdown
-//             $('#pasDropdown').select2({
-//                 data: listaDinamica
-//             });
-//         })
-//         .catch(error => console.error('Error al cargar datos', error));
-        
-   
-
-// });
-// document.getElementById('authorize_button').style.visibility = 'hidden';
-// document.getElementById('signout_button').style.visibility = 'hidden';
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
 }
@@ -435,13 +377,14 @@ function gisLoaded() {
                 const token = gapi.client.getToken();
                 console.log('Token recibido:', token);
                 storeToken(token);
+                
             }
         },
     });
     gisInited = true;
 }
 
-function attemptSilentAuth() {
+async function attemptSilentAuth() {
     const token = retrieveToken();
     if (token && token.access_token) {
         console.log('Token válido encontrado:', token.access_token);
@@ -460,6 +403,7 @@ function handleAuthClick() {
             const token = gapi.client.getToken();
             console.log('Token recibido tras autenticación manual:', token);
             storeToken(token);
+           
         }
     };
 
@@ -499,6 +443,8 @@ function retrieveToken() {
 function clearStoredToken() {
     localStorage.removeItem('google_access_token');
 }
+
+
         </script>
     <!-- ============ Search UI End ============= -->
     <script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
@@ -509,8 +455,6 @@ function clearStoredToken() {
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
     <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
-    <script src="/dist-assets/js/plugins/sweetalert2.min.js"></script>
-    <script src="/dist-assets/js/scripts/sweetalert.script.min.js"></script>
     <script src="/dist-assets/js/scripts/sidebar.script.min.js"></script>
     <script src="/dist-assets/js/edicionFacturacion.js"></script>
 
