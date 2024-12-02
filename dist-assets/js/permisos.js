@@ -70,8 +70,8 @@ const pass = $('#pass').val(); // CUIT del formulario
                     if(userData.permission === 'mesa de entrada'){
                     
                     window.location.href = '/html/casosPendientes.html';
-                    }else{
-                     window.location.href = '/html/casosEnGestion.html';
+                    }else if(userData.permission === 'FACTURACION'){
+                     window.location.href = '/html/facturacion.html';
                     }
 
                 }else{
