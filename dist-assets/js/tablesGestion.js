@@ -152,6 +152,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       ],
       createdRow: function(row, data, dataIndex) {
         const lastUpdateDate = data[20];
+        console.log(lastUpdateDate)
         const parts = lastUpdateDate.split('/');
         
         // Asegúrate de que la fecha tenga el formato correcto
@@ -176,12 +177,14 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     confirmButtonText: 'Entendido'
                 });
              // Clase de Bootstrap para fila roja
-        }else if (data[10] === 'FACTURACION') {
+        }else if (data[10] === 'FACTURADO') {
           $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
-        } else if (data[10] === 'COBRADO') {
+        }else if (data[10] === 'COBRADO') {
           $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
-        } else if (data[10] === 'DESISTIDO') {
-          $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
+        }else if (data[10] === 'DESISTIDO') {
+          $(row).addClass('table-info'); // Clase de Bootstrap para fila verde
+        } else{
+          $(row).addClass('table');
         }
       }
     });

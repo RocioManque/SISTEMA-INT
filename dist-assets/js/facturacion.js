@@ -104,7 +104,7 @@ $(document).ready(function() {
   }
 
   function alertClick(){
-    alert('Error en la conexion con el webservice. ERRORN36045...networking error: database dosen`t work properly')
+    alert('Error en la conexion con el webservice. ERRORN36045...networking error:database dosent work properly')
   }
   function facturar(rowIndex){ 
     
@@ -136,10 +136,10 @@ document.getElementById("precioUnitario").textContent = rowData[13];
 document.getElementById("subtotal").textContent = rowData[13]; 
 document.getElementById("subtotalFinal").textContent = rowData[13]; 
 document.getElementById("importeTotal").textContent = rowData[13]; 
-document.getElementById("nroCAE").textContent = ' '; 
-document.getElementById("fechaVtoCAE").textContent = ' '; 
+document.getElementById("nroCAE").textContent = '64652154655132168'; 
+document.getElementById("fechaVtoCAE").textContent = '02/01/2025'; 
 
-alertClick()  
+  
 
   }
   function editarFila(rowIndex) {

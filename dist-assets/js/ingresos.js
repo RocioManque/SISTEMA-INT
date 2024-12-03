@@ -3,7 +3,7 @@ const urls = [];
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
 
-const rowIndex = parseInt(params.get('row'), 10);
+const rowIndex = parseInt(params.get('row')) + 1;
 const fechaIngreso = params.get('fechaIngreso');
 const pas = params.get('pas');
 const cliente = params.get('cliente');
@@ -27,19 +27,175 @@ const tipoReclamo= params.get('tipoReclamo');
 const historial= params.get('historial');
 const estado= params.get('estado');
 const carpetaUrl= params.get('carpetaUrl');
+//TODO: los dropdown deberian estar seleccionados correctamente
+const spreadsheetId0 = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
+const spreadsheetId2 = '1FdJtx_Dr8dgvC-9HWfckT8qzHm8BikoSbV9EORXSEb8';
+const apiKey2 = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
+const range0 = 'sheet1'; // 
+const range2 = 'Hoja 1'; // 
+const range3 = 'Hoja 2'; // 
+const range4 = 'Hoja 3'; // 
 
+// URL de la API de Google Sheets
+const url0 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId0}/values/${range0}?key=${apiKey2}`;
+const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range2}?key=${apiKey2}`;
+const url3 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range3}?key=${apiKey2}`;
+const url4 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range4}?key=${apiKey2}`;
+$(document).ready(function() {
+ 
+    // Inicializa Select2 en el elemento select
+    $('#pasDropdown').select2({
+        placeholder: 'Seleccione un nombre',
+        allowClear: true,
+        width: '100%'
+    });
+
+    $('#ciaReclamar').select2({
+        placeholder: 'Seleccione un nombre',
+        allowClear: true,
+        width: '100%'
+    });
+    $('#tipoReclamo').select2({
+        placeholder: 'Seleccione un nombre',
+        allowClear: true,
+        width: '90%'
+    });
+    $('#estado').select2({
+        placeholder: 'Seleccione un nombre',
+        
+        width: '100%'
+    });
+
+    // Realiza la solicitud fetch para obtener datos dinámicos
+    fetch(url0)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[2]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#pasDropdown').select2({
+                data: listaDinamica
+            });
+            $('#pasDropdown').val(pas).trigger('change');
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        
+       fetch(url2)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica2 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica2);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#ciaReclamar').select2({
+                data: listaDinamica2
+            });
+            $('#ciaReclamar').val(companiaReclamar).trigger('change');
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        fetch(url3)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica3 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica3);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#estado').select2({
+                data: listaDinamica3
+            });
+            $('#estado').val(estado).trigger('change');
+
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+        fetch(url4)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const rows = data.values;
+            console.log(rows);
+
+            // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+            const selectedRows = rows.slice(1).map(row => row[0]);
+            
+            // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+            const listaDinamica3 = selectedRows.map((nombre, index) => ({
+                id: nombre,
+                text: nombre
+            }));
+
+            console.log('Lista Dinámica:', listaDinamica3);
+
+            // Cargar la lista dinámica en el dropdown
+            $('#tipoReclamo').select2({
+                data: listaDinamica3
+            });
+            $('#tipoReclamo').val(tipoReclamo).trigger('change');
+
+        })
+        .catch(error => console.error('Error al cargar datos', error));
+
+});
 // Luego muestra o manipula estos datos en la página según lo necesites
 document.getElementById('ingreso').value = fechaIngreso;
-document.getElementById('pasDropdown').value = pas;
 document.getElementById('cliente').value = cliente;
 document.getElementById('dominio').value = dominio;
-document.getElementById('ciaReclamar').value = companiaReclamar;
 document.getElementById('telefono').value = telefonoCliente;
 document.getElementById('email').value = mailCliente;
 document.getElementById('obs').value = observacion;
-document.getElementById('tipoReclamo').value = tipoReclamo;
 document.getElementById('historial').value = historial;
-document.getElementById('estado').value = estado;
 
 if (adjDniFrente === null || adjDniFrente === '') { // Si está vacío o no existe
     document.getElementById('1').style.visibility = 'visible'; // Mostrar input
@@ -167,7 +323,9 @@ async function uploadFile(file) {
 
 
 async function updateDataInSheetWithFiles(urls, targetRow) {
-
+    const newText = document.getElementById('actualizacion').value;
+    const oldText = document.getElementById('historial').value;
+const historial = `${oldText} \n ${newText}` 
     // Datos para las columnas de A a H
     const valuesAtoH = [
         document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
@@ -189,7 +347,7 @@ async function updateDataInSheetWithFiles(urls, targetRow) {
     // Datos para las columnas de T a V
     const valuesTtoV = [
         document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
-        document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "",
+        document.getElementById('actualizacion') ? historial : document.getElementById('historial').value,
         document.getElementById('estado') ? document.getElementById('estado').value : ""
     ];
 
@@ -215,11 +373,33 @@ async function updateDataInSheetWithFiles(urls, targetRow) {
 console.log(response)
         if (response.ok) {
             const result = await response.json();
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se actualizó correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosPendientes.html';
+                }
+              });
             console.log('Fila actualizada con éxito:', result);
         } else {
+            Swal.fire({
+                title: '¡ERROR!',
+                text: 'El caso no pudo Actualizarse correctamente.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
             console.error('Error al actualizar la fila:', response.statusText);
         }
     } catch (error) {
+        Swal.fire({
+            title: '¡ERROR!',
+            text: 'El caso no pudo Actualizarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
         console.error('Error al actualizar la fila:', error);
     }
 }
@@ -446,11 +626,14 @@ function incrementarNumeroCaso(ultimoNumero) {
     return `INT${nuevoNumeroFormateado}`;
 }
  async function derivarAEjecutivo(e){
+    const newText = document.getElementById('actualizacion').value;
+    const oldText = document.getElementById('historial').value;
+const historialConcat = `${oldText} \n ${newText}`;
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     const nroInterno = await obtenerNuevoNumeroCaso()
     const ejecutivoEncontrado = await encontrarEjecutivo()
-    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    const IndexNuevaFila = ultimaFilaDeTabla + 2
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const pas = document.getElementById('pasDropdown').value;
@@ -460,7 +643,7 @@ function incrementarNumeroCaso(ultimoNumero) {
     const telefonoCliente = document.getElementById('telefono').value;
     const emailCliente = document.getElementById('email').value;
     const observaciones = document.getElementById('obs').value;
-    const historial = document.getElementById('historial').value;
+    const historial = document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value; //TODO: actualizacion + historial
     const estado = document.getElementById('estado').value;
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
@@ -680,12 +863,17 @@ async function encontrarEjecutivo() {
     }
 }
 async function legales(e){
-    
+    const newText = document.getElementById('actualizacion').value;
+    const oldText = document.getElementById('historial').value;
+const historialConcat = `${oldText} \n ${newText}`;
+//document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value,
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
+    console.log(ultimaFilaDeTabla)
     const nroInterno = await obtenerNuevoNumeroCaso()
-    const ejecutivoEncontrado = await encontrarEjecutivo()
-    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    const ejecutivoEncontrado = 'Abogado'
+    const IndexNuevaFila = ultimaFilaDeTabla + 2
+    console.log(IndexNuevaFila)
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const pas = document.getElementById('pasDropdown').value;
@@ -695,7 +883,7 @@ async function legales(e){
     const telefonoCliente = document.getElementById('telefono').value;
     const emailCliente = document.getElementById('email').value;
     const observaciones = document.getElementById('obs').value;
-    const historial = document.getElementById('historial').value;
+    const historial = document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value;
     const estado = document.getElementById('estado').value;
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
@@ -869,12 +1057,15 @@ async function legales(e){
     }
 }
 async function desistido(e){
-    
+    const newText = document.getElementById('actualizacion').value;
+    const oldText = document.getElementById('historial').value;
+const historialConcat = `${oldText} \n ${newText}`;
+//document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value,
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     const nroInterno = await obtenerNuevoNumeroCaso()
     const ejecutivoEncontrado = await encontrarEjecutivo()
-    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    const IndexNuevaFila = ultimaFilaDeTabla + 2
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const pas = document.getElementById('pasDropdown').value;
@@ -884,7 +1075,7 @@ async function desistido(e){
     const telefonoCliente = document.getElementById('telefono').value;
     const emailCliente = document.getElementById('email').value;
     const observaciones = document.getElementById('obs').value;
-    const historial = document.getElementById('historial').value;
+    const historial = document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value; //TODO: actualizacion + historial
     const estado = 'DESISTIDO';
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
@@ -1057,12 +1248,15 @@ async function desistido(e){
     }
 }
 async function mediacion(e){
-    
+    const newText = document.getElementById('actualizacion').value;
+    const oldText = document.getElementById('historial').value;
+const historialConcat = `${oldText} \n ${newText}`;
+//document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value,
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     const nroInterno = await obtenerNuevoNumeroCaso()
     const ejecutivoEncontrado = 'MARIANELA'
-    const IndexNuevaFila = ultimaFilaDeTabla + 1
+    const IndexNuevaFila = ultimaFilaDeTabla + 2
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const pas = document.getElementById('pasDropdown').value;
@@ -1072,7 +1266,7 @@ async function mediacion(e){
     const telefonoCliente = document.getElementById('telefono').value;
     const emailCliente = document.getElementById('email').value;
     const observaciones = document.getElementById('obs').value;
-    const historial = document.getElementById('historial').value;
+    const historial = document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value; //TODO: actualizacion + historial
     const estado = document.getElementById('estado').value;
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
