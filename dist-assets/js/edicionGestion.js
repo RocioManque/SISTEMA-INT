@@ -493,7 +493,7 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
     const phoneForm = document.getElementById('telefono').value
     const mensaje = document.getElementById('actualizacion').value;
     const cliente = document.getElementById('cliente').value;
-    const pas = document.getElementById('pas').value;
+    const pas = document.getElementById('pasDropdown').value;
     console.log(mensaje)
     const phoneNumber = phoneForm; // Reemplaza con el número de teléfono completo
     const message = `Estimado/a ${cliente} nos comunicamos de IN ITINERE, servicio de gestión de siniestros del productor de seguros ${pas} para mantenerlo informado: ${mensaje}`;
