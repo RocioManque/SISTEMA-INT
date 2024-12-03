@@ -204,7 +204,7 @@ document.getElementById('reclamo').value = numeroInterno;
 document.getElementById('reclamoCia').value = numeroReclamoCia;
 document.getElementById('planInt').value = planInt;
 document.getElementById('montoReclamado').value = montoReclamar;
-document.getElementById('montoCerrado').value = montoCerrado;;
+document.getElementById('montoCerrado').value = montoCerrado;
 document.getElementById('gestionado').value = gestionadoCon;
 document.getElementById('obs').value = observacion;
 document.getElementById('email').value = mailCliente;
@@ -269,6 +269,10 @@ async function updateRowInSheet(updatedValues, ranges) {
     }
 }
 async function actualizar(e){
+    const newText = document.getElementById('actualizacion').value;
+    const oldText = document.getElementById('historial').value;
+const historialConcat = `${oldText} \n ${newText}`;
+//document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value,
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; 
     const today = new Date();
   const day = String(today.getDate()).padStart(2, '0'); // Asegura dos dígitos para el día
@@ -284,7 +288,7 @@ const fechaHoy = `${day}/${month}/${year}`;
     const telefonoCliente = document.getElementById('telefono').value;
     const emailCliente = document.getElementById('email').value;
     const observaciones = document.getElementById('obs').value;
-    const historial = document.getElementById('historial').value;//TODO: actualizacion + historial
+    const historial = document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value;//TODO: actualizacion + historial
     const fechaInicio = document.getElementById('inicio').value;
     const planInt = document.getElementById('planInt').value;
     const nroReclamoCia = document.getElementById('reclamoCia').value;

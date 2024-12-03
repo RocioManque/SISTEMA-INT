@@ -542,7 +542,6 @@ async function updateEjecutivo() {
     }
 }
 
-
 async function obtenerUltimaFila(spreadsheetId) {
     
     const range = 'Sheet1!A:A'; // Lee toda la columna A para determinar cuántas filas tienen datos
@@ -862,16 +861,53 @@ async function encontrarEjecutivo() {
         return null; // Retorna null en caso de error
     }
 }
+// Mueve esta función hacia arriba para que esté disponible antes de usarla
+
 async function legales(e){
     const newText = document.getElementById('actualizacion').value;
     const oldText = document.getElementById('historial').value;
 const historialConcat = `${oldText} \n ${newText}`;
+//Legales
+try {
+    const response = await gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI',
+        range: 'sheet2',
+    });
+
+    const rows = response.result.values;
+
+    if (!rows || rows.length === 0) {
+        console.warn("No se encontraron datos en la hoja.");
+    }
+
+    // Obtener índice de columnas basado en la primera fila (encabezados)
+    const headers = rows[0];
+    const nameIndex = headers.indexOf("Nombre y Apellido");
+    const permissionIndex = headers.indexOf("permisos");
+
+    if (nameIndex === -1 || permissionIndex === -1) {
+        console.error("No se encontraron las columnas 'nombre' o 'permiso' en la hoja.");
+    }
+
+    // Filtrar y obtener nombres con el permiso indicado
+    const resultado = rows
+        .slice(1) // Omitir encabezados
+        .filter(row => row[permissionIndex] === 'LEGALES') // Filtrar por permiso
+        .map(row => row[nameIndex]); // Obtener solo los nombres
+
+    console.log('Resultado: ', resultado[0]); // Mostrar el primer abogado encontrado
+
+    // Aquí puedes hacer lo que necesites con el resultado, por ejemplo:
+    // - Agregarlo al historial
+    // - Enviar un correo, etc.
+
+
 //document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value,
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     console.log(ultimaFilaDeTabla)
     const nroInterno = await obtenerNuevoNumeroCaso()
-    const ejecutivoEncontrado = 'Abogado'
+    const ejecutivoEncontrado = resultado[0]
     const IndexNuevaFila = ultimaFilaDeTabla + 2
     console.log(IndexNuevaFila)
     // Supongamos que tienes valores para las columnas a actualizar
@@ -1055,7 +1091,12 @@ const historialConcat = `${oldText} \n ${newText}`;
           })
         console.error('Error en la actualización múltiple:', error);
     }
+} catch (error) {
+    console.error("Error al leer datos de Google Sheets:", error);
 }
+}
+
+
 async function desistido(e){
     const newText = document.getElementById('actualizacion').value;
     const oldText = document.getElementById('historial').value;
