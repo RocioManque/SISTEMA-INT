@@ -293,6 +293,8 @@ const fechaHoy = `${day}/${month}/${year}`;
     const planInt = document.getElementById('planInt').value;
     const nroReclamoCia = document.getElementById('reclamoCia').value;
     const estado = document.getElementById('estado').value;
+    const gestionado = document.getElementById('gestionado').value;
+    console.log(gestionado)
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const montoReclamado = document.getElementById('montoReclamado').value;
     const montoCerrado = document.getElementById('montoCerrado').value;
@@ -388,6 +390,27 @@ const fechaHoy = `${day}/${month}/${year}`;
                                 { userEnteredValue: { stringValue: String(tipoReclamo) } },          
                                 { userEnteredValue: { stringValue: String(montoReclamado) } },          
                                 { userEnteredValue: { stringValue: String(montoCerrado) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: rowIndex - 1,
+                        endRowIndex: rowIndex,
+                        startColumnIndex: 48, // Es el indice primero
+                        endColumnIndex: 49 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(gestionado) } },        
                             ]
                         }
                     ],
