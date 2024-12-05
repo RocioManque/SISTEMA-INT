@@ -11,11 +11,7 @@ $(document).ready(function() {
       .then(data => {
         const rows = data.values//.slice(1); // Remueve encabezados
       console.log(rows)
-     
-
         // Separa el nombre y apellido (asumiendo que están separados por un espacio)
-      
-
         // Filtra las filas antes de construir selectedRows
         const selectedRows = rows
         .map((row, index) => {

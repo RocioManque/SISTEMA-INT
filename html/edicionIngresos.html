@@ -13,7 +13,25 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+<style>
+    .disabled {
+    pointer-events: none; /* Deshabilita la interacción */
+    opacity: 0.6; /* Visualmente se ve deshabilitado */
+    cursor: not-allowed; /* Cambia el cursor al pasar por encima */
+}
+.loader {
+    border: 8px solid #f3f3f3; /* Gris claro */
+    border-top: 8px solid #3498db; /* Azul */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
 </head>
 
 <body class="text-left">
@@ -134,7 +152,7 @@
                                         <a class="link-icon d-md-none" data-sidebar-toggle="main"><i class="icon-regular i-Arrow-Turn-Left"></i></a><a class="link-icon mr-3 d-md-none" data-sidebar-toggle="secondary"><i class="icon-regular mr-1 i-Left-3"></i> Inbox</a>
                                         <div class="d-flex">
                                            
-                                            <a class="link-icon mr-3" id="desistido" onclick="desistido(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Remove-x"></i> Desistido</a><a class="link-icon mr-3" id="mediacion" onclick="mediacion(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Mediación</a><a class="link-icon mr-3" id="legales" onclick="legales(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Legales</a><a class="link-icon mr-3" id="saveChanges" onclick="uploadFiles(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Actualizar</a><a class="link-icon mr-3" id="derivado" onclick="derivarAEjecutivo(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Derivar a ejecutivo</a><a class="link-icon mr-3" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a> </div>
+                                            <a class="link-icon mr-3 disabled" id="desistido" onclick="desistido(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Remove-x"></i> Desistido</a><a class="link-icon mr-3 disabled" id="mediacion" onclick="mediacion(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Mediación</a><a class="link-icon mr-3 disabled" id="legales" onclick="legales(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Legales</a><a class="link-icon mr-3" id="saveChanges" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Guardar Cambios</a><a class="link-icon mr-3 disabled" id="derivado" onclick="derivarAEjecutivo(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Derivar a ejecutivo</a><a class="link-icon mr-3 disabled" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a> </div>
 
                                     </div>
                                     <div class="row">
@@ -194,6 +212,10 @@
                                   <div class="input-group mb-3" id="11" style="visibility:hidden;">
                                     <label class="input-group-text" for="inputGroupFile01">Contrato Social</label>
                                     <input type="file" class="form-control" id="adjContratoSoc">
+                                  </div>
+                                  <div class="input-group mb-3" id="12" style="visibility:hidden;">
+                                    <label class="input-group-text" for="inputGroupFile01">Nota Representación</label>
+                                    <input type="file" class="form-control" id="adjNotaRepresentacion">
                                   </div>
 
                             </div>

@@ -192,6 +192,10 @@
                                     <label class="input-group-text" for="inputGroupFile01">Contrato Social</label>
                                     <input type="file" class="form-control" id="adjContratoSoc">
                                   </div>
+                                  <div class="input-group mb-3" id="12" >
+                                    <label class="input-group-text" for="inputGroupFile01">Nota Representación</label>
+                                    <input type="file" class="form-control" id="adjNotaRepresentacion">
+                                  </div>
 
                             </div>
                             <div class="col-md-6">
@@ -405,7 +409,7 @@ function handleAuthClick() {
         const accessToken = gapi.client.getToken().access_token;
         localStorage.setItem('google_access_token', accessToken);
 
-        console.log('Token guardado en localStorage.');
+        
 
     };
 
@@ -458,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const rows = data.values;
-            console.log(rows);
+
 
             // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
             const selectedRows = rows.slice(1).map(row => row[2]);
@@ -469,7 +473,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: nombre
             }));
 
-            console.log('Lista Dinámica:', listaDinamica);
 
             // Cargar la lista dinámica en el dropdown
             $('#pasDropdown').select2({
@@ -487,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const rows = data.values;
-            console.log(rows);
+     
 
             // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
             const selectedRows = rows.slice(1).map(row => row[0]);
@@ -497,8 +500,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: nombre,
                 text: nombre
             }));
-
-            console.log('Lista Dinámica:', listaDinamica2);
 
             // Cargar la lista dinámica en el dropdown
             $('#ciaReclamar').select2({
@@ -515,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const rows = data.values;
-            console.log(rows);
+
 
             // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
             const selectedRows = rows.slice(1).map(row => row[0]);
@@ -526,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: nombre
             }));
 
-            console.log('Lista Dinámica:', listaDinamica3);
+
 
             // Cargar la lista dinámica en el dropdown
             $('#estado').select2({
@@ -543,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const rows = data.values;
-            console.log(rows);
+
 
             // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
             const selectedRows = rows.slice(1).map(row => row[0]);
@@ -553,8 +554,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: nombre,
                 text: nombre
             }));
-
-            console.log('Lista Dinámica:', listaDinamica3);
 
             // Cargar la lista dinámica en el dropdown
             $('#tipoReclamo').select2({
@@ -567,7 +566,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function uploadFiles(e) {
     e.preventDefault();
-    
+    Swal.fire({
+        title: 'Cargando...',
+        text: 'Por favor espera mientras se procesan los archivos.',
+        allowOutsideClick: false, // Evita que el usuario cierre la alerta
+        didOpen: () => {
+            Swal.showLoading(); // Muestra un spinner integrado
+        },
+    });
     const fileIds = [
         'adjDniFrente',
         'adjDniDorso',
@@ -580,12 +586,14 @@ async function uploadFiles(e) {
         'adjFotoSiniestro',
         'adjPresupuesto',
         'adjContratoSoc',
+        'adjNotaRepresentacion',
     ];
-    console.log(fileIds);
+
     const urls = [];
 
     // Aquí debes definir el ID de la carpeta donde se guardarán los archivos
     const parentFolderId = await createFolderInDynamicParent(); 
+
 
     for (const fileId of fileIds) {
         const fileInput = document.getElementById(fileId);
@@ -602,7 +610,7 @@ async function uploadFiles(e) {
             urls.push(''); // Si no hay archivo, guarda null
         }
     }
-    console.log(urls);
+    Swal.close();
     await saveDataToSheetWithFiles(urls,parentFolderId.folderUrl);
 }
 
@@ -627,7 +635,6 @@ async function uploadFile(file, parentFolderId) {
         if (response.ok) {
             const result = await response.json();
             const fileURL = `https://drive.google.com/file/d/${result.id}/view?usp=sharing`;
-            alert(`Archivo ${file.name} subido con éxito. ID: ${result.id}`);
             return fileURL;
         } else {
             console.error('Error al subir archivo:', response.statusText);
@@ -640,8 +647,6 @@ async function uploadFile(file, parentFolderId) {
 async function createFolderInDynamicParent() {
     const parentFolderName = document.getElementById('pasDropdown').value;
     const newFolderName = document.getElementById('cliente').value;
-    console.log(parentFolderName);
-    console.log(newFolderName);
 
     try {
         // 1. Buscar la carpeta padre en Drive por nombre
@@ -650,8 +655,6 @@ async function createFolderInDynamicParent() {
             fields: 'files(id, name, webViewLink)'
         });
 
-        console.log('parentResponse', parentResponse);
-
         if (parentResponse.result.files.length === 0) {
             console.error("No se encontró la carpeta padre especificada.");
             return null;
@@ -659,7 +662,7 @@ async function createFolderInDynamicParent() {
 
         // Selecciona el primer resultado de búsqueda como la carpeta padre
         const parentFolder = parentResponse.result.files[0];
-        console.log("Carpeta padre encontrada:", parentFolder);
+
 
         // 2. Crear la nueva carpeta dentro de la carpeta padre
         const newFolderBody = {
@@ -675,9 +678,6 @@ async function createFolderInDynamicParent() {
 
         if (createResponse.status === 200) {
             const newFolder = createResponse.result;
-            console.log("Carpeta creada exitosamente:", newFolder);
-            console.log("ID de la nueva carpeta:", newFolder.id);
-            console.log("Enlace a la carpeta:", newFolder.webViewLink);
             const folderUrl =  newFolder.webViewLink;
             const folderId = newFolder.id;
           
@@ -709,11 +709,10 @@ async function saveDataToSheetWithFiles(urls,folderUrl) {
         document.getElementById('email') ? document.getElementById('email').value : "",
         document.getElementById('obs') ? document.getElementById('obs').value : "",
     ];
-    console.log(valuesAtoH)
     // URLs de archivos adjuntos para llenar de I a S
     const filledUrls = urls.map(url => url || ''); // Reemplaza los valores vacíos con ''
-    while (filledUrls.length < 11) {
-        filledUrls.push(''); // Asegura que haya exactamente 11 columnas en I:S
+    while (filledUrls.length < 12) {
+        filledUrls.push(''); // Asegura que haya exactamente 12 columnas en I:T
     }
 
     // Datos para las columnas de T a V
@@ -757,22 +756,21 @@ async function saveDataToSheetWithFiles(urls,folderUrl) {
     window.location.href = '/html/casosPendientes.html';
   }
 });
-            console.log('Fila guardada con éxito:', result);
         } else {
             Swal.fire({
-  title: '¡ERROR!',
+  title: '¡UPS!',
   text: 'El caso no pudo guardarse.',
   icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-  confirmButtonText: 'Aceptar'
+  confirmButtonText: 'Aceptar',
 })
             console.error('Error al guardar la fila:', response.statusText);
         }
     } catch (error) {
         Swal.fire({
-  title: '¡ERROR!',
+  title: '¡UPS!',
   text: 'El caso no pudo guardarse.',
   icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-  confirmButtonText: 'Aceptar'
+  confirmButtonText: 'Aceptar',
 });
         console.error('Error al guardar la fila:', error);
     }
@@ -783,8 +781,6 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
     const mensaje = document.getElementById('actualizacion').value;
     const cliente = document.getElementById('cliente').value;
     const pas = document.getElementById('pasDropdown').value;
-
-    console.log(mensaje)
     const phoneNumber = phoneForm; // Reemplaza con el número de teléfono completo
     const message = `Estimado/a ${cliente} nos comunicamos de IN ITINERE, servicio de gestión de siniestros del productor de seguros ${pas} para mantenerlo informado: ${mensaje}`;
     

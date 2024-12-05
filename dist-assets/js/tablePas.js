@@ -57,7 +57,7 @@ $(document).ready(function() {
                 $(row).addClass('table-warning'); 
             } else if (data[5] === 'INGRESADO') {
                 $(row).addClass('table-success'); 
-            } else if (data[5] === 'DESISTIMIENTO') {
+            } else if (data[5] === 'DESISTIDO') {
                 $(row).addClass('table-danger'); 
             }
         }
@@ -65,18 +65,6 @@ $(document).ready(function() {
         $('#zero_configuration_table').on('click', '.btn-primary', function() {
             const rowIndex = $(this).data('row');
             const rowData = selectedRows[rowIndex];
-    
-            // Llenar el modal con los datos específicos de la fila
-            $('#modalPas').text(rowData[0]);
-            $('#modalCliente').text(rowData[1]);
-            $('#modalFechaIngreso').text(rowData[2]);
-            $('#modalFechaInicio').text(rowData[3]);
-            $('#modalReclamo').text(rowData[4]);
-            $('#modalEstado').text(rowData[5]);
-            $('#modalUltimaActualizacion').text(rowData[6]);
-            $('#modalTipoReclamo').text(rowData[7]);
-            $('#modalMonto').text(rowData[8]);
-            $('#modalCompania').text(rowData[9]);
           });
       })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));

@@ -44,7 +44,8 @@ $(document).ready(function() {
           row[19] || "",   
           row[20] || "",   
           row[21] || "",   
-          row[22] || ""   
+          row[22] || "",   
+          row[23] || "",   
         ];
       
    // Excluye filas que no coincidan
@@ -130,6 +131,12 @@ $(document).ready(function() {
             return data ? `<a href="${data}" target="_blank">Ver Documento</a>` : '';
           }
          },//44
+         { title: "Nota Representación",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<a href="${data}" target="_blank">Ver Documento</a>` : '';
+          }
+         },//44
         { title: "Tipo Reclamo" },//45
         { title: "Informe/Historial",
           render: function(data, type, row, meta) {
@@ -182,10 +189,11 @@ $(document).ready(function() {
     adjFotoSiniestro: rowData[17] || "",
     adjPresupuesto: rowData[18] || "",
     adjContratoSoc: rowData[19] || "",
-    tipoReclamo: rowData[20] || "",
-    historial: rowData[21] || "",
-    estado: rowData[22] || "",
-    carpetaUrl: rowData[23] || "",
+    adjNotaRepresentacion:rowData[20] || "",
+    tipoReclamo: rowData[21] || "",
+    historial: rowData[22] || "",
+    estado: rowData[23] || "",
+    carpetaUrl: rowData[24] || "",
 
     });
     

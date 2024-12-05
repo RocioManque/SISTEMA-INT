@@ -240,8 +240,8 @@ const caso = document.getElementById('caso').value;
            console.log('Actualización múltiple realizada con éxito:', result);
        } else {
         Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
+            title: '¡UPS!',
+            text: 'El caso no pudo Guardarse correctamente.',
             icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
             confirmButtonText: 'Aceptar'
           })
@@ -249,8 +249,8 @@ const caso = document.getElementById('caso').value;
        }
    } catch (error) {
     Swal.fire({
-        title: '¡ERROR!',
-        text: 'El caso no pudo Actualizarse correctamente.',
+        title: '¡UPS!',
+        text: 'El caso no pudo Guardarse correctamente.',
         icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
         confirmButtonText: 'Aceptar'
       })

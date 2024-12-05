@@ -265,8 +265,8 @@
     $btnExportar.addEventListener("click", function() {
         let tableExport = new TableExport($tabla, {
             exportButtons: false, // No queremos botones
-            filename: "Reporte de prueba", //Nombre del archivo de Excel
-            sheetname: "Reporte de prueba", //Título de la hoja
+            filename: "Reporte_casos_initinere", //Nombre del archivo de Excel
+            sheetname: "Reporte de casos", //Título de la hoja
         });
         let datos = tableExport.getExportData();
         let preferenciasDocumento = datos.zero_configuration_table.xlsx;

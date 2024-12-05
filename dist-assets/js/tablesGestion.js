@@ -7,8 +7,6 @@ const range = 'sheet1'; //
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
 $(document).ready(function() {
- // Asegúrate de que Swal esté definido
- 
 
 
 // Función para calcular la diferencia de días
@@ -21,17 +19,16 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   .then(response => response.json())
   .then(data => {
     const rows = data.values; // Aquí obtienes todas las filas
-    console.log(rows);
+  
     
     const userData = JSON.parse(localStorage.getItem('userData'));
     const nombreEjecutivo = userData.name.toUpperCase();
     const permiso = userData.permission;  // Asumiendo que tienes un campo 'permission' en userData
-    console.log('ejecutivo', nombreEjecutivo);
-    console.log('permiso', permiso);
+   
 
     // Separa el nombre y apellido (asumiendo que están separados por un espacio)
     const [nombre, apellido] = nombreEjecutivo.split(" ");
-    console.log(nombre);
+
 
     // Si el usuario es un superusuario, mostrar todos los casos
     let selectedRows = [];
@@ -104,7 +101,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         .filter(row => row !== undefined); // Filtra filas vacías resultantes
     }
 
-    console.log(selectedRows);
+
 
     // Inicializa la DataTable con las filas seleccionadas
     $('#zero_configuration_table').DataTable({
@@ -152,7 +149,6 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       ],
       createdRow: function(row, data, dataIndex) {
         const lastUpdateDate = data[20];
-        console.log(lastUpdateDate)
         const parts = lastUpdateDate.split('/');
         
         // Asegúrate de que la fecha tenga el formato correcto
@@ -164,7 +160,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         // Calculamos la diferencia en días
         const daysDifference = getDaysDifference(newDate, currentDate);
         
-        console.log('daysDifference', daysDifference);  // Verifica que la diferencia de días sea correcta
+       
         
         // Si la diferencia es mayor a 7 días, asignamos la clase 'table-danger'
         if (daysDifference > 7) {
@@ -186,7 +182,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         } else{
           $(row).addClass('table');
         }
-      }
+      },
+      fixedHeader: true  // Activar el encabezado fijo
     });
   })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));

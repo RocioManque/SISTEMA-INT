@@ -7,12 +7,13 @@ const rowIndex = parseInt(params.get('row')) + 1;
 const fechaIngreso = params.get('fechaIngreso');
 const pas = params.get('pas');
 const cliente = params.get('cliente');
-const dominio = params.get('Dominio');
+const dominio = params.get('dominio');
 const companiaReclamar = params.get('companiaReclamar');
 const telefonoCliente = params.get('telefonoCliente');
 const mailCliente = params.get('mailCliente');
 const observacion = params.get('observacion');
 const adjDniFrente = params.get('adjDniFrente');
+console.log(adjDniFrente);
 const adjDniDorso = params.get('adjDniDorso');
 const adjRegistroFrente = params.get('adjRegistroFrente');
 const adjRegistroDorso = params.get('adjRegistroDorso');
@@ -23,6 +24,7 @@ const adjCertCobertura = params.get('adjCertCobertura');
 const adjFotoSiniestro = params.get('adjFotoSiniestro');
 const adjPresupuesto = params.get('adjPresupuesto');
 const adjContratoSoc = params.get('adjContratoSoc');
+const adjNotaRepresentacion = params.get('adjNotaRepresentacion');
 const tipoReclamo= params.get('tipoReclamo');
 const historial= params.get('historial');
 const estado= params.get('estado');
@@ -230,7 +232,10 @@ if (adjPresupuesto === null || adjPresupuesto === '') { // Si está vacío o no 
 if (adjContratoSoc === null || adjContratoSoc === '') { // Si está vacío o no existe
     document.getElementById('11').style.visibility = 'visible'; // Mostrar input
 }
-//document.getElementById('adjDniFrente').value = adjDniFrente;
+if (adjNotaRepresentacion === null || adjNotaRepresentacion === '') { // Si está vacío o no existe
+    document.getElementById('12').style.visibility = 'visible'; // Mostrar input
+}
+// document.getElementById('adjDniFrente').value = adjDniFrente;
 // document.getElementById('adjDniDorso').value = adjDniDorso;
 // document.getElementById('adjRegistroFrente').value = adjRegistroFrente;
 // document.getElementById('adjRegistroDorso').value = adjRegistroDorso;
@@ -250,50 +255,162 @@ const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/valu
 // URL de la API de Google Sheets
 const SPREADSHEET_ID = '1vnJXUhAGGcI8xt-83_T2K_TzJNqhz2nYdcMhilSqkWY';  // Reemplaza con tu ID de hoja de cálculo
 
-async function uploadFiles(e) {
-    e.preventDefault();
-    
-    const fileIds = [
-        'adjDniFrente',
-        'adjDniDorso',
-        'adjRegistroFrente',
-        'adjRegistroDorso',
-        'adjCedulaVerdeFrente',
-        'adjCedulaVerdeDorso',
-        'adjDenunciaAdm',
-        'adjCertCobertura',
-        'adjFotoSiniestro',
-        'adjPresupuesto',
-        'adjContratoSoc',
-    ];
-    console.log(fileIds)
-    
+document.getElementById('saveChanges').addEventListener('click', () => {
+    handleFileUploadsAndSheetUpdate(rowIndex);
 
-    for (const fileId of fileIds) {
-        const fileInput = document.getElementById(fileId);
-        const file = fileInput.files[0];
+});
+
+async function handleFileUploadsAndSheetUpdate(rowIndex) {
+    // IDs de los inputs de archivo
+    Swal.fire({
+        title: 'Cargando...',
+        text: 'Por favor espera mientras se procesan los archivos.',
+        allowOutsideClick: false, // Evita que el usuario cierre la alerta
+        didOpen: () => {
+            Swal.showLoading(); // Muestra un spinner integrado
+        },
+    });
+    const fileIds = [
+        'adjDniFrente', 'adjDniDorso', 'adjRegistroFrente',
+        'adjRegistroDorso', 'adjCedulaVerdeFrente', 'adjCedulaVerdeDorso',
+        'adjDenunciaAdm', 'adjCertCobertura', 'adjFotoSiniestro',
+        'adjPresupuesto', 'adjContratoSoc','adjNotaRepresentacion'
+    ];
+
+    // Rango de columnas de URLs en Google Sheets (I:T)
+    const urlRange = `Respuestas de formulario 1!I${rowIndex}:T${rowIndex}`;
+
+    // Obtener las URLs actuales desde Sheets
+    const currentUrls = await getUrlsFromSheet(urlRange);
+
+    if (!currentUrls) {
+        alert('Error al obtener las URLs existentes de Google Sheets');
+        return;
+    }
+
+    // Arrays para manejar archivos y URLs actualizadas
+    const filesToUpload = [];
+    const updatedUrls = [];
+
+    // Validar inputs y preparar archivos a subir
+    for (let i = 0; i < fileIds.length; i++) {
+        const fileInput = document.getElementById(fileIds[i]);
+        const file = fileInput?.files[0];
 
         if (file) {
-            const url = await uploadFile(file);
-            if (url) {
-                urls.push(url);
-            } else {
-                console.error(`Error al subir ${fileId}`);
-            }
+            // Si hay un archivo nuevo, marcarlo para subir
+            filesToUpload.push({ file, index: i });
         } else {
-            urls.push(''); // Si no hay archivo, guarda null
+            // Si no hay archivo, conservar la URL actual
+            updatedUrls[i] = currentUrls[i] || '';
         }
     }
-    console.log(urls)
-    await updateDataInSheetWithFiles(urls,rowIndex);
-   // await saveDataToSheet();
-  //  await saveDataToSheet2();
-   // await saveFileURLsToSheet(urls); // Guardar todas las URLs en Google Sheets
+
+    // Subir archivos en paralelo
+    const uploadedFiles = await uploadFilesInParallel(filesToUpload);
+
+    // Actualizar las URLs subidas en la posición correcta
+    uploadedFiles.forEach(({ url, index }) => {
+        updatedUrls[index] = url;
+    });
+
+    // Completar las URLs faltantes
+    while (updatedUrls.length < fileIds.length) {
+        updatedUrls.push('');
+    }
+
+    // Actualizar la fila en Google Sheets
+    const success = await updateRowInSheet(rowIndex, updatedUrls);
+    Swal.close();
+    if (success) {
+        Swal.fire({
+            title: '¡Éxito!',
+            text: 'Los cambios se guardaron correctamente.',
+            icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonColor: '#28a745',
+            confirmButtonText: 'Aceptar',
+          }).then((result) => {
+            Swal.fire({
+                title: '¡Atención!',
+                text: '¿Querés volver a Mesa de Entrada?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, vamos',
+                cancelButtonText: 'No, me quedo'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosPendientes.html'; 
+                }else{
+                    document.getElementById('desistido').classList.remove('disabled'); 
+                    document.getElementById('desistido').style.pointerEvents = 'auto'; 
+                    document.getElementById('derivado').classList.remove('disabled'); 
+                    document.getElementById('derivado').style.pointerEvents = 'auto'; 
+                    document.getElementById('mediacion').classList.remove('disabled'); 
+                    document.getElementById('mediacion').style.pointerEvents = 'auto'; 
+                    document.getElementById('legales').classList.remove('disabled'); 
+                    document.getElementById('legales').style.pointerEvents = 'auto'; 
+                    document.getElementById('sendWhatsApp').classList.remove('disabled'); 
+                    document.getElementById('sendWhatsApp').style.pointerEvents = 'auto'; 
+                    console.log('nos quedamos')
+                }
+              });
+              
+          });
+    } else {
+        Swal.fire({
+            title: '¡UPS!',
+            text: 'Hubo un error al subir los archivos.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
+        console.error('Error en la actualización múltiple:', error);
+    }
 }
-async function uploadFile(file) {
+
+// Obtener las URLs actuales desde Google Sheets
+async function getUrlsFromSheet(range) {
+    try {
+        const response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs',
+            range: range,
+        });
+        return response.result.values?.[0] || [];
+    } catch (error) {
+        console.error('Error al obtener las URLs existentes:', error);
+        return null;
+    }
+}
+
+// Subir archivos en paralelo
+async function uploadFilesInParallel(files) {
+    const folderName = document.getElementById('cliente').value;
+    const folderId = await getFolderIdByName(folderName);
+
+    if (!folderId) {
+        alert(`No se encontró la carpeta: ${folderName}`);
+        return [];
+    }
+
+    const uploadPromises = files.map(({ file, index }) =>
+        uploadFile(file, folderId).then((url) => ({ url, index }))
+    );
+
+    try {
+        return await Promise.all(uploadPromises);
+    } catch (error) {
+        console.error('Error al subir archivos:', error);
+        return [];
+    }
+}
+
+// Subir un archivo a Google Drive
+async function uploadFile(file, folderId) {
     const metadata = {
         'name': file.name,
-        'mimeType': file.type
+        'mimeType': file.type,
+        'parents': [folderId]
     };
 
     const formData = new FormData();
@@ -309,160 +426,70 @@ async function uploadFile(file) {
 
         if (response.ok) {
             const result = await response.json();
-            const fileURL = `https://drive.google.com/file/d/${result.id}/view?usp=sharing`;
-            alert(`Archivo ${file.name} subido con éxito. ID: ${result.id}`);
-            return fileURL;
+            return `https://drive.google.com/file/d/${result.id}/view?usp=sharing`;
         } else {
             console.error('Error al subir archivo:', response.statusText);
+            return '';
         }
     } catch (error) {
         console.error('Error al subir archivo:', error);
+        return '';
     }
-    return null; // En caso de error
 }
 
+// Actualizar la fila en Google Sheets
+async function updateRowInSheet(rowIndex, updatedUrls) {
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
+    const range = `Respuestas de formulario 1!A${rowIndex}:W${rowIndex}`;
 
-async function updateDataInSheetWithFiles(urls, targetRow) {
-    const newText = document.getElementById('actualizacion').value;
-    const oldText = document.getElementById('historial').value;
-const historial = `${oldText} \n ${newText}` 
-    // Datos para las columnas de A a H
-    const valuesAtoH = [
-        document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
-        document.getElementById('pasDropdown') ? document.getElementById('pasDropdown').value : "",
-        document.getElementById('cliente') ? document.getElementById('cliente').value : "",
-        document.getElementById('dominio') ? document.getElementById('dominio').value : "",
-        document.getElementById('ciaReclamar') ? document.getElementById('ciaReclamar').value : "",
-        document.getElementById('telefono') ? document.getElementById('telefono').value : "",
-        document.getElementById('email') ? document.getElementById('email').value : "",
-        document.getElementById('obs') ? document.getElementById('obs').value : "",
+    const values = [
+        document.getElementById('ingreso')?.value || '',
+        document.getElementById('pasDropdown')?.value || '',
+        document.getElementById('cliente')?.value || '',
+        document.getElementById('dominio')?.value || '',
+        document.getElementById('ciaReclamar')?.value || '',
+        document.getElementById('telefono')?.value || '',
+        document.getElementById('email')?.value || '',
+        document.getElementById('obs')?.value || '',
+        ...updatedUrls,
+        document.getElementById('tipoReclamo')?.value || '',
+        document.getElementById('actualizacion')?.value || '',
+        document.getElementById('estado')?.value || ''
     ];
 
-    // URLs de archivos adjuntos para llenar de I a S
-    const filledUrls = urls.map(url => url || ''); // Reemplaza los valores vacíos con ''
-    while (filledUrls.length < 11) {
-        filledUrls.push(''); // Asegura que haya exactamente 11 columnas en I:S
-    }
-
-    // Datos para las columnas de T a V
-    const valuesTtoV = [
-        document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
-        document.getElementById('actualizacion') ? historial : document.getElementById('historial').value,
-        document.getElementById('estado') ? document.getElementById('estado').value : ""
-    ];
-
-    // Combina todos los valores en un solo array
-    const values = [...valuesAtoH, ...filledUrls, ...valuesTtoV];
-
-    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de hoja de cálculo
-    const range = `Respuestas de formulario 1!A${targetRow}:V${targetRow}`; // Especifica el rango exacto para la fila objetivo
-
-    const body = {
-        values: [values] // Agrega la fila combinada
-    };
+    const body = { values: [values] };
 
     try {
         const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=USER_ENTERED`, {
-            method: 'PUT', // Cambia a 'PUT' para actualizar la fila específica
+            method: 'PUT',
             headers: new Headers({
                 'Authorization': 'Bearer ' + gapi.client.getToken().access_token,
                 'Content-Type': 'application/json'
             }),
             body: JSON.stringify(body)
         });
-console.log(response)
-        if (response.ok) {
-            const result = await response.json();
-            Swal.fire({
-                title: '¡Éxito!',
-                text: 'El caso se actualizó correctamente.',
-                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-                confirmButtonText: 'Aceptar',
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  window.location.href = '/html/casosPendientes.html';
-                }
-              });
-            console.log('Fila actualizada con éxito:', result);
-        } else {
-            Swal.fire({
-                title: '¡ERROR!',
-                text: 'El caso no pudo Actualizarse correctamente.',
-                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-                confirmButtonText: 'Aceptar'
-              })
-            console.error('Error al actualizar la fila:', response.statusText);
-        }
+
+        return response.ok;
     } catch (error) {
-        Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
-            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-            confirmButtonText: 'Aceptar'
-          })
-        console.error('Error al actualizar la fila:', error);
+        console.error('Error al actualizar Google Sheets:', error);
+        return false;
     }
 }
 
-
-
-
-
-
-document.getElementById('sendWhatsApp').addEventListener('click', function() {
-    console.log('entra')
-    const phoneForm = document.getElementById('telefono').value
-    const mensaje = document.getElementById('actualizacion').value;
-    const cliente = document.getElementById('cliente').value;
-    const pas = document.getElementById('pasDropdown').value;
-    console.log(mensaje)
-    const phoneNumber = phoneForm; // Reemplaza con el número de teléfono completo
-    const message = `Estimado/a ${cliente} nos comunicamos de IN ITINERE, servicio de gestión de siniestros del productor de seguros ${pas} para mantenerlo informado: ${mensaje}`;
-    
-     // Codificar el mensaje para URL
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Construir la URL
-    const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-    
-    // Abrir la URL en una nueva pestaña o ventana
-    window.open(whatsappURL, '_blank');
-  });
-
-  async function updateRowInSheet(updatedValues, ranges) {
-    console.log("entró")
-    console.log(ranges)
-    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con el ID de tu hoja de cálculo
-    const range =`sheet1!${ranges}`;
-    console.log(typeof(range)) // Modifica según el rango necesario
-
-    const body = {
-        values: [updatedValues], // Array con los valores a actualizar en la fila
-    };
-
+// Obtener ID de carpeta por nombre
+async function getFolderIdByName(folderName) {
     try {
-        const response = await fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED`,
-            {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            }
-        );
-
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Fila actualizada con éxito:', result);
-        } else {
-            console.error('Error al actualizar la fila:', await response.text());
-        }
+        const response = await gapi.client.drive.files.list({
+            q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+            fields: 'files(id, name)'
+        });
+        return response.result.files?.[0]?.id || null;
     } catch (error) {
-        console.error('Error al actualizar la fila:', error);
+        console.error('Error al buscar carpeta:', error);
+        return null;
     }
 }
+
 async function updateEjecutivo() {
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con el ID de tu hoja de cálculo
     const range = `sheet1!C${rowIndex}`;
@@ -541,6 +568,26 @@ async function updateEjecutivo() {
         console.error('Error al obtener los datos:', error);
     }
 }
+
+document.getElementById('sendWhatsApp').addEventListener('click', function() {
+    console.log('entra')
+    const phoneForm = document.getElementById('telefono').value
+    const mensaje = document.getElementById('actualizacion').value;
+    const cliente = document.getElementById('cliente').value;
+    const pas = document.getElementById('pasDropdown').value;
+    console.log(mensaje)
+    const phoneNumber = phoneForm; // Reemplaza con el número de teléfono completo
+    const message = `Estimado/a ${cliente} nos comunicamos de IN ITINERE, servicio de gestión de siniestros del productor de seguros ${pas} para mantenerlo informado: ${mensaje}`;
+    
+     // Codificar el mensaje para URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Construir la URL
+    const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+    
+    // Abrir la URL en una nueva pestaña o ventana
+    window.open(whatsappURL, '_blank');
+  });
 
 async function obtenerUltimaFila(spreadsheetId) {
     
@@ -787,7 +834,7 @@ const historialConcat = `${oldText} \n ${newText}`;
             const result = await response.json();
             Swal.fire({
                 title: '¡Éxito!',
-                text: 'El caso se actualizó correctamente.',
+                text: 'El caso se derivó al ejecutivo correspondiente.',
                 icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar',
               }).then((result) => {
@@ -798,8 +845,8 @@ const historialConcat = `${oldText} \n ${newText}`;
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
             Swal.fire({
-                title: '¡ERROR!',
-                text: 'El caso no pudo Actualizarse correctamente.',
+                title: '¡UPS!',
+                text: 'El caso no pudo ser derivado...',
                 icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar'
               })
@@ -807,8 +854,8 @@ const historialConcat = `${oldText} \n ${newText}`;
         }
     } catch (error) {
         Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
+            title: '¡UPS!',
+            text: 'El caso no pudo ser derivado...',
             icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
             confirmButtonText: 'Aceptar'
           })
@@ -1064,7 +1111,7 @@ try {
             const result = await response.json();
             Swal.fire({
                 title: '¡Éxito!',
-                text: 'El caso se actualizó correctamente.',
+                text: 'El caso ha sido derivado a Legales.',
                 icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar',
               }).then((result) => {
@@ -1075,8 +1122,8 @@ try {
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
             Swal.fire({
-                title: '¡ERROR!',
-                text: 'El caso no pudo Actualizarse correctamente.',
+                title: '¡UPS!',
+                text: 'El caso no pudo derivarse correctamente.',
                 icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar'
               })
@@ -1084,8 +1131,8 @@ try {
         }
     } catch (error) {
         Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
+            title: '¡UPS!',
+            text: 'El caso no pudo derivarse correctamente.',
             icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
             confirmButtonText: 'Aceptar'
           })
@@ -1260,7 +1307,7 @@ const historialConcat = `${oldText} \n ${newText}`;
             const result = await response.json();
             Swal.fire({
                 title: '¡Éxito!',
-                text: 'El caso se actualizó correctamente.',
+                text: 'El caso ha sido desistido.',
                 icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar',
               }).then((result) => {
@@ -1271,8 +1318,8 @@ const historialConcat = `${oldText} \n ${newText}`;
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
             Swal.fire({
-                title: '¡ERROR!',
-                text: 'El caso no pudo Actualizarse correctamente.',
+                title: '¡UPS!',
+                text: 'El estado del caso no ha podido ser modificado.',
                 icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar'
               })
@@ -1280,8 +1327,8 @@ const historialConcat = `${oldText} \n ${newText}`;
         }
     } catch (error) {
         Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
+            title: '¡UPS!',
+            text: 'El estado del caso no ha podido ser modificado.',
             icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
             confirmButtonText: 'Aceptar'
           })
@@ -1451,7 +1498,7 @@ const historialConcat = `${oldText} \n ${newText}`;
             const result = await response.json();
             Swal.fire({
                 title: '¡Éxito!',
-                text: 'El caso se actualizó correctamente.',
+                text: 'El caso ha sido enviado a Mediación.',
                 icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar',
               }).then((result) => {
@@ -1462,8 +1509,8 @@ const historialConcat = `${oldText} \n ${newText}`;
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
             Swal.fire({
-                title: '¡ERROR!',
-                text: 'El caso no pudo Actualizarse correctamente.',
+                title: '¡UPS!',
+                text: 'El caso no ha podido ser derivado correctamente.',
                 icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar'
               })
@@ -1471,8 +1518,8 @@ const historialConcat = `${oldText} \n ${newText}`;
         }
     } catch (error) {
         Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
+            title: '¡UPS!',
+            text: 'El caso no ha podido ser derivado correctamente.',
             icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
             confirmButtonText: 'Aceptar'
           })

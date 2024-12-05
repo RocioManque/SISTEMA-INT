@@ -13,7 +13,13 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <style>
+        .disabled {
+        pointer-events: none; /* Deshabilita la interacción */
+        opacity: 0.6; /* Visualmente se ve deshabilitado */
+        cursor: not-allowed; /* Cambia el cursor al pasar por encima */
+    }
+    </style>
 </head>
 
 <body class="text-left">
@@ -129,7 +135,7 @@
                             <div data-sidebar-content="secondary">
                                 <div class="inbox-secondary-sidebar-content position-relative" style="min-height: 500px">
                                     <div class="inbox-topbar box-shadow-1 perfect-scrollbar rtl-ps-none pl-3" data-suppress-scroll-y="true">
-                                        <a class="link-icon mr-3" id="desistido" onclick="desistido(event) " style="cursor: pointer;" ><i class="icon-regular i-Mail-Remove-x"></i> Desistido</a><a class="link-icon mr-3" id="facturacion" onclick="facturacion(event)" style="cursor: pointer;" ><i class="icon-regular i-Mail-Remove-x"></i>Facturación</a><a class="link-icon mr-3" id="mediacion" onclick="mediacion(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Mediación</a><a class="link-icon mr-3" id="legales" onclick="legales(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Legales</a><a class="link-icon mr-3" id="saveChanges" onclick="actualizar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Actualizar</a><a class="link-icon mr-3" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a>
+                                        <a class="link-icon mr-3 disabled" id="desistido" onclick="desistido(event) " style="cursor: pointer;" ><i class="icon-regular i-Mail-Remove-x"></i> Desistido</a><a class="link-icon mr-3 disabled" id="enviarFacturacion" onclick="facturacion(event)" style="cursor: pointer;" ><i class="icon-regular i-Mail-Remove-x"></i>Facturación</a><a class="link-icon mr-3 disabled" id="mediacion" onclick="mediacion(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Mediación</a><a class="link-icon mr-3 disabled" id="legales" onclick="legales(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Legales</a><a class="link-icon mr-3" id="saveChanges" onclick="actualizar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Guardar Cambios</a><a class="link-icon mr-3 disabled" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a>
 
                                     </div>
                                     <div class="row">

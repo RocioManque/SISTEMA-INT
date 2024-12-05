@@ -239,7 +239,7 @@ async function updateRowInSheet(updatedValues, ranges) {
         if (response.ok) {
             Swal.fire({
                 title: '¡Éxito!',
-                text: 'El caso se actualizó correctamente.',
+                text: 'Los cambios se guardaron correctamente.',
                 icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar',
               }).then((result) => {
@@ -251,8 +251,8 @@ async function updateRowInSheet(updatedValues, ranges) {
             console.log('Fila actualizada con éxito:', result);
         } else {
             Swal.fire({
-                title: '¡ERROR!',
-                text: 'El caso no pudo Actualizarse correctamente.',
+                title: '¡UPS!',
+                text: 'Los cambios no se guardaron correctamente.',
                 icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar'
               })
@@ -260,8 +260,8 @@ async function updateRowInSheet(updatedValues, ranges) {
         }
     } catch (error) {
         Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
+            title: '¡UPS!',
+            text: 'Los cambios no se guardaron correctamente.',
             icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
             confirmButtonText: 'Aceptar'
           })
@@ -460,19 +460,48 @@ const fechaHoy = `${day}/${month}/${year}`;
             const result = await response.json();
             Swal.fire({
                 title: '¡Éxito!',
-                text: 'El caso se actualizó correctamente.',
+                text: 'Los cambios se guardaron correctamente.',
                 icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar',
               }).then((result) => {
-                if (result.isConfirmed) {
-                  window.location.href = '/html/casosEnGestion.html';
-                }
+                Swal.fire({
+                    title: '¡Atención!',
+                    text: '¿Querés volver a tus casos en gestión?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, vamos',
+                    cancelButtonText: 'No, me quedo'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire(
+                        '¡Genial!',
+                        'Redirigiendo...',
+                        'success'
+                      );
+                      window.location.href = '/html/casosEnGestion.html'; 
+                    }else{
+                        document.getElementById('desistido').classList.remove('disabled'); 
+                        document.getElementById('desistido').style.pointerEvents = 'auto'; 
+                        document.getElementById('enviarFacturacion').classList.remove('disabled'); 
+                        document.getElementById('enviarFacturacion').style.pointerEvents = 'auto'; 
+                        document.getElementById('mediacion').classList.remove('disabled'); 
+                        document.getElementById('mediacion').style.pointerEvents = 'auto'; 
+                        document.getElementById('legales').classList.remove('disabled'); 
+                        document.getElementById('legales').style.pointerEvents = 'auto'; 
+                        document.getElementById('sendWhatsApp').classList.remove('disabled'); 
+                        document.getElementById('sendWhatsApp').style.pointerEvents = 'auto'; 
+                        console.log('nos quedamos')
+                    }
+                  });
+                  
               });
             console.log('Actualización múltiple realizada con éxito:', result);
         } else {
             Swal.fire({
-                title: '¡ERROR!',
-                text: 'El caso no pudo Actualizarse correctamente.',
+                title: '¡UPS!',
+                text: 'Los cambios no pueden guardarse correctamente.',
                 icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
                 confirmButtonText: 'Aceptar'
               })
@@ -480,8 +509,8 @@ const fechaHoy = `${day}/${month}/${year}`;
         }
     } catch (error) {
         Swal.fire({
-            title: '¡ERROR!',
-            text: 'El caso no pudo Actualizarse correctamente.',
+            title: '¡UPS!',
+            text: 'Los cambios no pueden guardarse correctamente.',
             icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
             confirmButtonText: 'Aceptar'
           })
