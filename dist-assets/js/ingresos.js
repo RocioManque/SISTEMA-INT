@@ -2,7 +2,7 @@ const urls = [];
 
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
-
+console.log('entra')
 const rowIndex = parseInt(params.get('row')) + 1;
 const fechaIngreso = params.get('fechaIngreso');
 const pas = params.get('pas');
@@ -26,7 +26,9 @@ const adjPresupuesto = params.get('adjPresupuesto');
 const adjContratoSoc = params.get('adjContratoSoc');
 const adjNotaRepresentacion = params.get('adjNotaRepresentacion');
 const tipoReclamo= params.get('tipoReclamo');
+console.log(tipoReclamo)
 const historial= params.get('historial');
+console.log(historial)
 const estado= params.get('estado');
 const carpetaUrl= params.get('carpetaUrl');
 //TODO: los dropdown deberian estar seleccionados correctamente
@@ -257,54 +259,40 @@ const SPREADSHEET_ID = '1vnJXUhAGGcI8xt-83_T2K_TzJNqhz2nYdcMhilSqkWY';  // Reemp
 
 document.getElementById('saveChanges').addEventListener('click', () => {
     handleFileUploadsAndSheetUpdate(rowIndex);
-
 });
 
 async function handleFileUploadsAndSheetUpdate(rowIndex) {
-    // IDs de los inputs de archivo
     Swal.fire({
         title: 'Cargando...',
         text: 'Por favor espera mientras se procesan los archivos.',
-        allowOutsideClick: false, // Evita que el usuario cierre la alerta
+        allowOutsideClick: false,
         didOpen: () => {
-            Swal.showLoading(); // Muestra un spinner integrado
+            Swal.showLoading();
         },
     });
+
     const fileIds = [
         'adjDniFrente', 'adjDniDorso', 'adjRegistroFrente',
         'adjRegistroDorso', 'adjCedulaVerdeFrente', 'adjCedulaVerdeDorso',
         'adjDenunciaAdm', 'adjCertCobertura', 'adjFotoSiniestro',
-        'adjPresupuesto', 'adjContratoSoc','adjNotaRepresentacion'
+        'adjPresupuesto', 'adjContratoSoc', 'adjNotaRepresentacion'
     ];
 
-    // Rango de columnas de URLs en Google Sheets (I:T)
     const urlRange = `Respuestas de formulario 1!I${rowIndex}:T${rowIndex}`;
 
     // Obtener las URLs actuales desde Sheets
     const currentUrls = await getUrlsFromSheet(urlRange);
-
     if (!currentUrls) {
-        alert('Error al obtener las URLs existentes de Google Sheets');
+        Swal.fire({
+            title: 'Error',
+            text: 'No se pudieron obtener las URLs existentes desde Google Sheets.',
+            icon: 'error',
+        });
         return;
     }
 
-    // Arrays para manejar archivos y URLs actualizadas
-    const filesToUpload = [];
-    const updatedUrls = [];
-
-    // Validar inputs y preparar archivos a subir
-    for (let i = 0; i < fileIds.length; i++) {
-        const fileInput = document.getElementById(fileIds[i]);
-        const file = fileInput?.files[0];
-
-        if (file) {
-            // Si hay un archivo nuevo, marcarlo para subir
-            filesToUpload.push({ file, index: i });
-        } else {
-            // Si no hay archivo, conservar la URL actual
-            updatedUrls[i] = currentUrls[i] || '';
-        }
-    }
+    // Preparar carga de archivos y actualizar URLs
+    const { updatedUrls, filesToUpload } = prepareFilesAndUrls(fileIds, currentUrls);
 
     // Subir archivos en paralelo
     const uploadedFiles = await uploadFilesInParallel(filesToUpload);
@@ -321,52 +309,98 @@ async function handleFileUploadsAndSheetUpdate(rowIndex) {
 
     // Actualizar la fila en Google Sheets
     const success = await updateRowInSheet(rowIndex, updatedUrls);
+
     Swal.close();
     if (success) {
         Swal.fire({
             title: '¡Éxito!',
             text: 'Los cambios se guardaron correctamente.',
-            icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-            confirmButtonColor: '#28a745',
+            icon: 'success',
             confirmButtonText: 'Aceptar',
-          }).then((result) => {
-            Swal.fire({
-                title: '¡Atención!',
-                text: '¿Querés volver a Mesa de Entrada?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, vamos',
-                cancelButtonText: 'No, me quedo'
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  window.location.href = '/html/casosPendientes.html'; 
-                }else{
-                    document.getElementById('desistido').classList.remove('disabled'); 
-                    document.getElementById('desistido').style.pointerEvents = 'auto'; 
-                    document.getElementById('derivado').classList.remove('disabled'); 
-                    document.getElementById('derivado').style.pointerEvents = 'auto'; 
-                    document.getElementById('mediacion').classList.remove('disabled'); 
-                    document.getElementById('mediacion').style.pointerEvents = 'auto'; 
-                    document.getElementById('legales').classList.remove('disabled'); 
-                    document.getElementById('legales').style.pointerEvents = 'auto'; 
-                    document.getElementById('sendWhatsApp').classList.remove('disabled'); 
-                    document.getElementById('sendWhatsApp').style.pointerEvents = 'auto'; 
-                    console.log('nos quedamos')
-                }
-              });
-              
-          });
+        }).then(() => handlePostSuccessActions());
     } else {
         Swal.fire({
             title: '¡UPS!',
             text: 'Hubo un error al subir los archivos.',
-            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-            confirmButtonText: 'Aceptar'
-          })
-        console.error('Error en la actualización múltiple:', error);
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+        });
     }
+}
+
+// Preparar archivos y URLs actualizadas
+function prepareFilesAndUrls(fileIds, currentUrls) {
+    const filesToUpload = [];
+    const updatedUrls = [];
+
+    fileIds.forEach((fileId, index) => {
+        const fileInput = document.getElementById(fileId);
+        const file = fileInput?.files[0];
+
+        if (file) {
+            filesToUpload.push({ file, index });
+        } else {
+            updatedUrls[index] = currentUrls[index] || '';
+        }
+    });
+
+    return { updatedUrls, filesToUpload };
+}
+
+// Subir archivos en paralelo
+async function uploadFilesInParallel(files) {
+    const folderName = document.getElementById('cliente').value;
+    const folderId = await getFolderIdByName(folderName);
+
+    if (!folderId) {
+        Swal.fire({
+            title: 'Error',
+            text: `No se encontró la carpeta llamada: ${folderName}.`,
+            icon: 'error',
+        });
+        return [];
+    }
+
+    const uploadPromises = files.map(({ file, index }) =>
+        uploadFile(file, folderId).then((url) => ({ url, index }))
+    );
+
+    try {
+        return await Promise.all(uploadPromises);
+    } catch (error) {
+        console.error('Error al subir archivos:', error);
+        return [];
+    }
+}
+
+// Acciones posteriores al éxito
+function handlePostSuccessActions() {
+    Swal.fire({
+        title: '¡Atención!',
+        text: '¿Querés volver a Mesa de Entrada?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, vamos',
+        cancelButtonText: 'No, me quedo',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/html/casosPendientes.html';
+        } else {
+            enableButtons();
+        }
+    });
+}
+
+// Habilitar botones deshabilitados
+function enableButtons() {
+    const buttonIds = ['desistido', 'derivado', 'mediacion', 'legales', 'sendWhatsApp'];
+    buttonIds.forEach((id) => {
+        const button = document.getElementById(id);
+        button.classList.remove('disabled');
+        button.style.pointerEvents = 'auto';
+    });
 }
 
 // Obtener las URLs actuales desde Google Sheets
@@ -383,34 +417,12 @@ async function getUrlsFromSheet(range) {
     }
 }
 
-// Subir archivos en paralelo
-async function uploadFilesInParallel(files) {
-    const folderName = document.getElementById('cliente').value;
-    const folderId = await getFolderIdByName(folderName);
-
-    if (!folderId) {
-        alert(`No se encontró la carpeta: ${folderName}`);
-        return [];
-    }
-
-    const uploadPromises = files.map(({ file, index }) =>
-        uploadFile(file, folderId).then((url) => ({ url, index }))
-    );
-
-    try {
-        return await Promise.all(uploadPromises);
-    } catch (error) {
-        console.error('Error al subir archivos:', error);
-        return [];
-    }
-}
-
 // Subir un archivo a Google Drive
 async function uploadFile(file, folderId) {
     const metadata = {
-        'name': file.name,
-        'mimeType': file.type,
-        'parents': [folderId]
+        name: file.name,
+        mimeType: file.type,
+        parents: [folderId],
     };
 
     const formData = new FormData();
@@ -420,8 +432,8 @@ async function uploadFile(file, folderId) {
     try {
         const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
             method: 'POST',
-            headers: new Headers({ 'Authorization': 'Bearer ' + gapi.client.getToken().access_token }),
-            body: formData
+            headers: new Headers({ 'Authorization': `Bearer ${gapi.client.getToken().access_token}` }),
+            body: formData,
         });
 
         if (response.ok) {
@@ -454,20 +466,23 @@ async function updateRowInSheet(rowIndex, updatedUrls) {
         ...updatedUrls,
         document.getElementById('tipoReclamo')?.value || '',
         document.getElementById('actualizacion')?.value || '',
-        document.getElementById('estado')?.value || ''
+        document.getElementById('estado')?.value || '',
     ];
 
     const body = { values: [values] };
 
     try {
-        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=USER_ENTERED`, {
-            method: 'PUT',
-            headers: new Headers({
-                'Authorization': 'Bearer ' + gapi.client.getToken().access_token,
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify(body)
-        });
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=USER_ENTERED`,
+            {
+                method: 'PUT',
+                headers: new Headers({
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                }),
+                body: JSON.stringify(body),
+            }
+        );
 
         return response.ok;
     } catch (error) {
@@ -481,7 +496,7 @@ async function getFolderIdByName(folderName) {
     try {
         const response = await gapi.client.drive.files.list({
             q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-            fields: 'files(id, name)'
+            fields: 'files(id, name)',
         });
         return response.result.files?.[0]?.id || null;
     } catch (error) {

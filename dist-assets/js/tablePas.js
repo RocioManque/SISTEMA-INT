@@ -25,7 +25,7 @@ $(document).ready(function() {
               return (row[1] || "").toUpperCase().trim() === nombrePas;
           })
           .map((row) => [
-        row[1] || "",  
+        row[2] || "",  
         row[5] || "",  
         row[24] || "",  
         row[26] || "", 
@@ -37,6 +37,16 @@ $(document).ready(function() {
         row[35] || "" , 
       ]);
       console.log(selectedRows)
+        // Guardar el nombre del ejecutivo en una variable
+        const ejecutivoEncontrado = selectedRows[0][0].toLowerCase() // Nombre del ejecutivo
+  console.log(ejecutivoEncontrado)
+       // Mostrar tarjeta del ejecutivo encontrado
+        if (ejecutivoEncontrado) {
+          const cardId = `#${ejecutivoEncontrado.replace(/\s+/g, '')}`; // Reemplazar espacios en blanco en el nombre
+          $(cardId).show(); // Mostrar la tarjeta
+        }else{
+          
+        }
       $('#zero_configuration_table').DataTable({
         data: selectedRows,
         columns: [

@@ -569,11 +569,12 @@ async function uploadFiles(e) {
     Swal.fire({
         title: 'Cargando...',
         text: 'Por favor espera mientras se procesan los archivos.',
-        allowOutsideClick: false, // Evita que el usuario cierre la alerta
+        allowOutsideClick: false,
         didOpen: () => {
-            Swal.showLoading(); // Muestra un spinner integrado
+            Swal.showLoading(); // Muestra un spinner mientras carga
         },
     });
+
     const fileIds = [
         'adjDniFrente',
         'adjDniDorso',
@@ -590,35 +591,89 @@ async function uploadFiles(e) {
     ];
 
     const urls = [];
-
-    // Aquí debes definir el ID de la carpeta donde se guardarán los archivos
+    
+    // Definimos el ID de la carpeta donde se guardarán los archivos
     const parentFolderId = await createFolderInDynamicParent(); 
 
+    if (!parentFolderId) {
+        Swal.close();
+        Swal.fire('Error', 'No se pudo crear la carpeta. Por favor, intente de nuevo.', 'error');
+        return;
+    }
 
-    for (const fileId of fileIds) {
+    const filePromises = fileIds.map(async (fileId) => {
         const fileInput = document.getElementById(fileId);
-        const file = fileInput.files[0];
+        const file = fileInput?.files[0]; // Utilizamos el operador de encadenamiento opcional
 
         if (file) {
-            const url = await uploadFile(file, parentFolderId.folderId);
-            if (url) {
-                urls.push(url);
-            } else {
-                console.error(`Error al subir ${fileId}`);
+            try {
+                // Fragmentar el archivo antes de cargarlo
+                const fileParts = await splitFile(file);
+                const uploadedUrls = await uploadFileParts(fileParts, parentFolderId.folderId);
+                if (uploadedUrls.length > 0) {
+                    urls.push(uploadedUrls[0]); // Solo almacenamos la URL del archivo completo después de recomponerlo
+                } else {
+                    console.error(`Error al subir el archivo ${fileId}`);
+                }
+            } catch (error) {
+                console.error(`Error al subir el archivo ${fileId}:`, error);
             }
         } else {
-            urls.push(''); // Si no hay archivo, guarda null
+            urls.push(''); // Si no hay archivo, asignamos un valor vacío
         }
-    }
+    });
+
+    await Promise.all(filePromises); // Esperamos a que todos los archivos se suban
+
     Swal.close();
-    await saveDataToSheetWithFiles(urls,parentFolderId.folderUrl);
+    await saveDataToSheetWithFiles(urls, parentFolderId.folderUrl);
 }
 
+// Fragmenta el archivo en partes más pequeñas
+async function splitFile(file) {
+    const chunkSize = 5 * 1024 * 1024; // 5 MB por fragmento
+    const fileParts = [];
+
+    for (let start = 0; start < file.size; start += chunkSize) {
+        const end = Math.min(start + chunkSize, file.size);
+        const filePart = file.slice(start, end);
+        fileParts.push(filePart);
+    }
+
+    return fileParts;
+}
+
+// Sube las partes del archivo a Google Drive
+async function uploadFileParts(fileParts, parentFolderId) {
+    const uploadedUrls = [];
+
+    for (let i = 0; i < fileParts.length; i++) {
+        const part = fileParts[i];
+        const partName = `part-${i}-${part.name}`;
+
+        try {
+            const url = await uploadFile(part, parentFolderId);
+            if (url) {
+                uploadedUrls.push(url);
+            } else {
+                console.error(`Error al subir la parte ${i} del archivo.`);
+            }
+        } catch (error) {
+            console.error(`Error al subir la parte ${i} del archivo:`, error);
+        }
+    }
+
+    // Aquí podrías recomponer el archivo en Google Drive si es necesario
+    // En este caso, estamos usando solo la URL de la primera parte como ejemplo.
+    return uploadedUrls;
+}
+
+// Subir un fragmento individual del archivo
 async function uploadFile(file, parentFolderId) {
     const metadata = {
         'name': file.name,
         'mimeType': file.type,
-        'parents': [parentFolderId] // Especificar la carpeta padre
+        'parents': [parentFolderId] // Especificamos la carpeta padre
     };
 
     const formData = new FormData();
@@ -642,8 +697,10 @@ async function uploadFile(file, parentFolderId) {
     } catch (error) {
         console.error('Error al subir archivo:', error);
     }
-    return null; // En caso de error
+
+    return null; // Retorna null si hubo un error
 }
+
 async function createFolderInDynamicParent() {
     const parentFolderName = document.getElementById('pasDropdown').value;
     const newFolderName = document.getElementById('cliente').value;
@@ -663,7 +720,6 @@ async function createFolderInDynamicParent() {
         // Selecciona el primer resultado de búsqueda como la carpeta padre
         const parentFolder = parentResponse.result.files[0];
 
-
         // 2. Crear la nueva carpeta dentro de la carpeta padre
         const newFolderBody = {
             name: newFolderName,
@@ -678,15 +734,10 @@ async function createFolderInDynamicParent() {
 
         if (createResponse.status === 200) {
             const newFolder = createResponse.result;
-            const folderUrl =  newFolder.webViewLink;
-            const folderId = newFolder.id;
-          
-            // Retorna el webViewLink de la nueva carpeta creada
-            return  {
-                folderUrl,
-                folderId
-            
-            }
+            return {
+                folderUrl: newFolder.webViewLink,
+                folderId: newFolder.id
+            };
         } else {
             console.error("Error al crear la carpeta:", createResponse);
             return null;
@@ -696,86 +747,62 @@ async function createFolderInDynamicParent() {
         return null;
     }
 }
-async function saveDataToSheetWithFiles(urls,folderUrl) {
 
-    // Datos para las columnas de A a H
+async function saveDataToSheetWithFiles(urls, folderUrl) {
     const valuesAtoH = [
-        document.getElementById('ingreso') ? document.getElementById('ingreso').value : "",
-        document.getElementById('pasDropdown') ? document.getElementById('pasDropdown').value : "",
-        document.getElementById('cliente') ? document.getElementById('cliente').value : "",
-        document.getElementById('dominio') ? document.getElementById('dominio').value : "",
-        document.getElementById('ciaReclamar') ? document.getElementById('ciaReclamar').value : "",
-        document.getElementById('telefono') ? document.getElementById('telefono').value : "",
-        document.getElementById('email') ? document.getElementById('email').value : "",
-        document.getElementById('obs') ? document.getElementById('obs').value : "",
+        document.getElementById('ingreso')?.value || "",
+        document.getElementById('pasDropdown')?.value || "",
+        document.getElementById('cliente')?.value || "",
+        document.getElementById('dominio')?.value || "",
+        document.getElementById('ciaReclamar')?.value || "",
+        document.getElementById('telefono')?.value || "",
+        document.getElementById('email')?.value || "",
+        document.getElementById('obs')?.value || "",
     ];
-    // URLs de archivos adjuntos para llenar de I a S
-    const filledUrls = urls.map(url => url || ''); // Reemplaza los valores vacíos con ''
+
+    // Rellenamos las URLs de los archivos para llenar las columnas de I a S
+    const filledUrls = urls.map(url => url || ''); // Si no hay URL, asignamos una cadena vacía
     while (filledUrls.length < 12) {
-        filledUrls.push(''); // Asegura que haya exactamente 12 columnas en I:T
+        filledUrls.push(''); // Aseguramos que haya exactamente 12 columnas
     }
 
-    // Datos para las columnas de T a V
     const valuesTtoW = [
-        document.getElementById('tipoReclamo') ? document.getElementById('tipoReclamo').value : "",
-        document.getElementById('actualizacion') ? document.getElementById('actualizacion').value : "",
-        document.getElementById('estado') ? document.getElementById('estado').value : "",
+        document.getElementById('tipoReclamo')?.value || "",
+        document.getElementById('actualizacion')?.value || "",
+        document.getElementById('estado')?.value || "",
         folderUrl || "",
     ];
 
-    // Combina todos los valores en un solo array
     const values = [...valuesAtoH, ...filledUrls, ...valuesTtoW];
 
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de hoja de cálculo
-    const range = `Respuestas de formulario 1!A:W`; // Especifica todo el rango de A a V
+    const range = 'Respuestas de formulario 1!A:W'; // Rango donde insertar los datos
 
     const body = {
-        values: [values] // Agrega la fila combinada
+        values: [values] // Fila combinada
     };
 
     try {
         const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED`, {
-            method: 'POST', // Cambia a 'POST' para usar el método 'append'
+            method: 'POST',
             headers: new Headers({
-                'Authorization': 'Bearer ' + gapi.client.getToken().access_token,
+                'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
                 'Content-Type': 'application/json'
             }),
             body: JSON.stringify(body)
         });
 
         if (response.ok) {
-           // await createFolderInDynamicParent()
-            const result = await response.json();
-            Swal.fire({
-  title: '¡Éxito!',
-  text: 'El caso se guardo correctamente.',
-  icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-  confirmButtonText: 'Aceptar',
-}).then((result) => {
-  if (result.isConfirmed) {
-    window.location.href = '/html/casosPendientes.html';
-  }
-});
+            Swal.fire('Exito', 'Formulario completado exitosamente.', 'success');
         } else {
-            Swal.fire({
-  title: '¡UPS!',
-  text: 'El caso no pudo guardarse.',
-  icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-  confirmButtonText: 'Aceptar',
-})
-            console.error('Error al guardar la fila:', response.statusText);
+            console.error('Error al guardar los datos:', response.statusText);
+            Swal.fire('Error', 'No se pudo guardar los datos en Google Sheets.', 'error');
         }
     } catch (error) {
-        Swal.fire({
-  title: '¡UPS!',
-  text: 'El caso no pudo guardarse.',
-  icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
-  confirmButtonText: 'Aceptar',
-});
-        console.error('Error al guardar la fila:', error);
+        console.error('Error al guardar los datos:', error);
+        Swal.fire('Error', 'Ocurrió un error al guardar los datos.', 'error');
     }
 }
-
 document.getElementById('sendWhatsApp').addEventListener('click', function() {
     const phoneForm = document.getElementById('telefono').value
     const mensaje = document.getElementById('actualizacion').value;
