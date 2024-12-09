@@ -54,6 +54,7 @@ $(document).ready(function() {
   
   console.log(selectedRows);
   $('#zero_configuration_table').DataTable({
+   
     data: selectedRows,
     columns: [
         { title: "Nº" }, //index
@@ -158,6 +159,7 @@ $(document).ready(function() {
         }}
         
     ],
+    fixedHeader: true,
 });
     
   })

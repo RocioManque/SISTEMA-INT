@@ -72,6 +72,12 @@ const pass = $('#pass').val(); // CUIT del formulario
                     window.location.href = '/html/casosPendientes.html';
                     }else if(userData.permission === 'FACTURACION'){
                         window.location.href = '/html/facturacion.html';
+                    }else if(userData.permission === 'PAS'){
+                        window.location.href = '/html/casosPas.html';
+                    }else if(userData.permission === 'PRUEBA'){
+                        window.location.href = '/html/casosPas.html';
+                    }else if(userData.permission === 'ORGANIZADOR'){
+                        window.location.href = '/html/casosPas.html';
                     }else{
                      window.location.href = '/html/casosEnGestion.html';
                     }

@@ -2,7 +2,9 @@
 
 $(document).ready(function () {
   // zero table
-  $('#zero_configuration_table').DataTable(); // feature enable/disable
+  $('#zero_configuration_table').DataTable({
+    "fixedHeader": true,
+  }); // feature enable/disable
 
   $('#feature_disable_table').DataTable({
     "paging": false,

@@ -10,9 +10,7 @@ const fechaIngreso = params.get('fechaIngreso');
 const fechaInicio = params.get('fechaInicio');
 const numeroInterno = params.get('numeroInterno');
 const planInt = params.get('planInt');
-console.log(planInt)
 const numeroReclamoCia = params.get('numeroReclamoCia');
-console.log(numeroReclamoCia)
 const estado = params.get('estado');
 const observacion = params.get('observacion');
 const informeHistorial = params.get('informeHistorial');
@@ -21,8 +19,7 @@ const montoReclamar = params.get('montoReclamar');
 const montoCerrado = params.get('montoCerrado');
 const companiaReclamar = params.get('companiaReclamar');
 const gestionadoCon = params.get('gestionadoCon');
-console.log(typeof(fechaInicio))
-console.log(fechaInicio)
+const urlAdjuntos = params.get('urlAdjuntos');
 
    // Obtener la fecha actual
    const today = new Date();
@@ -42,12 +39,14 @@ console.log(fechaInicio)
    const range2 = 'Hoja 1'; // 
    const range3 = 'Hoja 2'; // 
    const range4 = 'Hoja 3'; // 
+   const range5 = 'Hoja 4'; // 
    
    // URL de la API de Google Sheets
    const url0 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId0}/values/${range0}?key=${apiKey2}`;
    const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range2}?key=${apiKey2}`;
    const url3 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range3}?key=${apiKey2}`;
    const url4 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range4}?key=${apiKey2}`;
+   const url5 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range5}?key=${apiKey2}`;
    $(document).ready(function() {
     
        // Inicializa Select2 en el elemento select
@@ -70,8 +69,13 @@ console.log(fechaInicio)
        $('#estado').select2({
            placeholder: 'Seleccione un nombre',
            
-           width: '100%'
+           width: '90%'
        });
+       $('#honorarios').select2({
+        placeholder: 'Seleccione un nombre',
+        
+        width: '90%'
+    });
    
        // Realiza la solicitud fetch para obtener datos dinámicos
        fetch(url0)
@@ -193,10 +197,38 @@ console.log(fechaInicio)
    
            })
            .catch(error => console.error('Error al cargar datos', error));
+           fetch(url5)
+           .then(response => {
+               if (!response.ok) {
+                   throw new Error(`HTTP error! status: ${response.status}`);
+               }
+               return response.json();
+           })
+           .then(data => {
+               const rows = data.values;
+               console.log(rows);
+   
+               // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+               const selectedRows = rows.slice(1).map(row => row[0]);
+               
+               // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+               const listaDinamica4 = selectedRows.map((nombre, index) => ({
+                   id: nombre,
+                   text: nombre
+               }));
+   
+               console.log('Lista Dinámica:', listaDinamica4);
+   
+               // Cargar la lista dinámica en el dropdown
+               $('#honorarios').select2({
+                   data: listaDinamica4
+               });
+   
+           })
+           .catch(error => console.error('Error al cargar datos', error));
    
    });
-   
-// Luego muestra o manipula estos datos en la página según lo necesites
+
 document.getElementById('cliente').value = cliente;
 document.getElementById('ingreso').value = fechaIngreso;
 fechaInicio === '' ? document.getElementById('inicio').value = formattedDate : document.getElementById('inicio').value = fechaInicio ;
@@ -210,9 +242,87 @@ document.getElementById('obs').value = observacion;
 document.getElementById('email').value = mailCliente;
 document.getElementById('telefono').value = telefonoCliente;
 document.getElementById('historial').value = informeHistorial;
-// Y así sucesivamente para otros campos
 
+//upload Multiple Files
+function updateProgressBar(percentage) {
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = `${percentage}%`;
+    progressBar.setAttribute('aria-valuenow', percentage);
+    progressBar.innerText = `${percentage}%`;
+}
+function addToResults(fileName, url, isSuccess) {
+    const uploadResults = document.getElementById('upload-results');
+    const listItem = document.createElement('li');
+    listItem.textContent = isSuccess
+        ? `✅ ${fileName} - Uploaded: ${url}`
+        : `❌ ${fileName} - Upload failed`;
+    listItem.style.color = isSuccess ? 'green' : 'red';
+    uploadResults.appendChild(listItem);
+}
+async function uploadMultipleFiles(files, folderId) {
+    const progressContainer = document.getElementById('progress-container');
+    const uploadResults = document.getElementById('upload-results');
 
+    // Mostrar barra de progreso y limpiar resultados previos
+    progressContainer.style.display = 'block';
+    uploadResults.innerHTML = '';
+    updateProgressBar(0);
+
+    const totalFiles = files.length;
+    let completedFiles = 0;
+
+    for (const file of files) {
+        try {
+            const url = await uploadFile(file, folderId);
+            addToResults(file.name, url, !!url);
+        } catch (error) {
+            console.error('Error al subir archivo:', file.name, error);
+            addToResults(file.name, '', false);
+        }
+
+        // Actualizar barra de progreso
+        completedFiles++;
+        const progressPercentage = Math.round((completedFiles / totalFiles) * 100);
+        updateProgressBar(progressPercentage);
+    }
+
+    // Ocultar barra de progreso después de completar
+    setTimeout(() => {
+        progressContainer.style.display = 'none';
+    }, 2000);
+}
+
+async function uploadFile(file, parentFolderId) {
+    const metadata = {
+        'name': file.name,
+        'mimeType': file.type,
+        'parents': [parentFolderId] // Especificamos la carpeta padre
+    };
+
+    const formData = new FormData();
+    formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+    formData.append('file', file);
+
+    try {
+        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+            method: 'POST',
+            headers: new Headers({ 'Authorization': 'Bearer ' + gapi.client.getToken().access_token }),
+            body: formData
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            const fileURL = `https://drive.google.com/file/d/${result.id}/view?usp=sharing`;
+            return fileURL;
+        } else {
+            console.error('Error al subir archivo:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error al subir archivo:', error);
+    }
+
+    return null; // Retorna null si hubo un error
+}
 async function updateRowInSheet(updatedValues, ranges) {
     console.log(ranges)
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con el ID de tu hoja de cálculo
@@ -269,6 +379,14 @@ async function updateRowInSheet(updatedValues, ranges) {
     }
 }
 async function actualizar(e){
+    Swal.fire({
+        title: 'Cargando...',
+        text: 'Por favor espera mientras se procesan los archivos.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); // Muestra un spinner mientras carga
+        },
+    });
     const newText = document.getElementById('actualizacion').value;
     const oldText = document.getElementById('historial').value;
 const historialConcat = `${oldText} \n ${newText}`;
@@ -299,7 +417,39 @@ const fechaHoy = `${day}/${month}/${year}`;
     const montoReclamado = document.getElementById('montoReclamado').value;
     const montoCerrado = document.getElementById('montoCerrado').value;
     const ultimaActualizacion = fechaHoy
-    
+     // Subir archivos
+     const url = urlAdjuntos;
+     const folderId = url.split('/').pop();
+     const fileInput = document.getElementById('file-input');
+     const files = fileInput.files;// Cambia esto con la carpeta específica
+     const urls = []; // Guardará las URLs de los archivos subidos
+ 
+     if (files.length > 0) {
+         try {
+             console.log(`${files.length} archivos seleccionados para subir.`);
+             const progressContainer = document.getElementById('progress-container');
+             progressContainer.style.display = 'block'; // Mostrar barra de progreso
+ 
+             // Subir los archivos y guardar las URLs
+             for (const file of files) {
+                 const url = await uploadFile(file, folderId);
+                 urls.push(url); // Agregar cada URL al array
+             }
+ 
+             console.log('Subida completada:', urls);
+         } catch (error) {
+             console.error('Error al subir archivos:', error);
+             Swal.fire({
+                 title: '¡Error!',
+                 text: 'No se pudieron subir los archivos.',
+                 icon: 'error',
+                 confirmButtonText: 'Aceptar',
+             });
+             return;
+         }
+     } else {
+         console.log('No se seleccionaron archivos.');
+     }
     
     // Crea la solicitud BatchUpdate
     const batchUpdateBody = {
@@ -442,7 +592,7 @@ const fechaHoy = `${day}/${month}/${year}`;
             }
         ]
     };
-
+    Swal.close();
     try {
         const response = await fetch(
             `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
@@ -582,14 +732,146 @@ function legales(e){
    
 }
 //facturacion
-function facturacion(e){
+async function facturacion(e){
     e.preventDefault();
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; 
+    const porcentaje = document.getElementById('honorarios').value;
+    const montoCerradoEnviar = parseInt(document.getElementById('montoCerrado').value);
+    const honorarios = parseInt(porcentaje.replace('%', ''), 10);
+    const montoFacturado = montoCerradoEnviar + (montoCerradoEnviar * honorarios)/100
+    console.log(montoFacturado)
     const estado = "FACTURACION";
-    const valuesAC = [
-        estado,   
-    ];
-   const rangeesAC =  `AC${rowIndex}:AC${rowIndex}`;
-    updateRowInSheet( valuesAC,rangeesAC);
+//     const valuesAC = [
+//         estado,   
+//     ];
+//    const rangeesAC =  `AC${rowIndex}:AC${rowIndex}`;
+//     updateRowInSheet( valuesAC,rangeesAC);
+    const batchUpdateBody = {
+        requests: [
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: rowIndex - 1,
+                    endRowIndex: rowIndex,
+                    startColumnIndex: 28, 
+                    endColumnIndex: 29 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(estado) } },        
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: rowIndex - 1,
+                    endRowIndex: rowIndex,
+                    startColumnIndex: 38, 
+                    endColumnIndex: 39 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(montoFacturado) } },        
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                   // sheetId: '454305688',
+                   range: {   //range se utiliza en update
+                    sheetId: '454305688',
+                    startRowIndex: rowIndex - 1,
+                    endRowIndex: rowIndex,
+                    startColumnIndex: 56, 
+                    endColumnIndex: 57, 
+                },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(porcentaje) } },    
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+            },
+        ]
+    };
+    Swal.close();
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${gapi.client.getToken().access_token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchUpdateBody),
+            }
+        );
+
+        if (response.ok) {
+            const result = await response.json();
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso fue derivado Correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                Swal.fire({
+                    title: '¡Atención!',
+                    text: '¿Querés volver a tus casos en gestión?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, vamos',
+                    cancelButtonText: 'No, me quedo'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire(
+                        '¡Genial!',
+                        'Redirigiendo...',
+                        'success'
+                      );
+                      window.location.href = '/html/casosEnGestion.html'; 
+                    }
+                  });
+                  
+              });
+            console.log('Actualización múltiple realizada con éxito:', result);
+        } else {
+            Swal.fire({
+                title: '¡UPS!',
+                text: 'No se ha podido derivar el caso.',
+                icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar'
+              })
+            console.error('Error en la actualización múltiple:', await response.text());
+        }
+    } catch (error) {
+        Swal.fire({
+            title: '¡UPS!',
+            text: 'Los cambios no pueden guardarse correctamente.',
+            icon: 'error', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+            confirmButtonText: 'Aceptar'
+          })
+        console.error('Error en la actualización múltiple:', error);
+    }
 }
 
 

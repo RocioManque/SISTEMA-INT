@@ -4,49 +4,78 @@ const range = 'sheet1'; //
 
 // URL de la API de Google Sheets
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-var nombrePas = localStorage.getItem('nombreEjecutivo');
 $(document).ready(function() {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        const rows = data.values//.slice(1); // Remueve encabezados
+        const rows = data.values.slice(1); // Remueve encabezados
       console.log(rows)
       const userData = JSON.parse(localStorage.getItem('userData'));
       const nombrePas = userData.name.toUpperCase().trim();
-      console.log("nombrepas",nombrePas)
+      const userRole = userData.permission.toLowerCase().trim(); 
+      console.log(userRole)
 
-        // Separa el nombre y apellido (asumiendo que están separados por un espacio)
-        // const [nombre, apellido] = nombrePas.split(" ");
+      let selectedRows = [];
 
-        // Filtra las filas antes de construir selectedRows
-        const selectedRows = rows
-          .filter(row => {
-              // Convierte el nombre del cliente a mayúsculas y compara
-              return (row[1] || "").toUpperCase().trim() === nombrePas;
-          })
-          .map((row) => [
-        row[2] || "",  
-        row[5] || "",  
-        row[24] || "",  
-        row[26] || "", 
-        row[28] || "",   
-        row[27] || "", 
-        row[29] || "",   
-        row[30] || "",   
-        row[32] || "",  
-        row[35] || "" , 
-      ]);
+      if (userRole === "organizador") {
+          // Mostrar todos los casos sin filtrar
+          selectedRows = rows.map(row => [
+              row[2] || "",  
+              row[5] || "",  
+              row[24] || "",  
+              row[26] || "", 
+              row[28] || "",   
+              row[27] || "", 
+              row[29] || "",   
+              row[30] || "",   
+              row[32] || "",  
+              row[35] || "" , 
+          ]);
+      } else if (userRole === "pas") {
+          // Mostrar casos asignados al ejecutivo
+          selectedRows = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas)
+              .map(row => [
+                  row[2] || "",  
+                  row[5] || "",  
+                  row[24] || "",  
+                  row[26] || "", 
+                  row[28] || "",   
+                  row[27] || "", 
+                  row[29] || "",   
+                  row[30] || "",   
+                  row[32] || "",  
+                  row[35] || "" , 
+              ]);
+      } else if (userRole === "prueba") {
+          // Mostrar casos de un ejecutivo específico predefinido
+          const pruebaEjecutivo = "MAIRA".toUpperCase(); // Cambiar por el nombre real
+          selectedRows = rows.filter(row => (row[2] || "").toUpperCase().trim() === pruebaEjecutivo)
+              .map(row => [
+                  row[2] || "",  
+                  row[5] || "",  
+                  row[24] || "",  
+                  row[26] || "", 
+                  row[28] || "",   
+                  row[27] || "", 
+                  row[29] || "",   
+                  row[30] || "",   
+                  row[32] || "",  
+                  row[35] || "" , 
+              ]);
+      }
       console.log(selectedRows)
-        // Guardar el nombre del ejecutivo en una variable
-        const ejecutivoEncontrado = selectedRows[0][0].toLowerCase() // Nombre del ejecutivo
-  console.log(ejecutivoEncontrado)
-       // Mostrar tarjeta del ejecutivo encontrado
+      if (userRole === "pas" || userRole === "prueba") {
+        const ejecutivoEncontrado = selectedRows[0]?.[0]?.toLowerCase();
         if (ejecutivoEncontrado) {
-          const cardId = `#${ejecutivoEncontrado.replace(/\s+/g, '')}`; // Reemplazar espacios en blanco en el nombre
-          $(cardId).show(); // Mostrar la tarjeta
-        }else{
-          
+            const cardId = `#${ejecutivoEncontrado.replace(/\s+/g, '')}`;
+            $(cardId).show(); 
         }
+    }else{
+      $('#showCardButton').hide()
+      $('.full-width').toggleClass('col-md-9');
+    }
+
+
       $('#zero_configuration_table').DataTable({
         data: selectedRows,
         columns: [
@@ -79,8 +108,18 @@ $(document).ready(function() {
       })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
 
+   
+  
       $('#showCardButton').click(function() {
-        $('#executiveCard').toggle(); // Alternar la visibilidad de la tarjeta
+        $('#marianela').toggle(); // Alternar la visibilidad de la tarjeta
         $('.full-width').toggleClass('col-md-9');
     });
+    $('#showCardButton').click(function() {
+      $('#maira').toggle(); // Alternar la visibilidad de la tarjeta
+      $('.full-width').toggleClass('col-md-9');
+  });
+  $('#showCardButton').click(function() {
+    $('#isabella').toggle(); // Alternar la visibilidad de la tarjeta
+    $('.full-width').toggleClass('col-md-9');
+});
     });

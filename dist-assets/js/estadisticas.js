@@ -352,7 +352,7 @@ async function renderCharts(casesByMonth, closedCasesByMonth,averageCasesPerMont
         data: {
             labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
             datasets: [{
-                label: 'Casos Cerrados Exitosamente',
+                label: 'Casos Facturados Exitosamente',
                 data: closedCasesByMonth,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',   // Enero - Rojo suave
@@ -398,7 +398,7 @@ const ctx = document.getElementById('promedioAnualCasosChart').getContext('2d');
  new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['Casos Ingresados', 'Casos Cerrados Exitosamente'],
+        labels: ['Casos Ingresados', 'Casos facturados Exitosamente'],
         datasets: [{
             label: 'Promedio Anual',
             data: [averageCasesPerMonth, averageClosedCasesPerMonth],
@@ -453,7 +453,7 @@ const ctx6 = document.getElementById('activeVsClosedChart').getContext('2d');
 new Chart(ctx6, {
     type: 'pie', // También puede ser 'bar' si prefieres barras
     data: {
-        labels: ['Casos Activos', 'Casos Cerrados'],
+        labels: ['Casos Activos', 'Casos Facturados'],
         datasets: [{
             data: [activeCases,closedCases],
             backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(75, 192, 192, 0.2)'],
@@ -505,7 +505,7 @@ new Chart(ctx7, {
             borderColor: borderColorsForExecutives,
             borderWidth: 1
         }, {
-            label: 'Casos Cerrados',
+            label: 'Casos Facturados',
             data: Object.values(casesByExecutive).map(item => item.closed),
             backgroundColor: backgroundColors,
             borderColor: borderColorsForExecutives,

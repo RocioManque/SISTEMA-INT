@@ -19,6 +19,12 @@
         opacity: 0.6; /* Visualmente se ve deshabilitado */
         cursor: not-allowed; /* Cambia el cursor al pasar por encima */
     }
+    .progress {
+        height: 20px;
+    }
+    .progress-bar {
+        transition: width 0.4s ease;
+    }
     </style>
 </head>
 
@@ -123,11 +129,6 @@
         <div class="main-content-wrap d-flex flex-column">
             <!-- ============ Body content start ============= -->
             <div class="main-content">
-                <div class="row mb-4">
-                    <!-- <div class="col-md-12 d-flex justify-content-end"> 
-                        <button onclick="handleAuthClick()">A</button>
-                    </div> -->
-                </div>
                 <div class="inbox-main-sidebar-container" data-sidebar-container="main">
                     <div class="inbox-main-content" data-sidebar-content="main">
                         <!-- SECONDARY SIDEBAR CONTAINER-->
@@ -164,7 +165,27 @@
                                    
                                    </div>
                                    
-                                   <div id="liveAlertPlaceholder"></div>
+                                   <div class=" mb-4">
+                                    <div class="card text-left">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Subir archivos faltantes</h4>
+                                            <form class="dropzone dropzone-area" id="button-select-upload" action="#">
+                                                <div class="fallback">
+                                                    <input id="file-input" name="file" type="file" multiple="multiple" />
+                                                </div>
+                                                <div class="dz-message">Arrastre los archivos aquí para subirlos</div>
+                                            </form>
+                                            <div id="progress-container" style="margin-top: 20px; display: none;">
+                                                <label>Progreso:</label>
+                                                <div class="progress">
+                                                    <div id="progress-bar" class="progress-bar progress-bar-striped" role="progressbar" 
+                                                        style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                            <ul id="upload-results" style="margin-top: 20px;"></ul>
+                                        </div>
+                                    </div>
+                                </div>
                                    <!-- <div class="col-md-6 mb-4">
                                             <form class="dropzone dropzone-area" id="button-select-upload" action="#">
                                                 <div class="fallback">
@@ -180,6 +201,7 @@
                                     <textarea class="form-control" placeholder="Historial..." id="historial" style="height: 100px" disabled></textarea>
                                   </div>
                                <div>
+                                
                                </div>
                              <div class="">
                                 <div class="input-group mt-2 mb-3">
@@ -206,7 +228,13 @@
                                     </select>
                                     
                                 </div>
-                                
+                                <div class="input-group mt-2 mb-3 mt-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Honorarios</span>
+                                    </div>
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="honorarios"></select>
+                                </div>
                              </div>
 
                         </div>

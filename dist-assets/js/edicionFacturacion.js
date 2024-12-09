@@ -25,24 +25,6 @@ const gastosEstructura = params.get('gastosEstructura');
 const fechaDePagoComision = params.get('fechaDePagoComision');
 const totalPercibido = params.get('totalPercibido');
 
-document.getElementById("comprobante").textContent = caeNumero;
-document.getElementById("fechaemision").textContent = fechaVtoCAE;
-document.getElementById("facturadoDesde").textContent = caeNumero;
-document.getElementById("facturadoHasta").textContent = fechaVtoCAE;
-document.getElementById("vtoPagoFactura").textContent = caeNumero;
-document.getElementById("cuitEmpresa").textContent = fechaVtoCAE; 
-document.getElementById("razonSocial").textContent = fechaVtoCAE; 
-document.getElementById("condicionIva").textContent = fechaVtoCAE; 
-document.getElementById("domicilioCia").textContent = fechaVtoCAE; 
-document.getElementById("condicionVenta").textContent = fechaVtoCAE; 
-document.getElementById("casoProducto").textContent = fechaVtoCAE; 
-document.getElementById("precioUnitario").textContent = fechaVtoCAE; 
-document.getElementById("subtotal").textContent = fechaVtoCAE; 
-document.getElementById("subtotalFinal").textContent = fechaVtoCAE; 
-document.getElementById("importeTotal").textContent = fechaVtoCAE; 
-document.getElementById("nroCAE").textContent = fechaVtoCAE; 
-document.getElementById("fechaVtoCAE").textContent = fechaVtoCAE; 
-
    // Obtener la fecha actual
    const today = new Date();
         
@@ -75,12 +57,12 @@ document.getElementById('gastosEstructura').value = gastosEstructura;
 document.getElementById('facturadoSinIva').value = totalFacturadoSinIva;
 document.getElementById('nroFactura').value = nroFactura;
 document.getElementById('iva').value = iva;
-document.getElementById('facturadoConIva').value = totalFacturadoConIva;
-document.getElementById('fechaPagoComision').value = fechaDePagoComision;
 document.getElementById('totalPercibido').value = totalPercibido;
 // Y así sucesivamente para otros campos
 
 async function actualizar(e){
+    const fc = document.getElementById('file-input');
+    console.log(fc)
    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; 
    const today = new Date();
  const day = String(today.getDate()).padStart(2, '0'); // Asegura dos dígitos para el día
@@ -90,11 +72,11 @@ const fechaHoy = `${day}/${month}/${year}`;
 const facturadoSinIva = parseFloat(document.getElementById('facturadoSinIva').value);
 const calcularPorcentaje = (inputId) => {
     const porcentaje = parseFloat(document.getElementById(inputId).value);
-    return parseFloat(porcentaje > 0 && porcentaje < 100 ? (facturadoSinIva * porcentaje) / 100 : porcentaje);
+    return parseFloat(porcentaje > 0 && porcentaje < 100 && porcentaje != null ? (facturadoSinIva * porcentaje) / 100 : 0);
 };
 const calcularPorcentajeIva = (inputId) => {
     const porcentaje = parseFloat(document.getElementById(inputId).value);
-    return parseFloat(porcentaje > 0 && porcentaje < 100 ? (facturadoSinIva * porcentaje) / 100 : (facturadoSinIva * 21) / 100);
+    return parseFloat(porcentaje > 0 && porcentaje < 100 && porcentaje != null ? (facturadoSinIva * porcentaje) / 100 : 0);
 };
  // Calcular valores solo si el porcentaje es válido
  const gastosEstructura = calcularPorcentaje('gastosEstructura');

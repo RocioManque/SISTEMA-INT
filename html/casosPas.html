@@ -126,6 +126,14 @@
                                     </div>
                                 </div>
                             </li>
+                            <li class="views" id="instagram" style="float:right">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">instagram</label>
+                                        <a href="https://www.instagram.com/initinere_int?igsh=NjNicDZzZDdsYnhl"> <span class="text-white"><i class="fa-brands fa-instagram"></i></span></a>
+                                    </div>
+                                </div>
+                            </li>
                         </ul>
                     
                     </div>
@@ -245,7 +253,8 @@
             const userData = JSON.parse(localStorage.getItem('userData'));
         
             if (userData) {
-                const permission = userData.permission; // Asumimos que este es un string con el permiso del usuario
+                const permission = userData.permission;
+                console.log(permission) // Asumimos que este es un string con el permiso del usuario
                 const name = userData.name;
                 document.getElementById('userNameDisplay').innerText = `${userData.name}`;
                 // Ocultar todas las pestañas inicialmente
@@ -287,6 +296,21 @@
                     document.getElementById('novedades').style.display = 'block';
                     document.getElementById('whatsapp').style.display = 'block';
                     document.getElementById('linkedin').style.display = 'block';
+                    document.getElementById('instagram').style.display = 'block';
+
+                }else if (permission === 'PRUEBA') {
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+                    document.getElementById('whatsapp').style.display = 'block';
+                    document.getElementById('linkedin').style.display = 'block';
+                    document.getElementById('instagram').style.display = 'block';
+
+                }else if (permission === 'ORGANIZADOR') {
+                    document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('novedades').style.display = 'block';
+                    document.getElementById('whatsapp').style.display = 'block';
+                    document.getElementById('linkedin').style.display = 'block';
+                    document.getElementById('instagram').style.display = 'block';
 
                 }else if (permission === 'LEGALES') {
                     document.getElementById('casosGestion').style.display = 'block';

@@ -210,7 +210,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         montoReclamar: rowData[14],
         montoCerrado: rowData[15],
         companiaReclamar: rowData[16],
-        gestionadoCon: rowData[17]
+        gestionadoCon: rowData[17],
+        urlAdjuntos: rowData[18],
     });
 
     if (window.opener) {
