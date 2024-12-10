@@ -104,8 +104,10 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
 
     // Inicializa la DataTable con las filas seleccionadas
-    $('#zero_configuration_table').DataTable({
+    $('#scroll_vertical_dynamic_height_table').DataTable({
       data: selectedRows,
+      scrollY: 300,
+    scrollX: true,
       columns: [
         { title: "Nº" }, // Nueva columna para el número de fila
         { title: "PAS" },
@@ -119,7 +121,13 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         { title: "Nº reclamo cia" },
         { title: "Estado" },
         { title: "Observación" },
-        { title: "Informe/Historial" },
+        { title: "Informe/Historial",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<pre  style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" data-bs-placement="top" title="${data}">${data}</pre>` : '';
+          }
+          
+         },//46
         { title: "Tipo de reclamo" },
         { title: "Monto a reclamar" },
         { title: "Monto cerrado" },
@@ -189,7 +197,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
   });
   function editarFila(rowIndex) {
-    const rowData = $('#zero_configuration_table').DataTable().row(rowIndex).data();
+    const rowData = $('#scroll_vertical_dynamic_height_table').DataTable().row(rowIndex).data();
     
     // Construir la URL con los datos de la fila
     const urlParams = new URLSearchParams({

@@ -56,6 +56,8 @@ $(document).ready(function() {
   $('#zero_configuration_table').DataTable({
    
     data: selectedRows,
+    scrollY: 300,
+    scrollX: true,
     columns: [
         { title: "Nº" }, //index
         { title: "Fecha de Ingreso" }, //35
@@ -142,7 +144,7 @@ $(document).ready(function() {
         { title: "Informe/Historial",
           render: function(data, type, row, meta) {
             // Si la celda contiene una URL, muestra un enlace cliqueable
-            return data ? `<pre>${data}</pre>` : '';
+            return data ? `<pre  style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" data-bs-placement="top" title="${data}">${data}</pre>` : '';
           }
           
          },//46

@@ -387,16 +387,33 @@ async function actualizar(e){
             Swal.showLoading(); // Muestra un spinner mientras carga
         },
     });
-    const newText = document.getElementById('actualizacion').value;
-    const oldText = document.getElementById('historial').value;
-const historialConcat = `${oldText} \n ${newText}`;
+       // Obtener la fecha y hora actual
+const now = new Date();
+
+// Formatear la fecha a dd/mm/yy
+const day = String(now.getDate()).padStart(2, '0'); // Asegura dos dígitos
+const month = String(now.getMonth() + 1).padStart(2, '0'); // Mes +1 (0-indexado)
+const year = String(now.getFullYear()).slice(-2); // Últimos dos dígitos del año
+
+// Formatear la hora a hh:mm:ss
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const seconds = String(now.getSeconds()).padStart(2, '0');
+
+// Combinar fecha y hora
+const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+console.log(formattedDateTime);
+const newText = document.getElementById('actualizacion').value;
+const oldText = document.getElementById('historial').value;
+const historialConcat = `${oldText} \n ${formattedDateTime} ${newText}`;
+const actualizacion = document.getElementById('actualizacion').value.trim();
 //document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value,
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; 
     const today = new Date();
-  const day = String(today.getDate()).padStart(2, '0'); // Asegura dos dígitos para el día
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
-  const year = today.getFullYear();
-const fechaHoy = `${day}/${month}/${year}`;
+    const daya = String(today.getDate()).padStart(2, '0'); // Asegura dos dígitos para el día
+    const montha = String(today.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
+    const yeara = today.getFullYear();
+const fechaHoy = `${daya}/${montha}/${yeara}`;
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const nroInterno = document.getElementById('reclamo').value;
@@ -406,7 +423,7 @@ const fechaHoy = `${day}/${month}/${year}`;
     const telefonoCliente = document.getElementById('telefono').value;
     const emailCliente = document.getElementById('email').value;
     const observaciones = document.getElementById('obs').value;
-    const historial = document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value;//TODO: actualizacion + historial
+    const nuevoHistorial = actualizacion !== '' ? historialConcat : oldText;
     const fechaInicio = document.getElementById('inicio').value;
     const planInt = document.getElementById('planInt').value;
     const nroReclamoCia = document.getElementById('reclamoCia').value;
@@ -532,7 +549,7 @@ const fechaHoy = `${day}/${month}/${year}`;
                     rows: [
                         {
                             values: [
-                                { userEnteredValue: { stringValue: String(historial) } },
+                                { userEnteredValue: { stringValue: String(nuevoHistorial) } },
                                 { userEnteredValue: { stringValue: String(fechaInicio) } },
                                 { userEnteredValue: { stringValue: String(planInt) } },
                                 { userEnteredValue: { stringValue: String(nroReclamoCia) } },

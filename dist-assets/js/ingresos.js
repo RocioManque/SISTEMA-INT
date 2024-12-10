@@ -31,6 +31,8 @@ const historial= params.get('historial');
 console.log(historial)
 const estado= params.get('estado');
 const carpetaUrl= params.get('carpetaUrl');
+
+
 //TODO: los dropdown deberian estar seleccionados correctamente
 const spreadsheetId0 = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
 const spreadsheetId2 = '1FdJtx_Dr8dgvC-9HWfckT8qzHm8BikoSbV9EORXSEb8';
@@ -201,41 +203,42 @@ document.getElementById('email').value = mailCliente;
 document.getElementById('obs').value = observacion;
 document.getElementById('historial').value = historial;
 
-if (adjDniFrente === null || adjDniFrente === '') { // Si está vacío o no existe
-    document.getElementById('1').style.visibility = 'visible'; // Mostrar input
+if (adjDniFrente != null && adjDniFrente != '') { // Si no está vacío o no es nulo
+    
+    document.getElementById('dniF').classList.remove('btn-secondary'); // Remover la clase
 }
-if (adjDniDorso === null || adjDniDorso  === '') { // Si está vacío o no existe
-    document.getElementById('2').style.visibility = 'visible'; // Mostrar input
+if (adjDniDorso != null && adjDniDorso  != '') { // Si está vacío o no existe
+    document.getElementById('dniD').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjRegistroFrente === null || adjRegistroFrente === '') { // Si está vacío o no existe
-    document.getElementById('3').style.visibility = 'visible'; // Mostrar input
+if (adjRegistroFrente != null && adjRegistroFrente != '') { // Si está vacío o no existe
+    document.getElementById('registroF').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjRegistroDorso === null || adjRegistroDorso === '') { // Si está vacío o no existe
-    document.getElementById('4').style.visibility = 'visible'; // Mostrar input
+if (adjRegistroDorso != null && adjRegistroDorso != '') { // Si está vacío o no existe
+    document.getElementById('registroD').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjCedulaVerdeFrente === null || adjCedulaVerdeFrente === '') { // Si está vacío o no existe
-    document.getElementById('5').style.visibility = 'visible'; // Mostrar input
+if (adjCedulaVerdeFrente != null && adjCedulaVerdeFrente != '') { // Si está vacío o no existe
+    document.getElementById('cedulaF').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjCedulaVerdeDorso === null || adjCedulaVerdeDorso === '') { // Si está vacío o no existe
-    document.getElementById('6').style.visibility = 'visible'; // Mostrar input
+if (adjCedulaVerdeDorso != null && adjCedulaVerdeDorso != '') { // Si está vacío o no existe
+    document.getElementById('cedulaD').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjDenunciaAdm === null || adjDenunciaAdm === '') { // Si está vacío o no existe
-    document.getElementById('7').style.visibility = 'visible'; // Mostrar input
+if (adjDenunciaAdm != null && adjDenunciaAdm != '') { // Si está vacío o no existe
+    document.getElementById('denunciaF').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjCertCobertura === null || adjCertCobertura === '') { // Si está vacío o no existe
-    document.getElementById('8').style.visibility = 'visible'; // Mostrar input
+if (adjCertCobertura != null && adjCertCobertura != '') { // Si está vacío o no existe
+    document.getElementById('certF').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjFotoSiniestro === null || adjFotoSiniestro === '') { // Si está vacío o no existe
-    document.getElementById('9').style.visibility = 'visible'; // Mostrar input
+if (adjFotoSiniestro != null && adjFotoSiniestro != '') { // Si está vacío o no existe
+    document.getElementById('fotoS').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjPresupuesto === null || adjPresupuesto === '') { // Si está vacío o no existe
-    document.getElementById('10').style.visibility = 'visible'; // Mostrar input
+if (adjPresupuesto != null && adjPresupuesto != '') { // Si está vacío o no existe
+    document.getElementById('presupuestoF').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjContratoSoc === null || adjContratoSoc === '') { // Si está vacío o no existe
-    document.getElementById('11').style.visibility = 'visible'; // Mostrar input
+if (adjContratoSoc != null && adjContratoSoc != '') { // Si está vacío o no existe
+    document.getElementById('contratoS').classList.remove('btn-secondary'); // Mostrar input
 }
-if (adjNotaRepresentacion === null || adjNotaRepresentacion === '') { // Si está vacío o no existe
-    document.getElementById('12').style.visibility = 'visible'; // Mostrar input
+if (adjNotaRepresentacion != null && adjNotaRepresentacion != '') { // Si está vacío o no existe
+    document.getElementById('notaR').classList.remove('btn-secondary'); // Mostrar input
 }
 // document.getElementById('adjDniFrente').value = adjDniFrente;
 // document.getElementById('adjDniDorso').value = adjDniDorso;
@@ -451,6 +454,27 @@ async function uploadFile(file, folderId) {
 
 // Actualizar la fila en Google Sheets
 async function updateRowInSheet(rowIndex, updatedUrls) {
+    // Obtener la fecha y hora actual
+const now = new Date();
+
+// Formatear la fecha a dd/mm/yy
+const day = String(now.getDate()).padStart(2, '0'); // Asegura dos dígitos
+const month = String(now.getMonth() + 1).padStart(2, '0'); // Mes +1 (0-indexado)
+const year = String(now.getFullYear()).slice(-2); // Últimos dos dígitos del año
+
+// Formatear la hora a hh:mm:ss
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const seconds = String(now.getSeconds()).padStart(2, '0');
+
+// Combinar fecha y hora
+const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+console.log(formattedDateTime);
+const newText = document.getElementById('actualizacion').value;
+const oldText = document.getElementById('historial').value;
+const historialConcat = `${oldText} \n ${formattedDateTime} ${newText}`;
+const actualizacion = document.getElementById('actualizacion').value.trim();
+const nuevoHistorial = actualizacion !== '' ? historialConcat : oldText;
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
     const range = `Respuestas de formulario 1!A${rowIndex}:W${rowIndex}`;
 
@@ -465,7 +489,7 @@ async function updateRowInSheet(rowIndex, updatedUrls) {
         document.getElementById('obs')?.value || '',
         ...updatedUrls,
         document.getElementById('tipoReclamo')?.value || '',
-        document.getElementById('actualizacion')?.value || '',
+        nuevoHistorial,
         document.getElementById('estado')?.value || '',
     ];
 

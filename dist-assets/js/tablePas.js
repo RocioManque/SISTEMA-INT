@@ -21,14 +21,14 @@ $(document).ready(function() {
           // Mostrar todos los casos sin filtrar
           selectedRows = rows.map(row => [
               row[2] || "",  
-              row[5] || "",  
+              row[6] || "",  
               row[24] || "",  
-              row[26] || "", 
-              row[28] || "",   
               row[27] || "", 
               row[29] || "",   
+              row[28] || "", 
               row[30] || "",   
-              row[32] || "",  
+              row[31] || "",   
+              row[25] || "",  
               row[35] || "" , 
           ]);
       } else if (userRole === "pas") {
@@ -36,14 +36,14 @@ $(document).ready(function() {
           selectedRows = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas)
               .map(row => [
                   row[2] || "",  
-                  row[5] || "",  
+                  row[6] || "",  
                   row[24] || "",  
-                  row[26] || "", 
-                  row[28] || "",   
                   row[27] || "", 
                   row[29] || "",   
+                  row[28] || "", 
                   row[30] || "",   
-                  row[32] || "",  
+                  row[31] || "",   
+                  row[25] || "",  
                   row[35] || "" , 
               ]);
       } else if (userRole === "prueba") {
@@ -52,14 +52,14 @@ $(document).ready(function() {
           selectedRows = rows.filter(row => (row[2] || "").toUpperCase().trim() === pruebaEjecutivo)
               .map(row => [
                   row[2] || "",  
-                  row[5] || "",  
+                  row[6] || "",  
                   row[24] || "",  
-                  row[26] || "", 
-                  row[28] || "",   
                   row[27] || "", 
                   row[29] || "",   
+                  row[28] || "", 
                   row[30] || "",   
-                  row[32] || "",  
+                  row[31] || "",   
+                  row[25] || "",  
                   row[35] || "" , 
               ]);
       }
@@ -69,19 +69,27 @@ $(document).ready(function() {
         if (ejecutivoEncontrado) {
             const cardId = `#${ejecutivoEncontrado.replace(/\s+/g, '')}`;
             $(cardId).show(); 
+            $('#showCardButton').click(function() {
+                $(cardId).toggle(); // Alternar la visibilidad de la tarjeta
+              $('.full-width').toggleClass('col-md-9');
+            });
+
         }
+        
     }else{
       $('#showCardButton').hide()
       $('.full-width').toggleClass('col-md-9');
     }
 
 
-      $('#zero_configuration_table').DataTable({
+      $('#scroll_vertical_dynamic_height_table').DataTable({
         data: selectedRows,
+        scrollY: 300,
+    scrollX: true,
         columns: [
             { title: "Ejecutivo" },
             { title: "Dominio" },
-            { title: "Iforme/Historial" },
+            { title: "Informe/Historial" },
             { title: "Nº Reclamo" },
             { title: "Tipo de Reclamo" },
             { title: "Estado" },
@@ -101,7 +109,7 @@ $(document).ready(function() {
             }
         }
     });
-        $('#zero_configuration_table').on('click', '.btn-primary', function() {
+        $('#scroll_vertical_dynamic_height_table').on('click', '.btn-primary', function() {
             const rowIndex = $(this).data('row');
             const rowData = selectedRows[rowIndex];
           });
@@ -110,16 +118,16 @@ $(document).ready(function() {
 
    
   
-      $('#showCardButton').click(function() {
-        $('#marianela').toggle(); // Alternar la visibilidad de la tarjeta
-        $('.full-width').toggleClass('col-md-9');
-    });
-    $('#showCardButton').click(function() {
-      $('#maira').toggle(); // Alternar la visibilidad de la tarjeta
-      $('.full-width').toggleClass('col-md-9');
-  });
-  $('#showCardButton').click(function() {
-    $('#isabella').toggle(); // Alternar la visibilidad de la tarjeta
-    $('.full-width').toggleClass('col-md-9');
-});
+//       $('#showCardButton').click(function() {
+//         $('#marianela').toggle(); // Alternar la visibilidad de la tarjeta
+//         $('.full-width').toggleClass('col-md-9');
+//     });
+//     $('#showCardButton').click(function() {
+//       $('#maira').toggle(); // Alternar la visibilidad de la tarjeta
+//       $('.full-width').toggleClass('col-md-9');
+//   });
+//   $('#showCardButton').click(function() {
+//     $('#isabella').toggle(); // Alternar la visibilidad de la tarjeta
+//     $('.full-width').toggleClass('col-md-9');
+// });
     });
