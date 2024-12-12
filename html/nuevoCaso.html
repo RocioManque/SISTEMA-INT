@@ -14,7 +14,14 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+<style>
+.emptyFile{
+    color: white;
+    background-color: #dd1a0086;
+    outline:#dd1a0086;
+}
 
+</style>
 
 </head>
 
@@ -144,51 +151,51 @@
                                    </div>
                                    
                                    <div class="input-group mb-3" id="1" >
-                                    <label class="input-group-text" for="inputGroupFile01">DNI (frente)</label>
+                                    <label class=" btn emptyFile" for="inputGroupFile01" id="dniF">DNI (frente)</label>
                                     <input type="file" class="form-control" id="adjDniFrente">
                                   </div>
                                   <div class="input-group mb-3" id="2" >
-                                    <label class="input-group-text" for="inputGroupFile01">DNI (dorso)</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="dniD">DNI (dorso)</label>
                                     <input type="file" class="form-control" id="adjDniDorso">
                                   </div>
                                   <div class="input-group mb-3" id="3" >
-                                    <label class="input-group-text" for="inputGroupFile01">Registro (frente)</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="registroF">Registro (frente)</label>
                                     <input type="file" class="form-control" id="adjRegistroFrente">
                                   </div>
                                   <div class="input-group mb-3" id="4" >
-                                    <label class="input-group-text" for="inputGroupFile01">Registro (dorso)</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="registroD">Registro (dorso)</label>
                                     <input type="file" class="form-control" id="adjRegistroDorso">
                                   </div>
                                   <div class="input-group mb-3" id="5" >
-                                    <label class="input-group-text" for="inputGroupFile01">Cédula Verde (Frente)</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="cedulaF">Cédula Verde (Frente)</label>
                                     <input type="file" class="form-control" id="adjCedulaVerdeFrente">
                                   </div>
                                   <div class="input-group mb-3" id="6" >
-                                    <label class="input-group-text" for="inputGroupFile01">Cédula Verde (Dorso)</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="cedulaD">Cédula Verde (Dorso)</label>
                                     <input type="file" class="form-control" id="adjCedulaVerdeDorso">
                                   </div>
                                   <div class="input-group mb-3" id="7" >
-                                    <label class="input-group-text" for="inputGroupFile01">Denuncia Administrativa</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="denunciaF">Denuncia Administrativa</label>
                                     <input type="file" class="form-control" id="adjDenunciaAdm">
                                   </div>
                                   <div class="input-group mb-3" id="8" >
-                                    <label class="input-group-text" for="inputGroupFile01">Certificado de cobertura</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="certF">Certificado de cobertura</label>
                                     <input type="file" class="form-control" id="adjCertCobertura">
                                   </div>
                                   <div class="input-group mb-3" id="9" >
-                                    <label class="input-group-text" for="inputGroupFile01">Foto Siniestro</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="fotoS">Foto Siniestro</label>
                                     <input type="file" class="form-control" id="adjFotoSiniestro">
                                   </div>
                                   <div class="input-group mb-3" id="10" >
-                                    <label class="input-group-text" for="inputGroupFile01">Presupuesto</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="presupuestoF">Presupuesto</label>
                                     <input type="file" class="form-control" id="adjPresupuesto">
                                   </div>
                                   <div class="input-group mb-3" id="11" >
-                                    <label class="input-group-text" for="inputGroupFile01">Contrato Social</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="contratoS">Contrato Social</label>
                                     <input type="file" class="form-control" id="adjContratoSoc">
                                   </div>
                                   <div class="input-group mb-3" id="12" >
-                                    <label class="input-group-text" for="inputGroupFile01">Nota Representación</label>
+                                    <label class="btn emptyFile" for="inputGroupFile01" id="notaR">Nota Representación</label>
                                     <input type="file" class="form-control" id="adjNotaRepresentacion">
                                   </div>
 
@@ -332,6 +339,68 @@
                 window.location.href = 'index.html';
             }
         });
+        
+        $(document).on('change', '#adjDniFrente', function() {
+    if (this.files && this.files.length > 0) {
+        $('#dniF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjDniDorso', function() {
+    if (this.files && this.files.length > 0) {
+        $('#dniD').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjRegistroFrente', function() {
+    if (this.files && this.files.length > 0) {
+        $('#registroF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjRegistroDorso', function() {
+    if (this.files && this.files.length > 0) {
+        $('#registroD').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjCedulaVerdeFrente', function() {
+    if (this.files && this.files.length > 0) {
+        $('#cedulaF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjCedulaVerdeDorso', function() {
+    if (this.files && this.files.length > 0) {
+        $('#cedulaD').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjDenunciaAdm', function() {
+    if (this.files && this.files.length > 0) {
+        $('#denunciaF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjCertCobertura', function() {
+    if (this.files && this.files.length > 0) {
+        $('#certF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjFotoSiniestro', function() {
+    if (this.files && this.files.length > 0) {
+        $('#fotoS').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjPresupuesto', function() {
+    if (this.files && this.files.length > 0) {
+        $('#presupuestoF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#contratoS', function() {
+    if (this.files && this.files.length > 0) {
+        $('#contratoS').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjNotaRepresentacion', function() {
+    if (this.files && this.files.length > 0) {
+        $('#notaR').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+
 
         const CLIENT_ID = '607561137784-rq84r06gop7p4hjo1nnv0q5re4fl2nff.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E';
@@ -585,7 +654,7 @@ async function uploadFiles(e) {
         'adjNotaRepresentacion',
     ];
 
-    const urls = [];
+    const urls = new Array(fileIds.length).fill('');
     
     // Definimos el ID de la carpeta donde se guardarán los archivos
     const parentFolderId = await createFolderInDynamicParent(); 
@@ -596,9 +665,9 @@ async function uploadFiles(e) {
         return;
     }
 
-    const filePromises = fileIds.map(async (fileId) => {
+    const filePromises = fileIds.map(async (fileId, index) => {
         const fileInput = document.getElementById(fileId);
-        const file = fileInput?.files[0]; // Utilizamos el operador de encadenamiento opcional
+        const file = fileInput?.files[0]; // Verificamos si hay archivo cargado
 
         if (file) {
             try {
@@ -606,7 +675,7 @@ async function uploadFiles(e) {
                 const fileParts = await splitFile(file);
                 const uploadedUrls = await uploadFileParts(fileParts, parentFolderId.folderId);
                 if (uploadedUrls.length > 0) {
-                    urls.push(uploadedUrls[0]); // Solo almacenamos la URL del archivo completo después de recomponerlo
+                    urls[index] = uploadedUrls[0]; // Asignamos la URL al índice correspondiente
                 } else {
                     console.error(`Error al subir el archivo ${fileId}`);
                 }
@@ -614,11 +683,12 @@ async function uploadFiles(e) {
                 console.error(`Error al subir el archivo ${fileId}:`, error);
             }
         } else {
-            urls.push(''); // Si no hay archivo, asignamos un valor vacío
+            urls[index] = ''; // Si no hay archivo, mantenemos el valor vacío
         }
     });
 
-    await Promise.all(filePromises); // Esperamos a que todos los archivos se suban
+    await Promise.all(filePromises); // Esperamos a que todos los archivos terminen de cargar
+
 
     Swal.close();
     await saveDataToSheetWithFiles(urls, parentFolderId.folderUrl);
@@ -788,7 +858,16 @@ async function saveDataToSheetWithFiles(urls, folderUrl) {
         });
 
         if (response.ok) {
-            Swal.fire('Exito', 'Formulario completado exitosamente.', 'success');
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'El caso se ha cargado correctamente.',
+                icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+                confirmButtonText: 'Aceptar',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/html/casosPendientes.html';
+                }
+              });
         } else {
             console.error('Error al guardar los datos:', response.statusText);
             Swal.fire('Error', 'No se pudo guardar los datos en Google Sheets.', 'error');
@@ -798,6 +877,7 @@ async function saveDataToSheetWithFiles(urls, folderUrl) {
         Swal.fire('Error', 'Ocurrió un error al guardar los datos.', 'error');
     }
 }
+
 document.getElementById('sendWhatsApp').addEventListener('click', function() {
     const phoneForm = document.getElementById('telefono').value
     const mensaje = document.getElementById('actualizacion').value;

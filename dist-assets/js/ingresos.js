@@ -204,42 +204,118 @@ document.getElementById('obs').value = observacion;
 document.getElementById('historial').value = historial;
 
 if (adjDniFrente != null && adjDniFrente != '') { // Si no está vacío o no es nulo
-    
-    document.getElementById('dniF').classList.remove('btn-secondary'); // Remover la clase
+
+    document.getElementById('dniF').classList.remove('emptyFile'); // Quitar la clase emptyFile
+    document.getElementById('dniF').classList.add('input-group-text'); // Agregar la clase input-group-text
 }
 if (adjDniDorso != null && adjDniDorso  != '') { // Si está vacío o no existe
-    document.getElementById('dniD').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('dniD').classList.remove('emptyFile'); 
+    document.getElementById('dniD').classList.add('input-group-text'); 
 }
 if (adjRegistroFrente != null && adjRegistroFrente != '') { // Si está vacío o no existe
-    document.getElementById('registroF').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('registroF').classList.remove('emptyFile'); 
+    document.getElementById('registroF').classList.add('input-group-text');
 }
 if (adjRegistroDorso != null && adjRegistroDorso != '') { // Si está vacío o no existe
-    document.getElementById('registroD').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('registroD').classList.remove('emptyFile'); 
+    document.getElementById('registroD').classList.add('input-group-text');
 }
 if (adjCedulaVerdeFrente != null && adjCedulaVerdeFrente != '') { // Si está vacío o no existe
-    document.getElementById('cedulaF').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('cedulaF').classList.remove('emptyFile'); 
+    document.getElementById('cedulaF').classList.add('input-group-text');
 }
 if (adjCedulaVerdeDorso != null && adjCedulaVerdeDorso != '') { // Si está vacío o no existe
-    document.getElementById('cedulaD').classList.remove('btn-secondary'); // Mostrar input
-}
+    document.getElementById('cedulaD').classList.remove('emptyFile'); 
+    document.getElementById('cedulaD').classList.add('input-group-text');
+}   
 if (adjDenunciaAdm != null && adjDenunciaAdm != '') { // Si está vacío o no existe
-    document.getElementById('denunciaF').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('denunciaF').classList.remove('emptyFile'); 
+    document.getElementById('denunciaF').classList.add('input-group-text');
+
 }
 if (adjCertCobertura != null && adjCertCobertura != '') { // Si está vacío o no existe
-    document.getElementById('certF').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('certF').classList.remove('emptyFile'); 
+    document.getElementById('certF').classList.add('input-group-text');
 }
 if (adjFotoSiniestro != null && adjFotoSiniestro != '') { // Si está vacío o no existe
-    document.getElementById('fotoS').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('fotoS').classList.remove('emptyFile'); 
+    document.getElementById('fotoS').classList.add('input-group-text');
 }
 if (adjPresupuesto != null && adjPresupuesto != '') { // Si está vacío o no existe
-    document.getElementById('presupuestoF').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('presupuestoF').classList.remove('emptyFile'); 
+    document.getElementById('presupuestoF').classList.add('input-group-text');
 }
 if (adjContratoSoc != null && adjContratoSoc != '') { // Si está vacío o no existe
-    document.getElementById('contratoS').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('contratoS').classList.remove('emptyFile'); 
+    document.getElementById('contratoS').classList.add('input-group-text');
 }
 if (adjNotaRepresentacion != null && adjNotaRepresentacion != '') { // Si está vacío o no existe
-    document.getElementById('notaR').classList.remove('btn-secondary'); // Mostrar input
+    document.getElementById('notaR').classList.remove('emptyFile'); 
+    document.getElementById('notaR').classList.add('input-group-text');
 }
+
+   
+$(document).on('change', '#adjDniFrente', function() {
+    if (this.files && this.files.length > 0) {
+        $('#dniF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjDniDorso', function() {
+    if (this.files && this.files.length > 0) {
+        $('#dniD').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjRegistroFrente', function() {
+    if (this.files && this.files.length > 0) {
+        $('#registroF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjRegistroDorso', function() {
+    if (this.files && this.files.length > 0) {
+        $('#registroD').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjCedulaVerdeFrente', function() {
+    if (this.files && this.files.length > 0) {
+        $('#cedulaF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjCedulaVerdeDorso', function() {
+    if (this.files && this.files.length > 0) {
+        $('#cedulaD').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjDenunciaAdm', function() {
+    if (this.files && this.files.length > 0) {
+        $('#denunciaF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjCertCobertura', function() {
+    if (this.files && this.files.length > 0) {
+        $('#certF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjFotoSiniestro', function() {
+    if (this.files && this.files.length > 0) {
+        $('#fotoS').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjPresupuesto', function() {
+    if (this.files && this.files.length > 0) {
+        $('#presupuestoF').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#contratoS', function() {
+    if (this.files && this.files.length > 0) {
+        $('#contratoS').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+$(document).on('change', '#adjNotaRepresentacion', function() {
+    if (this.files && this.files.length > 0) {
+        $('#notaR').removeClass('emptyFile').addClass('input-group-text');
+    }
+});
+
 // document.getElementById('adjDniFrente').value = adjDniFrente;
 // document.getElementById('adjDniDorso').value = adjDniDorso;
 // document.getElementById('adjRegistroFrente').value = adjRegistroFrente;
