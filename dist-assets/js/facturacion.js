@@ -54,6 +54,33 @@ $(document).ready(function() {
           return null; // Excluye filas que no coincidan
         })
         .filter(row => row !== null); // Elimina valores nulos de la lista
+        const selectedRows2 = rows
+        .map((row, index) => {
+          // Añade la fila visible en la hoja (índice + 1 o + 2 si hay encabezados)
+          const numeroFila = index + 1; 
+      
+          // Convierte el contenido de la columna a mayúsculas para comparar
+          const tipoReclamo = (row[28] || "").toUpperCase();
+      
+          // Verifica si el tipo de reclamo es "FACTURACION"
+          if (tipoReclamo === 'FACTURACION') {
+            return [
+      // Número de fila en Google Sheets
+              row[35] || "",    // Información relevante
+              row[26] || "",   
+              row[28] || "",  
+              row[29] || "",   
+              row[31] || "",   
+              row[56] || "",    
+              row[33] || "",
+              row[38] || "",    
+              row[37] || "",
+              row[39] || "",   
+            ];
+          }
+          return null; // Excluye filas que no coincidan
+        })
+        .filter(row => row !== null); // Elimina valores nulos de la lista
       
       console.log(selectedRows);
       $('#zero_configuration_table').DataTable({
@@ -93,6 +120,28 @@ $(document).ready(function() {
             
         ],
     });
+    $('#table2').DataTable({
+      data: selectedRows2,
+      columns: [
+          { title: "Caso" }, //35
+          { title: "Plan INT" },//26
+          { title: "Estado" },//28
+          { title: "Tipo de reclamo" },//29
+          { title: "Monto cerrado" },//31
+          { title: "Honorario Porcentaje" },//56
+          { title: "Fecha de facturación" },//33
+          { title: "Total facturado sin IVA" },//38
+          { title: "Comision PAS" },//37
+          { title: "Nro de factura/comprobante interno" },//39
+          { title: "Acciones", render: function(data, type, row, meta) {
+              return `  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="facturar(${meta.row})">
+      Facturar
+    </button> <button class="btn btn-primary mt-2" type="button" onclick="editarFila(${meta.row})">Editar</button>
+    <button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#uploadFc" onclick="capturarRowIndex(${meta.row})" >Cargar Factura</button>`;
+          }}
+          
+      ],
+  });
         
       })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
