@@ -3,7 +3,7 @@ const urls = [];
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
 console.log('entra')
-const rowIndex = parseInt(params.get('row')) + 1;
+const rowIndex = parseInt(params.get('row'));
 const fechaIngreso = params.get('fechaIngreso');
 const pas = params.get('pas');
 const cliente = params.get('cliente');
@@ -794,7 +794,7 @@ const historialConcat = `${oldText} \n ${newText}`;
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     const nroInterno = await obtenerNuevoNumeroCaso()
     const ejecutivoEncontrado = await encontrarEjecutivo()
-    const IndexNuevaFila = ultimaFilaDeTabla + 2
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const pas = document.getElementById('pasDropdown').value;
@@ -1070,7 +1070,7 @@ try {
     console.log(ultimaFilaDeTabla)
     const nroInterno = await obtenerNuevoNumeroCaso()
     const ejecutivoEncontrado = resultado[0]
-    const IndexNuevaFila = ultimaFilaDeTabla + 2
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
     console.log(IndexNuevaFila)
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
@@ -1268,7 +1268,7 @@ const historialConcat = `${oldText} \n ${newText}`;
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     const nroInterno = await obtenerNuevoNumeroCaso()
     const ejecutivoEncontrado = await encontrarEjecutivo()
-    const IndexNuevaFila = ultimaFilaDeTabla + 2
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const pas = document.getElementById('pasDropdown').value;
@@ -1459,7 +1459,7 @@ const historialConcat = `${oldText} \n ${newText}`;
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     const nroInterno = await obtenerNuevoNumeroCaso()
     const ejecutivoEncontrado = 'MARIANELA'
-    const IndexNuevaFila = ultimaFilaDeTabla + 2
+    const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
     const pas = document.getElementById('pasDropdown').value;

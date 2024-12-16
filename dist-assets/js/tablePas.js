@@ -1,7 +1,7 @@
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'sheet1'; // 
-
+let selectedRows2 = [];
 // URL de la API de Google Sheets
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 $(document).ready(function() {
@@ -20,52 +20,71 @@ $(document).ready(function() {
       if (userRole === "organizador") {
           // Mostrar todos los casos sin filtrar
           selectedRows = rows.map(row => [
-              row[2] || "",  
+              row[35] || "",  
               row[6] || "",  
-              row[24] || "",  
-              row[27] || "", 
-              row[29] || "",   
+              row[29] || "",  
               row[28] || "", 
               row[30] || "",   
-              row[31] || "",   
-              row[25] || "",  
-              row[35] || "" , 
+              row[31] || "", 
+              row[25] || "",   
           ]);
       } else if (userRole === "pas") {
           // Mostrar casos asignados al ejecutivo
           selectedRows = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas)
               .map(row => [
-                  row[2] || "",  
+                  row[35] || "",  
                   row[6] || "",  
-                  row[24] || "",  
-                  row[27] || "", 
-                  row[29] || "",   
+                  row[29] || "",  
                   row[28] || "", 
                   row[30] || "",   
-                  row[31] || "",   
-                  row[25] || "",  
-                  row[35] || "" , 
+                  row[31] || "", 
+                  row[25] || "",   
               ]);
       } else if (userRole === "prueba") {
           // Mostrar casos de un ejecutivo específico predefinido
           const pruebaEjecutivo = "MAIRA".toUpperCase(); // Cambiar por el nombre real
           selectedRows = rows.filter(row => (row[2] || "").toUpperCase().trim() === pruebaEjecutivo)
               .map(row => [
-                  row[2] || "",  
+                  row[35] || "",  
                   row[6] || "",  
-                  row[24] || "",  
-                  row[27] || "", 
-                  row[29] || "",   
+                  row[29] || "",  
                   row[28] || "", 
                   row[30] || "",   
-                  row[31] || "",   
-                  row[25] || "",  
-                  row[35] || "" , 
+                  row[31] || "", 
+                  row[25] || "",   
               ]);
       }
       console.log(selectedRows)
+      if (userRole === "organizador") {
+        // Mostrar todos los casos sin filtrar
+        selectedRows2 = rows.map(row => [
+            row[2] || "",   
+            row[24] || "",  
+        ]);
+    } else if (userRole === "pas") {
+        // Mostrar casos asignados al ejecutivo
+        selectedRows2 = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas)
+            .map(row => [
+                row[2] || "",  
+                row[6] || "",  
+                row[24] || "",  
+            ]);
+    } else if (userRole === "prueba") {
+        // Mostrar casos de un ejecutivo específico predefinido
+        const pruebaEjecutivo = "MAIRA".toUpperCase(); // Cambiar por el nombre real
+        selectedRows2 = rows.filter(row => (row[2] || "").toUpperCase().trim() === pruebaEjecutivo)
+            .map(row => [
+                row[2] || "",  
+                row[6] || "",  
+                row[24] || "",  
+            ]);
+    }
+      console.log(selectedRows2)
+
+
       if (userRole === "pas" || userRole === "prueba") {
-        const ejecutivoEncontrado = selectedRows[0]?.[0]?.toLowerCase();
+        const ejecutivoEncontrado = selectedRows2[0]?.[0]?.toLowerCase();
+        console.log(ejecutivoEncontrado)
         if (ejecutivoEncontrado) {
             const cardId = `#${ejecutivoEncontrado.replace(/\s+/g, '')}`;
             $(cardId).show(); 
@@ -80,54 +99,59 @@ $(document).ready(function() {
       $('#showCardButton').hide()
       $('.full-width').toggleClass('col-md-9');
     }
-
-
+   
       $('#scroll_vertical_dynamic_height_table').DataTable({
+        
         data: selectedRows,
         scrollY: 300,
-    scrollX: true,
+        scrollX: true,
         columns: [
-            { title: "Ejecutivo" },
+            { title: "Caso" },
             { title: "Dominio" },
-            { title: "Informe/Historial" },
-            { title: "Nº Reclamo" },
             { title: "Tipo de Reclamo" },
             { title: "Estado" },
             { title: "Monto reclamado" },
             { title: "Monto cerrado" },
-            { title: "Fecha de inicio" },
-            { title: "Caso" },
+            { title: "Fecha de Inicio" },
+            { title: "Acciones", render: function(data, type, row, meta) {
+                return `<button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#history" onclick="verHistorial(${meta.row})" >Ver Historial</button>`;
+            }}
+            
         ],
-        createdRow: function(row, data, dataIndex) {
-            // Aplica clases dependiendo del estado de la reclamación
-            if (data[5] === 'FALTA DOCUMENTACIÓN') {
-                $(row).addClass('table-warning'); 
-            } else if (data[5] === 'INGRESADO') {
-                $(row).addClass('table-success'); 
-            } else if (data[5] === 'DESISTIDO') {
-                $(row).addClass('table-danger'); 
-            }
-        }
     });
-        $('#scroll_vertical_dynamic_height_table').on('click', '.btn-primary', function() {
-            const rowIndex = $(this).data('row');
-            const rowData = selectedRows[rowIndex];
-          });
+    $('#ghost-table').DataTable({
+        data: selectedRows2,
+        scrollY: 300,
+        scrollX: true,
+        columns: [
+            { title: "Ejecutivo" },
+            { title: "dominio" },
+            { title: "historial" },
+            
+        ],
+    });
       })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
-
-   
-  
-//       $('#showCardButton').click(function() {
-//         $('#marianela').toggle(); // Alternar la visibilidad de la tarjeta
-//         $('.full-width').toggleClass('col-md-9');
-//     });
-//     $('#showCardButton').click(function() {
-//       $('#maira').toggle(); // Alternar la visibilidad de la tarjeta
-//       $('.full-width').toggleClass('col-md-9');
-//   });
-//   $('#showCardButton').click(function() {
-//     $('#isabella').toggle(); // Alternar la visibilidad de la tarjeta
-//     $('.full-width').toggleClass('col-md-9');
-// });
+      
     });
+
+    function verHistorial(rowIndex) {
+        // Accede directamente al elemento en selectedRows2 usando el índice
+        const historialData = selectedRows2[rowIndex];
+    console.log(historialData)
+        const historyList = document.getElementById("historyList");
+        console.log('el history list',historyList)
+    
+        if (historialData) {
+            const listItem = document.createElement("li");
+            listItem.textContent = historialData[2];
+            console.log(listItem)
+          //  historyList.appendChild(listItem);
+         historyList = listItem;
+            
+            console.log("finale",historyList)
+        } else {
+            historyList.innerHTML = "<li>No hay historial disponible</li>";
+        }
+    }
+    

@@ -23308,6 +23308,7 @@ ul.metismenu {
 .avatar-lg {
   width: 80px;
   height: 80px;
+
 }
 
 .avatar-xl {
@@ -23627,8 +23628,8 @@ ul.metismenu {
 }
 
 .card-profile-1 .avatar {
-  width: 80px;
-  height: 80px;
+  width: 150px;
+  height: 150px;
   overflow: hidden;
   margin: auto;
   border-radius: 50%;
@@ -31187,7 +31188,7 @@ div.tab-border {
   .inbox-secondary-sidebar
   .mail-item
   .avatar {
-  width: 15%;
+  width: 50%;
 }
 .inbox-main-sidebar-container
   .inbox-secondary-sidebar-container

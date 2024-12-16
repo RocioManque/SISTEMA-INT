@@ -32,6 +32,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     // Si el usuario es un superusuario, mostrar todos los casos
     let selectedRows = [];
+    let selectedRows2 = [];
 
     if (permiso === "super usuario") {
       selectedRows = rows.map((row, index) => {
@@ -59,6 +60,22 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           row[53] || "",     // Compañía a reclamar
           row[54] || "",     // Compañía a reclamar
           row[55] || ""     // Compañía a reclamar
+        ];
+      });
+      selectedRows2 = rows.map((row, index) => {
+        // Añade la fila visible en la hoja (índice + 1)
+        const numeroFila = index + 1;
+        return [
+          row[1] || "",     // PAS
+          row[4] || "",     // Cliente
+          row[28] || "",     // Fecha de ingreso
+          row[24] || "",    // Fecha de inicio
+          row[29] || "",     // Nº de Reclamo
+          row[30] || "",    // Compañía a reclamar
+          row[31] || "",   
+          row[48] || "",    // Tipo de reclamo
+          row[54] || "",    // Tipo de reclamo
+          row[55] || "",    // Tipo de reclamo    // Compañía a reclamar
         ];
       });
     } else {
@@ -99,12 +116,34 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           }
         })
         .filter(row => row !== undefined); // Filtra filas vacías resultantes
+        selectedRows2 = rows
+        .map((row, index) => {
+          // Añade la fila visible en la hoja (índice + 1)
+          const numeroFila = index + 1;
+
+          // Convierte el nombre del cliente a mayúsculas y compara
+          const nombreCliente = (row[2] || "").toUpperCase();
+          const apellidoCliente = (row[1] || "").toUpperCase();
+
+          if (nombreCliente === nombre || apellidoCliente === apellido) {
+            return [
+              row[1] || "",     // PAS
+              row[4] || "",     // Cliente
+              row[28] || "",     // Fecha de ingreso
+              row[24] || "",    // Fecha de inicio
+              row[29] || "",     // Nº de Reclamo
+              row[30] || "",    // Compañía a reclamar
+              row[5] || "",   
+              row[48] || "",    // Tipo de reclamo
+              row[53] || "",    // Tipo de reclamo
+              row[55] || "", 
+            ];
+          }
+        })
+        .filter(row => row !== undefined); // Filtra filas vacías resultantes
     }
 
-
-
-    // Inicializa la DataTable con las filas seleccionadas
-    $('#scroll_vertical_dynamic_height_table').DataTable({
+    $('#table2').DataTable({
       data: selectedRows,
       scrollY: 300,
     scrollX: true,
@@ -193,11 +232,55 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       },
       fixedHeader: true  // Activar el encabezado fijo
     });
+
+    // Inicializa la DataTable con las filas seleccionadas
+    $('#scroll_vertical_dynamic_height_table').DataTable({
+      data: selectedRows2,
+      scrollY: 300,
+    scrollX: true,
+      columns: [
+        { title: "PAS" },
+        { title: "Cliente" },
+        { title: "Estado" },
+        { title: "Informe/Historial",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<pre  style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" data-bs-placement="top" title="${data}">${data}</pre>` : '';
+          }
+          
+         },//46
+        { title: "Tipo de reclamo" },
+        { title: "Monto a reclamar" },
+        { title: "Compañía a reclamar" },
+        { 
+          title: "Url Adjuntos",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<a href="${data}" target="_blank">Ver Adjuntos</a>` : '';
+          }
+        },
+        { 
+          title: "Url Facturas",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<a href="${data}" target="_blank">Ver Facturas</a>` : '';
+          }
+        },
+        {
+          title: "Acciones",
+          render: function(data, type, row, meta) {
+            return `<button class="btn btn-primary" type="button" onclick="editarFila(${meta.row})">Editar</button>`;
+          }
+        }
+      ],
+      
+      fixedHeader: true  // Activar el encabezado fijo
+    });
   })
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
   });
   function editarFila(rowIndex) {
-    const rowData = $('#scroll_vertical_dynamic_height_table').DataTable().row(rowIndex).data();
+    const rowData = $('#table2').DataTable().row(rowIndex).data();
     
     // Construir la URL con los datos de la fila
     const urlParams = new URLSearchParams({
