@@ -1,7 +1,7 @@
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'Respuestas de formulario 1'; // 
-
+let allRows = []; // Definir globalmente
 // URL de la API de Google Sheets
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
@@ -16,36 +16,40 @@ $(document).ready(function() {
     const filteredRows = rows.filter(row => row[22] !== "PARA INGRESAR");
 
     // Mapear las filas filtradas para incluir el número de fila y los valores relevantes
-    const selectedRows = filteredRows.map((row, index) => {
-      const numeroFila = index + 1; // Ajusta el índice según la fila visible
+    const selectedRows = filteredRows.map((row) => {
+      // Encuentra el índice real de la fila en la hoja original
+      const numeroFila = rows.findIndex(originalRow => 
+          JSON.stringify(originalRow) === JSON.stringify(row)
+      ) + 2; // Ajustar para incluir encabezados (si el encabezado está en la fila 1)
+  
       return [
-        numeroFila,        // Número de fila en Google Sheets
-        row[0] || "",      // Información relevante
-        row[1] || "",   
-        row[2] || "",  
-        row[3] || "", 
-        row[4] || "",   
-        row[5] || "",   
-        row[6] || "",   
-        row[7] || "",   
-        row[8] || "",  
-        row[9] || "",   
-        row[10] || "",   
-        row[11] || "",   
-        row[12] || "",   
-        row[13] || "",   
-        row[14] || "",   
-        row[15] || "",   
-        row[16] || "",   
-        row[17] || "",   
-        row[18] || "",   
-        row[19] || "",   
-        row[20] || "",   
-        row[21] || "",   
-        row[22] || "",   
-        row[23] || ""
+          numeroFila,        // Número real de fila en Google Sheets
+          row[0] || "",      // Información relevante
+          row[1] || "",   
+          row[2] || "",  
+          row[3] || "", 
+          row[4] || "",   
+          row[5] || "",   
+          row[6] || "",   
+          row[7] || "",   
+          row[8] || "",  
+          row[9] || "",   
+          row[10] || "",   
+          row[11] || "",   
+          row[12] || "",   
+          row[13] || "",   
+          row[14] || "",   
+          row[15] || "",   
+          row[16] || "",   
+          row[17] || "",   
+          row[18] || "",   
+          row[19] || "",   
+          row[20] || "",   
+          row[21] || "",   
+          row[22] || "",   
+          row[23] || ""
       ];
-    });
+  });
     const selectedRows2 = filteredRows.map((row, index) => {
       const numeroFila = index + 1; // Ajusta el índice según la fila visible
       return [      // Número de fila en Google Sheets

@@ -4,6 +4,7 @@ const urls = [];
 const params = new URLSearchParams(window.location.search);
 console.log('entra')
 const rowIndex = parseInt(params.get('row'));
+console.log(rowIndex)
 const fechaIngreso = params.get('fechaIngreso');
 const pas = params.get('pas');
 const cliente = params.get('cliente');
@@ -552,7 +553,7 @@ const historialConcat = `${oldText} \n ${formattedDateTime} ${newText}`;
 const actualizacion = document.getElementById('actualizacion').value.trim();
 const nuevoHistorial = actualizacion !== '' ? historialConcat : oldText;
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
-    const range = `Respuestas de formulario 1!A${rowIndex}:W${rowIndex}`;
+    const range = `Respuestas de formulario 1!A${rowIndex}:X${rowIndex}`;
 
     const values = [
         document.getElementById('ingreso')?.value || '',
@@ -729,8 +730,7 @@ async function obtenerUltimaFila(spreadsheetId) {
 
         // El índice de la última fila con datos
         const ultimaFila = rows.length;
-     
-
+        console.log(ultimaFila)
         return ultimaFila;
     } catch (error) {
         console.error('Error al obtener la última fila:', error);
