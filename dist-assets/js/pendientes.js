@@ -46,7 +46,20 @@ $(document).ready(function() {
         row[23] || ""
       ];
     });
-
+    const selectedRows2 = filteredRows.map((row, index) => {
+      const numeroFila = index + 1; // Ajusta el índice según la fila visible
+      return [      // Número de fila en Google Sheets
+        row[0] || "",      // Información relevante
+        row[1] || "",   
+        row[2] || "",  
+        row[3] || "", 
+        row[4] || "",       
+        row[20] || "",   
+        row[21] || "",   
+        row[22] || "",   
+        row[23] || ""
+      ];
+    });
     console.log(selectedRows);
 
     $('#zero_configuration_table').DataTable({
@@ -159,6 +172,40 @@ $(document).ready(function() {
       ],
       fixedHeader: true,
    });
+   $('#table2').DataTable({
+   
+    data: selectedRows2,
+    scrollY: 300,
+    scrollX: true,
+    columns: [
+        { title: "Fecha de Ingreso" }, //35
+        { title: "Pas" },//26
+        { title: "Cliente" },//28
+        { title: "Dominio" },//29
+        { title: "Compañia a Reclamar" },//27
+        { title: "Tipo Reclamo" },//45
+        { title: "Informe/Historial",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<pre  style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" data-bs-placement="top" title="${data}">${data}</pre>` : '';
+          }
+          
+         },//46
+        { title: "Estado" },//47
+        { 
+          title: "URL Carpeta",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<a href="${data}" target="_blank">Ver Adjuntos</a>` : '';
+          }
+        },
+        { title: "Acciones", render: function(data, type, row, meta) {
+            return `<button class="btn btn-primary mt-2" type="button" onclick="editarFila(${meta.row})">Editar</button>`;
+        }}
+        
+    ],
+    fixedHeader: true,
+ });
   })
   .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
 });
