@@ -133,10 +133,9 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
               row[24] || "",    // Fecha de inicio
               row[29] || "",     // Nº de Reclamo
               row[30] || "",    // Compañía a reclamar
-              row[5] || "",   
-              row[48] || "",    // Tipo de reclamo
+              row[5] || "",      // Tipo de reclamo
               row[53] || "",    // Tipo de reclamo
-              row[55] || "", 
+              row[54] || "", 
             ];
           }
         })
@@ -195,6 +194,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         }
       ],
       createdRow: function(row, data, dataIndex) {
+        console.log('datatable',$('#scroll_vertical_dynamic_height_table'))
         const lastUpdateDate = data[20];
         const parts = lastUpdateDate.split('/');
         
@@ -215,7 +215,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           $(row).addClass('table-danger');
              Swal.fire({
                     title: '¡Actualización Pendiente!',
-                    text: 'Han pasado 7 días desde la última actualización. Por favor, actualiza la información.',
+                    text: `Han pasado más de 7 días desde la última actualización. Por favor, actualiza la información de ${data[2]}.`,
                     icon: 'warning',
                     confirmButtonText: 'Entendido'
                 });
@@ -281,6 +281,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   });
   function editarFila(rowIndex) {
     const rowData = $('#table2').DataTable().row(rowIndex).data();
+   
     
     // Construir la URL con los datos de la fila
     const urlParams = new URLSearchParams({

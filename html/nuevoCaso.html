@@ -250,7 +250,7 @@
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Fecha de ingreso</span></div>
-                                    <input class="form-control" id="ingreso" type="text" aria-describedby="basic-addon3" />
+                                    <input class="form-control" id="ingreso" type="date" aria-describedby="basic-addon3" />
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Dominio</span></div>
@@ -814,6 +814,26 @@ async function createFolderInDynamicParent() {
 }
 
 async function saveDataToSheetWithFiles(urls, folderUrl) {
+        // Obtener la fecha y hora actual
+const now = new Date();
+
+// Formatear la fecha a dd/mm/yy
+const day = String(now.getDate()).padStart(2, '0'); // Asegura dos dígitos
+const month = String(now.getMonth() + 1).padStart(2, '0'); // Mes +1 (0-indexado)
+const year = String(now.getFullYear()).slice(-2); // Últimos dos dígitos del año
+
+// Formatear la hora a hh:mm:ss
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const seconds = String(now.getSeconds()).padStart(2, '0');
+
+// Combinar fecha y hora
+const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+console.log(formattedDateTime);
+const newText = document.getElementById('actualizacion').value;
+const historialConcat = `${formattedDateTime} ${newText}`;
+const actualizacion = document.getElementById('actualizacion').value.trim();
+const nuevoHistorial = actualizacion !== '' ? historialConcat : '';
     const valuesAtoH = [
         document.getElementById('ingreso')?.value || "",
         document.getElementById('pasDropdown')?.value || "",
@@ -833,7 +853,7 @@ async function saveDataToSheetWithFiles(urls, folderUrl) {
 
     const valuesTtoW = [
         document.getElementById('tipoReclamo')?.value || "",
-        document.getElementById('actualizacion')?.value || "",
+        nuevoHistorial,
         document.getElementById('estado')?.value || "",
         folderUrl || "",
     ];
