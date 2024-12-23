@@ -122,6 +122,8 @@ $(document).ready(function() {
     });
     $('#table2').DataTable({
       data: selectedRows2,
+      scrollY: 300,
+      scrollX: true,
       columns: [
           { title: "Caso" }, //35
           { title: "Plan INT" },//26

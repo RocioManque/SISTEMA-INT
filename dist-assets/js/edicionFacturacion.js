@@ -122,7 +122,7 @@ async function actualizar(e) {
       (retencionIva + retencionGanancia + retencionIBBcompania + retencionIBBbanco + gastosEstructura);
     
     const ultimaActualizacion = fechaHoy;
-  
+
     // Función para formatear el número con punto de miles
     const formatearConPuntos = (numero) => {
       return numero.toLocaleString('de-DE'); // 'de-DE' usa punto como separador de miles

@@ -769,15 +769,38 @@ function legales(e){
    
 }
 //facturacion
+function calcularComisionPas(plan, montoCerrado) {
+    const porcentaje = {
+      "INT 1": 0.01,
+      "INT 2": 0.02,
+      "INT 3": 0.03,
+    };
+  
+    // Devuelve el monto multiplicado por el porcentaje correspondiente
+    return montoCerrado * (porcentaje[plan] || 0); // Si el plan no coincide, devuelve 0
+  }
+  
 async function facturacion(e){
     e.preventDefault();
-    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; 
+    const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
+
+    // Función para calcular la comisión pas
+
+  // Ejemplo de uso en tu sistema
+  const plan = document.getElementById("planInt").value; // Obtener el plan del input
+  const montoCerrado = parseFloat(
+    document.getElementById("montoCerrado").value.replace(/\./g, "").replace(",", ".")
+  ); // Convertir el monto cerrado a número
+  
+  const comisionPas = calcularComisionPas(plan, montoCerrado);
+  const comisionFormateada = Math.round(comisionPas).toLocaleString("es-ES");
     const porcentaje = document.getElementById('honorarios').value;
     const montoCerradoStr = document.getElementById('montoCerrado').value; // Obtiene el valor como string
     const montoCerradoEnviar = parseInt(montoCerradoStr.replace(/\./g, ''), 10); 
     const honorarios = parseInt(porcentaje.replace('%', ''), 10);
-    const montoFacturado = montoCerradoEnviar + (montoCerradoEnviar * honorarios)/100
-    console.log(montoFacturado)
+    const montoFacturado = (montoCerradoEnviar * honorarios)/100;
+  const montoFormateado = Math.round(montoFacturado).toLocaleString("es-ES");
+
     const estado = "FACTURACION";
 //     const valuesAC = [
 //         estado,   
@@ -813,13 +836,14 @@ async function facturacion(e){
                     sheetId: '454305688',
                     startRowIndex: rowIndex - 1,
                     endRowIndex: rowIndex,
-                    startColumnIndex: 38, 
+                    startColumnIndex: 37, 
                     endColumnIndex: 39 
                 },
                     rows: [
                         {
                             values: [
-                                { userEnteredValue: { stringValue: String(montoFacturado) } },        
+                                { userEnteredValue: { stringValue: String(comisionFormateada) } },        
+                                { userEnteredValue: { stringValue: String(montoFormateado) } },        
                             ]
                         }
                     ],
