@@ -21,15 +21,12 @@ const companiaReclamar = params.get('companiaReclamar');
 const gestionadoCon = params.get('gestionadoCon');
 const urlAdjuntos = params.get('urlAdjuntos');
 
-   // Obtener la fecha actual
-   const today = new Date();
-        
-   // Formatear la fecha a dd/mm/yy
-   const day = String(today.getDate()).padStart(2, '0'); // Asegura dos dígitos
-   const month = String(today.getMonth() + 1).padStart(2, '0'); // Mes +1 (0-indexado)
-   const year = String(today.getFullYear()).slice(-2); // Últimos dos dígitos del año
-   
-   const formattedDate = `${day}/${month}/${year}`;
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses empiezan desde 0
+const day = String(today.getDate()).padStart(2, '0'); // Asegura dos dígitos para el día
+
+const formattedDate = `${year}-${month}-${day}`;
    console.log(formattedDate)
    // Asignar la fecha al input
    const spreadsheetId0 = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
@@ -433,6 +430,7 @@ const fechaHoy = `${daya}/${montha}/${yeara}`;
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const montoReclamado = document.getElementById('montoReclamado').value;
     const montoCerrado = document.getElementById('montoCerrado').value;
+    const ingresadoCia = document.getElementById('ingresoCia').value;
     const ultimaActualizacion = fechaHoy
      // Subir archivos
      const url = urlAdjuntos;
@@ -606,6 +604,28 @@ const fechaHoy = `${daya}/${montha}/${yeara}`;
                     fields: 'userEnteredValue'
                 }
                 
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: rowIndex - 1,
+                        endRowIndex: rowIndex,
+                        startColumnIndex: 57, // Es el indice primero
+                        endColumnIndex: 58 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(ingresadoCia) } },          
+                                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
             }
         ]
     };
@@ -753,7 +773,8 @@ async function facturacion(e){
     e.preventDefault();
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; 
     const porcentaje = document.getElementById('honorarios').value;
-    const montoCerradoEnviar = parseInt(document.getElementById('montoCerrado').value);
+    const montoCerradoStr = document.getElementById('montoCerrado').value; // Obtiene el valor como string
+    const montoCerradoEnviar = parseInt(montoCerradoStr.replace(/\./g, ''), 10); 
     const honorarios = parseInt(porcentaje.replace('%', ''), 10);
     const montoFacturado = montoCerradoEnviar + (montoCerradoEnviar * honorarios)/100
     console.log(montoFacturado)

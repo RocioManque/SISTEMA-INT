@@ -114,7 +114,7 @@ $(document).ready(function() {
             { title: "Monto cerrado" },
             { title: "Fecha de Inicio" },
             { title: "Acciones", render: function(data, type, row, meta) {
-                return `<button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#history" onclick="verHistorial(${meta.row})" >Ver Historial</button>`;
+                return `<button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#history" onclick="capturarRowIndex(${meta.row})" >Ver Historial</button>`;
             }}
             
         ],
@@ -134,24 +134,13 @@ $(document).ready(function() {
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
       
     });
+     // Capturar y almacenar el índice
+async function capturarRowIndex(index) {
+  const rowData = $('#ghost-table').DataTable().row(index).data();
 
-    function verHistorial(rowIndex) {
-        // Accede directamente al elemento en selectedRows2 usando el índice
-        const historialData = selectedRows2[rowIndex];
-    console.log(historialData)
-        const historyList = document.getElementById("historyList");
-        console.log('el history list',historyList)
-    
-        if (historialData) {
-            const listItem = document.createElement("li");
-            listItem.textContent = historialData[2];
-            console.log(listItem)
-          //  historyList.appendChild(listItem);
-         historyList = listItem;
-            
-            console.log("finale",historyList)
-        } else {
-            historyList.innerHTML = "<li>No hay historial disponible</li>";
-        }
-    }
+  const historyList = rowData[2].trim()!='' ? rowData[2] : 'NO EXISTE REGISTRO DE INFORME EN ESTE CASO';;
+
+document.getElementById("historyList").innerHTML = historyList
+
+  }
     

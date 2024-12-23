@@ -281,7 +281,7 @@ async function capturarRowIndex(index) {
   }
 
   function alertClick(){
-    alert('Error en la conexion con el webservice. ERRORN36045...networking error:database dosent work properly')
+    alert('Error en la conexion con el webservice. ERRORN36045...networking error:database doesnt work properly')
   }
   function facturar(rowIndex){ 
     

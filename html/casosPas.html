@@ -18,6 +18,21 @@
         .full-width {
             flex: 1; /* Permitir que la tabla ocupe todo el espacio disponible */
         }
+                /* Estilos para el contenedor */
+        .contenedor {
+            width: 100%; /* O un ancho específico, como 500px */
+            border: 1px solid #ddd;
+            overflow: hidden; /* Evita que el contenido sobresalga */
+        }
+
+        /* Estilos para la etiqueta <pre> */
+        pre {
+            white-space: pre-wrap; /* Ajusta automáticamente el texto */
+            word-wrap: break-word; /* Rompe las palabras largas */
+            margin: 0; /* Elimina el margen predeterminado */
+            padding: 10px;
+        }
+
     </style>
 </head>
 
@@ -187,9 +202,6 @@
                                                
                                             </thead>
                                             <tbody>
-                                               <ul id="historyList">
-
-                                               </ul>
                                                 <!-- Agregar más filas según sea necesario -->
                                             </tbody>
                                         </table>
@@ -250,16 +262,18 @@
                     </div>
                 </div>
                 <div class="modal fade" id="history" tabindex="-1" role="dialog" aria-labelledby="uploadFcTitle-2" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-dialog modal-dialog-centered " role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="uploadFcTitle-2">Informe del Caso</h5>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
                             <div class="modal-body">
-                                
-                                <div ></div>
-            
+                                <div class="contenedor">
+                                    <pre id="historyList">
+
+                                    </pre>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -345,7 +359,7 @@
         });
         
         const $btnExportar = document.querySelector("#btnExportar"), 
-        $tabla = document.querySelector("#zero_configuration_table");
+        $tabla = document.querySelector("#scroll_vertical_dynamic_height_table");
 
     $btnExportar.addEventListener("click", function() {
         let tableExport = new TableExport($tabla, {
@@ -354,7 +368,7 @@
             sheetname: "Reporte de casos", //Título de la hoja
         });
         let datos = tableExport.getExportData();
-        let preferenciasDocumento = datos.zero_configuration_table.xlsx;
+        let preferenciasDocumento = datos.scroll_vertical_dynamic_height_table.xlsx;
         tableExport.export2file(preferenciasDocumento.data, preferenciasDocumento.mimeType, preferenciasDocumento.filename, preferenciasDocumento.fileExtension, preferenciasDocumento.merges, preferenciasDocumento.RTL, preferenciasDocumento.sheetname);
     });
   </script>

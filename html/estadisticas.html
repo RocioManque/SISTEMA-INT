@@ -139,34 +139,15 @@
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div class="card-title"> Casos ingresados por mes</div>
-                                <canvas id="casesByMonthChart"></canvas>
+                                <!-- <div class="card-title"> Casos ingresados por mes</div> -->
+                                <div id="graficoTotalesMes"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div class="card-title">Casos Facturados por mes</div>
-                                <canvas id="closedCasesByMonthChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="card-title"> Promedio Anual de Casos</div>
-                                <canvas id="promedioAnualCasosChart"></canvas> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="card-title">Casos Desistidos vs Casos Cobrados</div>
-                                <canvas id="dismissedChart"  width="200" height="200"></canvas>
+                               <div id="graficoTotalesEjecutivosIngresados"></div>
                             </div>
                         </div>
                     </div>
@@ -175,34 +156,14 @@
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div class="card-title"> Promedio dias del caso</div>
-                                <canvas id="averageTimeChart"></canvas>
+                                <div id="graficoTotalesEjecutivosIniciados"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div class="card-title"> Activos vs Cerrados</div>
-                                <canvas id="activeVsClosedChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="card-title"> Casos por ejecutivo</div>
-                                <canvas id="casesByExecutiveChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="card-title"> Casos por Compañia</div>
-                                <canvas id="casesByCompanyChart"></canvas>
+                                <div id="graficoGestion"></div>
                             </div>
                         </div>
                     </div>
@@ -211,16 +172,86 @@
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div class="card-title">Total facturado por Mes </div>
-                                <canvas id="facturadoPorMesChart"></canvas>
+                                <div id="graficoPorCia"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div class="card-title"> Total facturado por ejecutivo</div>
-                                <canvas id="facturadoPorEjecutivoChart"></canvas>
+                                <div id="grafico-facturados"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoFacturadoEjecutivo"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoFacturadosMontoEjecutivo"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoCobrados"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoComision"></div>
+                             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoPercibido"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoPercibidoCia"></div>
+                             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoPromedio"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div id="graficoPromedioCias"></div>
+                             
                             </div>
                         </div>
                     </div>
@@ -293,22 +324,19 @@
    <!-- ============ Search UI Start ============= -->
    <script src="https://apis.google.com/js/api.js" async defer></script>
    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-   <script>
-      
-   </script>
    <script src="https://apis.google.com/js/api.js"></script>
    <!-- Llamadas a `gapiLoaded` y `gisLoaded` cuando se cargan los scripts -->
-   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+   <!-- <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script> -->
     <!-- ============ Search UI End ============= -->
     <script src="/dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
     <script src="/dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
     <script src="/dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="/dist-assets/js/scripts/script.min.js"></script>
     <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/dist-assets/js/estadisticas.js"></script>
+    <script src="/dist-assets/js/sheets.js"></script>
     <!-- <script src="/dist-assets/js/estadisticas.js"></script> -->
 
 </body>
