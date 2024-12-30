@@ -538,22 +538,24 @@ const now = new Date();
 const day = String(now.getDate()).padStart(2, '0'); // Asegura dos dígitos
 const month = String(now.getMonth() + 1).padStart(2, '0'); // Mes +1 (0-indexado)
 const year = String(now.getFullYear()).slice(-2); // Últimos dos dígitos del año
+const yeara = String(now.getFullYear()); // Últimos dos dígitos del año
 
 // Formatear la hora a hh:mm:ss
 const hours = String(now.getHours()).padStart(2, '0');
 const minutes = String(now.getMinutes()).padStart(2, '0');
 const seconds = String(now.getSeconds()).padStart(2, '0');
-
+const fechaHoy = `${day}/${month}/${yeara}`;
 // Combinar fecha y hora
 const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
-console.log(formattedDateTime);
+console.log(carpetaUrl);
 const newText = document.getElementById('actualizacion').value;
 const oldText = document.getElementById('historial').value;
 const historialConcat = `${oldText} \n ${formattedDateTime} ${newText}`;
 const actualizacion = document.getElementById('actualizacion').value.trim();
 const nuevoHistorial = actualizacion !== '' ? historialConcat : oldText;
+const ultimaActualizacion = fechaHoy
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
-    const range = `Respuestas de formulario 1!A${rowIndex}:X${rowIndex}`;
+    const range = `Respuestas de formulario 1!A${rowIndex}:Y${rowIndex}`;
 
     const values = [
         document.getElementById('ingreso')?.value || '',
@@ -568,6 +570,8 @@ const nuevoHistorial = actualizacion !== '' ? historialConcat : oldText;
         document.getElementById('tipoReclamo')?.value || '',
         nuevoHistorial,
         document.getElementById('estado')?.value || '',
+        carpetaUrl,
+        ultimaActualizacion,
     ];
 
     const body = { values: [values] };

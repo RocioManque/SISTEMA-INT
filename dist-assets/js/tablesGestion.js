@@ -2,12 +2,13 @@
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'sheet1'; // 
-
+let casosAtrasados = [];
+let clientesAtrasados = [];
 // URL de la API de Google Sheets
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
 $(document).ready(function() {
-
+  
 
 // Función para calcular la diferencia de días
 function getDaysDifference(date1, date2) {
@@ -65,17 +66,36 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       selectedRows2 = rows.map((row, index) => {
         // Añade la fila visible en la hoja (índice + 1)
         const numeroFila = index + 1;
+        let isAtrasado = 0; // Indicador de atraso (0: no atrasado, 1: atrasado)
+        const lastUpdateDate = row[55] || "";
+        if (lastUpdateDate) {
+            const parts = lastUpdateDate.split('/');
+            const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+      
+            const daysDifference = getDaysDifference(newDate, currentDate);
+      
+            // Si supera los 7 días, agregar al arreglo
+            if (daysDifference > 7) {
+                const cliente = row[4] || ""; // Nombre del cliente (columna 4)
+                if (cliente) {
+                    clientesAtrasados.push(cliente);
+                }
+                isAtrasado = 1;
+            }
+        }
         return [
           row[1] || "",     // PAS
-          row[4] || "",     // Cliente
-          row[28] || "",     // Fecha de ingreso
-          row[24] || "",    // Fecha de inicio
-          row[29] || "",     // Nº de Reclamo
-          row[30] || "",    // Compañía a reclamar
-          row[31] || "",   
-          row[48] || "",    // Tipo de reclamo
-          row[54] || "",    // Tipo de reclamo
-          row[55] || "",    // Tipo de reclamo    // Compañía a reclamar
+              row[4] || "",     // Cliente
+              row[28] || "",     // Fecha de ingreso
+              row[24] || "",    // Fecha de inicio
+              row[29] || "",     // Nº de Reclamo
+              row[30] || "",    // Compañía a reclamar
+              row[5] || "",      // Tipo de reclamo
+              row[53] || "",    // Tipo de reclamo
+              row[54] || "",
+              isAtrasado
         ];
       });
     } else {
@@ -119,13 +139,33 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         selectedRows2 = rows
         .map((row, index) => {
           // Añade la fila visible en la hoja (índice + 1)
-          const numeroFila = index + 1;
-
+          const numeroFila = index + 1; 
+        // Extraer y procesar la fecha de actualización (columna 55)
+    
           // Convierte el nombre del cliente a mayúsculas y compara
           const nombreCliente = (row[2] || "").toUpperCase();
           const apellidoCliente = (row[1] || "").toUpperCase();
 
           if (nombreCliente === nombre || apellidoCliente === apellido) {
+            const lastUpdateDate = row[55] || "";
+            let isAtrasado = 0; // Indicador de atraso (0: no atrasado, 1: atrasado)
+            if (lastUpdateDate) {
+                const parts = lastUpdateDate.split('/');
+                const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                const currentDate = new Date();
+                currentDate.setHours(0, 0, 0, 0);
+          
+                const daysDifference = getDaysDifference(newDate, currentDate);
+          
+                // Si supera los 7 días, agregar al arreglo
+                if (daysDifference > 7) {
+                    const cliente = row[4] || ""; // Nombre del cliente (columna 4)
+                    if (cliente) {
+                        clientesAtrasados.push(cliente);
+                    }
+                    isAtrasado = 1; // Marcar como atrasado
+                }
+            }
             return [
               row[1] || "",     // PAS
               row[4] || "",     // Cliente
@@ -136,6 +176,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
               row[5] || "",      // Tipo de reclamo
               row[53] || "",    // Tipo de reclamo
               row[54] || "", 
+              isAtrasado
             ];
           }
         })
@@ -193,43 +234,54 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           }
         }
       ],
-      createdRow: function(row, data, dataIndex) {
-        console.log('datatable',$('#scroll_vertical_dynamic_height_table'))
+      createdRow: function (row, data, dataIndex) {
+        console.log('datatable', $('#scroll_vertical_dynamic_height_table'));
         const lastUpdateDate = data[20];
         const parts = lastUpdateDate.split('/');
-        
-        // Asegúrate de que la fecha tenga el formato correcto
+
+        // Validar y convertir la fecha
         const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
-        
-        // Calculamos la fecha actual
         const currentDate = new Date();
-        currentDate.setHours(0, 0, 0, 0);  // Aseguramos que solo se compare la fecha, no la hora
-        // Calculamos la diferencia en días
+        currentDate.setHours(0, 0, 0, 0); // Ignorar la hora
+
+        // Calcular diferencia en días
         const daysDifference = getDaysDifference(newDate, currentDate);
-        
-       
-        
-        // Si la diferencia es mayor a 7 días, asignamos la clase 'table-danger'
+
         if (daysDifference > 7) {
-          console.log('Fila con más de 7 días de diferencia', data[20], daysDifference);
-          $(row).addClass('table-danger');
-             Swal.fire({
-                    title: '¡Actualización Pendiente!',
-                    text: `Han pasado más de 7 días desde la última actualización. Por favor, actualiza la información de ${data[2]}.`,
-                    icon: 'warning',
-                    confirmButtonText: 'Entendido'
-                });
-             // Clase de Bootstrap para fila roja
-        }else if (data[10] === 'FACTURADO') {
-          $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
-        }else if (data[10] === 'COBRADO') {
-          $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
-        }else if (data[10] === 'DESISTIDO') {
-          $(row).addClass('table-info'); // Clase de Bootstrap para fila verde
-        } else{
-          $(row).addClass('table');
+            $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
+            casosAtrasados.push({
+                nombre: data[2], // Nombre o identificador
+                dias: daysDifference,
+            });
+        } else if (data[10] === 'FACTURADO') {
+            $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
+        } else if (data[10] === 'COBRADO') {
+            $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
+        } else if (data[10] === 'DESISTIDO') {
+            $(row).addClass('table-info'); // Clase de Bootstrap para fila azul
+        } else {
+            $(row).addClass('table'); // Clase por defecto
         }
-      },
+    },
+    drawCallback: function () {
+      // Mostrar la alerta única después de procesar todas las filas
+      if (casosAtrasados.length > 0) {
+          const mensaje = casosAtrasados.map(
+              caso => ` \n - ${caso.nombre}: ${caso.dias} días atrasados \n `
+          ).join(`\n`);
+
+          Swal.fire({
+              title: '¡Casos con actualización pendiente!',
+              text: `Los siguientes casos tienen más de 7 días de atraso:\n ${mensaje}`,
+              icon: 'warning',
+              confirmButtonText: 'Entendido'
+          });
+
+          // Vaciar el arreglo para evitar alertas duplicadas en futuras ejecuciones
+          casosAtrasados = [];
+      }
+  },
+
       fixedHeader: true  // Activar el encabezado fijo
     });
 
@@ -266,6 +318,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return data ? `<a href="${data}" target="_blank">Ver Facturas</a>` : '';
           }
         },
+        { title: "Atrasado", visible: false }, // Columna oculta para indicador
         {
           title: "Acciones",
           render: function(data, type, row, meta) {
@@ -273,7 +326,15 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           }
         }
       ],
-      
+      order: [[9, 'desc']], // Ordenar por la columna de indicador (9) en orden descendente
+      createdRow: function (row, data, dataIndex) {
+        const cliente = data[1]; // Nombre del cliente (columna 4 en selectedRows2)
+
+        // Verificar si el cliente está en el arreglo de atrasados
+        if (clientesAtrasados.includes(cliente)) {
+            $(row).addClass('table-danger'); // Pintar la fila de rojo
+        }
+    },
       fixedHeader: true  // Activar el encabezado fijo
     });
   })

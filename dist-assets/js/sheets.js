@@ -144,7 +144,7 @@ const prepareDataForAreaCharts = (totales, tipo) => {
 
     return {
         xaxis: mesesCompletos.map(mes =>
-            new Date(`${mes}-01`).toLocaleString('es-ES', { month: 'long' })
+            new Date(`${mes}-12`).toLocaleString('es-ES', { month: 'long' })
         ),
         series,
     };

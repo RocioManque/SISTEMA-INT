@@ -2,29 +2,35 @@ const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'Respuestas de formulario 1'; // 
 let allRows = []; // Definir globalmente
+let casosAtrasados = [];
+let clientesAtrasados = [];
 // URL de la API de Google Sheets
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
+// Función para calcular la diferencia de días
+function getDaysDifference(date1, date2) {
+  const diffTime = Math.abs(date2 - date1);
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
 $(document).ready(function() {
   fetch(url)
   .then(response => response.json())
   .then(data => {
-    const headers = data.values[0]; // Encabezados de la primera fila
-    const rows = data.values.slice(1); // Datos excluyendo los encabezados
+    const headers = data.values[0]; 
+    const rows = data.values.slice(1); 
 
-    // Filtrar filas para excluir aquellas con estado "PARA INGRESAR" en la columna 22 (índice 21)
+    // Filtrar filas para excluir aquellas con estado "PARA INGRESAR" 
     const filteredRows = rows.filter(row => row[22] !== "PARA INGRESAR");
 
-    // Mapear las filas filtradas para incluir el número de fila y los valores relevantes
     const selectedRows = filteredRows.map((row) => {
       // Encuentra el índice real de la fila en la hoja original
       const numeroFila = rows.findIndex(originalRow => 
           JSON.stringify(originalRow) === JSON.stringify(row)
-      ) + 2; // Ajustar para incluir encabezados (si el encabezado está en la fila 1)
+      ) + 2;
   
       return [
-          numeroFila,        // Número real de fila en Google Sheets
-          row[0] || "",      // Información relevante
+          numeroFila,      
+          row[0] || "",      
           row[1] || "",   
           row[2] || "",  
           row[3] || "", 
@@ -52,6 +58,26 @@ $(document).ready(function() {
   });
     const selectedRows2 = filteredRows.map((row, index) => {
       const numeroFila = index + 1; // Ajusta el índice según la fila visible
+      let isAtrasado = 0; // Indicador de atraso (0: no atrasado, 1: atrasado)
+      const lastUpdateDate = row[24] || "";
+      if (lastUpdateDate) {
+          const parts = lastUpdateDate.split('/');
+          const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+          const currentDate = new Date();
+          currentDate.setHours(0, 0, 0, 0);
+    
+          const daysDifference = getDaysDifference(newDate, currentDate);
+    
+          // Si supera los 7 días, agregar al arreglo
+          if (daysDifference > 3) {
+              const cliente = row[4] || ""; // Nombre del cliente (columna 4)
+              if (cliente) {
+                  clientesAtrasados.push(cliente);
+                  console.log('clientes atrasados',clientesAtrasados)
+              }
+              isAtrasado = 1;
+          }
+      }
       return [      // Número de fila en Google Sheets
         row[0] || "",      // Información relevante
         row[1] || "",   
@@ -61,7 +87,9 @@ $(document).ready(function() {
         row[20] || "",   
         row[21] || "",   
         row[22] || "",   
-        row[23] || ""
+        row[23] || "",
+        row[24] || "",
+        isAtrasado
       ];
     });
     console.log(selectedRows);
@@ -203,11 +231,56 @@ $(document).ready(function() {
             return data ? `<a href="${data}" target="_blank">Ver Adjuntos</a>` : '';
           }
         },
+       
+        { title: "Ultima Actualizacion", visible: false }, // Columna oculta para indicador
+        { title: "Atrasado", visible: false}, // Columna oculta para indicador
         { title: "Acciones", render: function(data, type, row, meta) {
             return `<button class="btn btn-primary mt-2" type="button" onclick="editarFila(${meta.row})">Editar</button>`;
         }}
         
     ],
+    order: [[10, 'desc']], // Ordenar por la columna de indicador (9) en orden descendente
+      createdRow: function (row, data, dataIndex) {
+        const cliente = data[2]; 
+        const lastUpdateDate = data[9];
+        const parts = lastUpdateDate.split('/');
+        // Validar y convertir la fecha
+        const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Ignorar la hora
+        const daysDifference = getDaysDifference(newDate, currentDate);
+
+        if (daysDifference > 3) {
+          $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
+          casosAtrasados.push({
+              nombre: data[2], // Nombre o identificador
+              dias: daysDifference,
+          });
+        }
+
+
+        // Calcular diferencia en días
+       
+
+    },
+    drawCallback: function () {
+      // Mostrar la alerta única después de procesar todas las filas
+      if (casosAtrasados.length > 0) {
+          const mensaje = casosAtrasados.map(
+              caso => ` \n - ${caso.nombre}: ${caso.dias} días atrasados \n `
+          ).join(`\n`);
+
+          Swal.fire({
+              title: '¡Casos con actualización pendiente!',
+              text: `Los siguientes casos tienen más de 7 días de atraso:\n ${mensaje}`,
+              icon: 'warning',
+              confirmButtonText: 'Entendido'
+          });
+
+          // Vaciar el arreglo para evitar alertas duplicadas en futuras ejecuciones
+          casosAtrasados = [];
+      }
+  },
     fixedHeader: true,
  });
   })
