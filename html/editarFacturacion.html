@@ -11,6 +11,7 @@
     <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
     <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
@@ -140,6 +141,10 @@
                                     <div class="form-floating">
                                         <div class="">
                                             <div class="input-group mt-2 mb-3">
+                                                <div class="input-group-prepend "><span class="input-group-text" >Monto Cerrado</span></div>
+                                                <input class="form-control" id="montoCerrado" type="text" aria-describedby="basic-addon3" />
+                                            </div>
+                                            <div class="input-group mt-2 mb-3">
                                                 <div class="input-group-prepend "><span class="input-group-text" >Total facturado sin IVA</span></div>
                                                 <input class="form-control" id="facturadoSinIva" type="text" aria-describedby="basic-addon3" />
                                             </div>
@@ -155,6 +160,7 @@
                                                 <div class="input-group-prepend "><span class="input-group-text" >Total facturado con IVA</span></div>
                                                 <input class="form-control" id="facturadoConIva" type="text" aria-describedby="basic-addon3" />
                                             </div>
+                                            
                                             <div class="input-group mt-2 mb-3">
                                                 <div class="input-group-prepend "><span class="input-group-text" >Fecha de Pago Comisión</span></div>
                                                 <input class="form-control" id="fechaPagoComision" type="text" aria-describedby="basic-addon3" />
@@ -238,6 +244,13 @@
                                     <div class="input-group-prepend "><span class="input-group-text" >plan INT</span></div>
                                     <input class="form-control" id="plan" type="text" aria-describedby="basic-addon3" />
                                 </div>
+                                <div class="input-group mt-2 mb-3 mt-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Estado</span>
+                                    </div>
+                                    <!-- Convierte el input en un select -->
+                                    <select class="form-control" id="estado"></select>
+                                </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Nro de Reclamo CIA</span></div>
                                     <input class="form-control" id="nroReclamo" type="text" aria-describedby="basic-addon3" />
@@ -245,6 +258,10 @@
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Facturado Por</span></div>
                                     <input class="form-control" id="facturadoPor" type="text" aria-describedby="basic-addon3" />
+                                </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de facturación</span></div>
+                                    <input class="form-control" id="fechaFactura" type="text" aria-describedby="basic-addon3" />
                                 </div>
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Fecha de Pago</span></div>
@@ -258,14 +275,8 @@
                                     <div class="input-group-prepend "><span class="input-group-text" >Monto Reclamado</span></div>
                                     <input class="form-control" id="montoReclamado" type="text" aria-describedby="basic-addon3" />
                                 </div>
-                                <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >Monto Cerrado</span></div>
-                                    <input class="form-control" id="montoCerrado" type="text" aria-describedby="basic-addon3" />
-                                </div>
-                                <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de facturación</span></div>
-                                    <input class="form-control" id="fechaFactura" type="text" aria-describedby="basic-addon3" />
-                                </div>
+                               
+                                
                 
                             </div>
                         </div>
@@ -455,6 +466,7 @@ function clearStoredToken() {
     <script src="https://apis.google.com/js/api.js"></script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="/dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
     <script src="/dist-assets/js/scripts/sidebar.script.min.js"></script>
     <script src="/dist-assets/js/edicionFacturacion.js"></script>

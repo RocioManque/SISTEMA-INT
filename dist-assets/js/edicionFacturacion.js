@@ -4,6 +4,7 @@ const rowIndex = params.get("index");
 const caso = params.get("caso");
 const plan = params.get("plan");
 const estado = params.get("estado");
+console.log(estado)
 const tipoReclamo = params.get("tipoReclamo");
 const nroReclamoCia = params.get("nroReclamoCia");
 const montoReclamado = params.get("montoReclamado");
@@ -36,7 +37,112 @@ const year = String(today.getFullYear()).slice(-2); // Últimos dos dígitos del
 const formattedDate = `${day}/${month}/${year}`;
 console.log(formattedDate);
 // Asignar la fecha al input
+$(document).ready(function() {
+    
+  // Inicializa Select2 en el elemento select
+  $('#estado').select2({
+      placeholder: 'Seleccione un nombre',
+      
+      width: '90%'
+  });
+  const spreadsheetId2 = '1FdJtx_Dr8dgvC-9HWfckT8qzHm8BikoSbV9EORXSEb8';
+  const apiKey2 = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
+  const range3 = 'Hoja 2'; // 
 
+  const url3 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range3}?key=${apiKey2}`;
+
+  // Realiza la solicitud fetch para obtener datos dinámicos
+      fetch(url3)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          const rows = data.values;
+          console.log(rows);
+
+          // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+          const selectedRows = rows.slice(1).map(row => row[0]);
+          
+          // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+          const listaDinamica3 = selectedRows.map((nombre, index) => ({
+              id: nombre,
+              text: nombre
+          }));
+
+          console.log('Lista Dinámica:', listaDinamica3);
+
+          // Cargar la lista dinámica en el dropdown
+          $('#estado').select2({
+              data: listaDinamica3
+          });
+          $('#estado').val(estado).trigger('change');
+
+      })
+      .catch(error => console.error('Error al cargar datos', error));
+      fetch(url4)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          const rows = data.values;
+          console.log(rows);
+
+          // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+          const selectedRows = rows.slice(1).map(row => row[0]);
+          
+          // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+          const listaDinamica3 = selectedRows.map((nombre, index) => ({
+              id: nombre,
+              text: nombre
+          }));
+
+          console.log('Lista Dinámica:', listaDinamica3);
+
+          // Cargar la lista dinámica en el dropdown
+          $('#tipoReclamo').select2({
+              data: listaDinamica3
+          });
+          $('#tipoReclamo').val(tipoReclamo).trigger('change');
+
+      })
+      .catch(error => console.error('Error al cargar datos', error));
+      fetch(url5)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(data => {
+          const rows = data.values;
+          console.log(rows);
+
+          // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
+          const selectedRows = rows.slice(1).map(row => row[0]);
+          
+          // Prepara la lista dinámica en el formato que Select2 espera (id y text)
+          const listaDinamica4 = selectedRows.map((nombre, index) => ({
+              id: nombre,
+              text: nombre
+          }));
+
+          console.log('Lista Dinámica:', listaDinamica4);
+
+          // Cargar la lista dinámica en el dropdown
+          $('#honorarios').select2({
+              data: listaDinamica4
+          });
+
+      })
+      .catch(error => console.error('Error al cargar datos', error));
+
+});
 // Luego muestra o manipula estos datos en la página según lo necesites
 document.getElementById("caso").value = caso;
 document.getElementById("plan").value = plan;
@@ -105,6 +211,7 @@ async function actualizar(e) {
     const iva = calcularPorcentajeIva("iva");
     const caso = document.getElementById("caso").value;
   const plan = document.getElementById("plan").value;
+  const estadoActual = document.getElementById("estado").value;
   const nroReclamo = document.getElementById("nroReclamo").value;
   const facturadoPor = document.getElementById("facturadoPor").value;
   const fechaPago = document.getElementById("fechaPago").value;
@@ -145,7 +252,7 @@ async function actualizar(e) {
                 values: [
                   { userEnteredValue: { stringValue: String(plan) } },
                   { userEnteredValue: { stringValue: String(nroReclamo) } },
-                  { userEnteredValue: { stringValue: String(estado) } },
+                  { userEnteredValue: { stringValue: String(estadoActual) } },
                   { userEnteredValue: { stringValue: String(tipoReclamo) } },
                   { userEnteredValue: { stringValue: String(montoReclamado) } },
                   { userEnteredValue: { stringValue: String(montoCerrado) } },

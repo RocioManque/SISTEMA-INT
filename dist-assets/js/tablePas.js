@@ -1,20 +1,63 @@
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
+const spreadsheetId2 = '1gzp1hLfZaZMQarKdxPnvtHeyTioqhd3vatL-UmFnlUI';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'sheet1'; // 
+const range2 = 'Respuestas de formulario 1'; // 
+const range3 = 'Sheet1'; // 
 let selectedRows2 = [];
+let datosGlobales = [];
 // URL de la API de Google Sheets
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-$(document).ready(function() {
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const rows = data.values.slice(1); // Remueve encabezados
-      console.log(rows)
+const url1 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range2}?key=${apiKey}`;
+const url3 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range3}?key=${apiKey}`;
+
+async function obtenerDatosDesdeGoogleSheet() {
+ 
+    fetch(url1)
+        .then(response => response.json())
+        .then(data => {
+            datosGlobales = data.values.slice(1);  // Remueve la primera fila (encabezados)
+        })
+        .catch(error => console.error('Error al obtener los datos:', error));
+}
+$(document).ready(async function() {
+    async function obtenerDatosDesdeGoogleSheet2() {
+        const response = await fetch(url);
+        const response2 = await fetch(url1);
+        const data = await response.json();
+        const data2 = await response2.json();
+        const completo = Object.assign({}, data, data2);
+        return data.values.slice(1);  // Devuelve los datos sin encabezado
+    }
+    async function obtenerPas() {
+        const responsePas = await fetch(url3);
+        const dataPas = await responsePas.json();
+        return dataPas.values.slice(1);  // Devuelve los datos sin encabezado
+    }
+        const rows = await obtenerDatosDesdeGoogleSheet2();
+        const bup = await obtenerPas();
       const userData = JSON.parse(localStorage.getItem('userData'));
       const nombrePas = userData.name.toUpperCase().trim();
       const userRole = userData.permission.toLowerCase().trim(); 
       console.log(userRole)
-
+      for (let i = 0; i < bup.length; i++) {
+        const persona = bup[i];
+        // Si encuentra una coincidencia con el nombre completo
+        if (nombrePas === persona[2]) {
+            // Asigna el "ejecutivo asignado" de esa persona a una variable
+            const ejecutivoAsignado = persona[15];
+                if (ejecutivoAsignado) {
+                    const cardId = `#${ejecutivoAsignado.toLowerCase().replace(/\s+/g, '')}`;
+                    $(cardId).show(); 
+                    $('#showCardButton').click(function() {
+                        $(cardId).toggle(); // Alternar la visibilidad de la tarjeta
+                      $('.full-width').toggleClass('col-md-9');
+                    });
+        
+                }
+            
+        }
+    }
       let selectedRows = [];
 
       if (userRole === "organizador") {
@@ -80,25 +123,6 @@ $(document).ready(function() {
             ]);
     }
       console.log(selectedRows2)
-
-
-      if (userRole === "pas" || userRole === "prueba") {
-        const ejecutivoEncontrado = selectedRows2[0]?.[0]?.toLowerCase();
-        console.log(ejecutivoEncontrado)
-        if (ejecutivoEncontrado) {
-            const cardId = `#${ejecutivoEncontrado.replace(/\s+/g, '')}`;
-            $(cardId).show(); 
-            $('#showCardButton').click(function() {
-                $(cardId).toggle(); // Alternar la visibilidad de la tarjeta
-              $('.full-width').toggleClass('col-md-9');
-            });
-
-        }
-        
-    }else{
-      $('#showCardButton').hide()
-      $('.full-width').toggleClass('col-md-9');
-    }
    
       $('#scroll_vertical_dynamic_height_table').DataTable({
         
@@ -130,10 +154,7 @@ $(document).ready(function() {
             
         ],
     });
-      })
-      .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
-      
-    });
+});      
      // Capturar y almacenar el índice
 async function capturarRowIndex(index) {
   const rowData = $('#ghost-table').DataTable().row(index).data();

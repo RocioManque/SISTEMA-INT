@@ -777,7 +777,8 @@ function calcularComisionPas(plan, montoCerrado) {
     };
   
     // Devuelve el monto multiplicado por el porcentaje correspondiente
-    return montoCerrado * (porcentaje[plan] || 0); // Si el plan no coincide, devuelve 0
+    const montoDecimal = Number(montoCerrado.toFixed(2)); 
+    return montoDecimal * (porcentaje[plan] || 0);
   }
   
 async function facturacion(e){
@@ -788,18 +789,25 @@ async function facturacion(e){
 
   // Ejemplo de uso en tu sistema
   const plan = document.getElementById("planInt").value; // Obtener el plan del input
-  const montoCerrado = parseFloat(
+  const montoCerrado = Number(
     document.getElementById("montoCerrado").value.replace(/\./g, "").replace(",", ".")
-  ); // Convertir el monto cerrado a número
+); // Convertir el monto cerrado a número
   
   const comisionPas = calcularComisionPas(plan, montoCerrado);
-  const comisionFormateada = Math.round(comisionPas).toLocaleString("es-ES");
-    const porcentaje = document.getElementById('honorarios').value;
+  const comisionFormateada = comisionPas.toLocaleString("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+});
+const honorariosStr = document.getElementById('honorarios').value; // Obtiene el valor como string
+const porcentaje = document.getElementById('honorarios').value;
     const montoCerradoStr = document.getElementById('montoCerrado').value; // Obtiene el valor como string
     const montoCerradoEnviar = parseInt(montoCerradoStr.replace(/\./g, ''), 10); 
     const honorarios = parseInt(porcentaje.replace('%', ''), 10);
     const montoFacturado = (montoCerradoEnviar * honorarios)/100;
-  const montoFormateado = Math.round(montoFacturado).toLocaleString("es-ES");
+    const montoFormateado = montoFacturado.toLocaleString("es-ES", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
 
     const estado = "FACTURACION";
 //     const valuesAC = [

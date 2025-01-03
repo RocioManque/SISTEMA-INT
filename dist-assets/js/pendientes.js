@@ -272,7 +272,7 @@ $(document).ready(function() {
 
           Swal.fire({
               title: '¡Casos con actualización pendiente!',
-              text: `Los siguientes casos tienen más de 7 días de atraso:\n ${mensaje}`,
+              text: `Los siguientes casos tienen más de 3 días de atraso:\n ${mensaje}`,
               icon: 'warning',
               confirmButtonText: 'Entendido'
           });

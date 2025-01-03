@@ -136,7 +136,14 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           }
         })
         .filter(row => row !== undefined); // Filtra filas vacías resultantes
-        selectedRows2 = rows
+       //"cobrado, rechazado, caso dado de baja"
+       const filteredRows = rows.filter(row => 
+        row[28] !== "COBRADO" && 
+        row[28] !== "RECHAZADO" && 
+        row[28] !== "CASO DADO DE BAJA"
+    );
+       console.log('filtered',filteredRows)
+        selectedRows2 = filteredRows
         .map((row, index) => {
           // Añade la fila visible en la hoja (índice + 1)
           const numeroFila = index + 1; 
@@ -238,7 +245,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         console.log('datatable', $('#scroll_vertical_dynamic_height_table'));
         const lastUpdateDate = data[20];
         const parts = lastUpdateDate.split('/');
-
+    
+   
         // Validar y convertir la fecha
         const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
         const currentDate = new Date();
@@ -253,9 +261,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 nombre: data[2], // Nombre o identificador
                 dias: daysDifference,
             });
-        } else if (data[10] === 'FACTURADO') {
-            $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
-        } else if (data[10] === 'COBRADO') {
+           } else if (data[10] === 'COBRADO') {
             $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
         } else if (data[10] === 'DESISTIDO') {
             $(row).addClass('table-info'); // Clase de Bootstrap para fila azul
@@ -329,11 +335,14 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       order: [[9, 'desc']], // Ordenar por la columna de indicador (9) en orden descendente
       createdRow: function (row, data, dataIndex) {
         const cliente = data[1]; // Nombre del cliente (columna 4 en selectedRows2)
-
+        const urlVacia = data[8];
+        console.log(urlVacia)
         // Verificar si el cliente está en el arreglo de atrasados
         if (clientesAtrasados.includes(cliente)) {
             $(row).addClass('table-danger'); // Pintar la fila de rojo
-        }
+        }else if (urlVacia !== null &&  urlVacia !== '' ) {
+          $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
+      }
     },
       fixedHeader: true  // Activar el encabezado fijo
     });
