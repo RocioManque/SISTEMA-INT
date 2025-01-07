@@ -45,6 +45,18 @@ fetch(url)
   const calcularTotalesPorMes = (registros) => {
     const resultados = {};
   
+    // Obtener la fecha actual y el mes actual
+    const fechaActual = new Date();
+    const mesActual = fechaActual.getMonth(); // Mes actual (0-11)
+    const anioActual = fechaActual.getFullYear(); // Año actual
+  
+    // Generar los últimos 12 meses (mes actual y los anteriores)
+    const mesesUltimos12 = [];
+    for (let i = 0; i < 12; i++) {
+      const mes = new Date(anioActual, mesActual - i, 1);
+      mesesUltimos12.push(mes.toISOString().slice(0, 7)); // Formato: "YYYY-MM"
+    }
+  
     registros.forEach(registro => {
       const fechaIngreso = registro["Fecha de ingreso"];
       const fechaInicio = registro["fecha ingreso a cia"];
@@ -56,14 +68,14 @@ fetch(url)
         ? new Date(fechaInicio).toISOString().slice(0, 7)
         : null;
   
-      if (mesIngreso) {
+      if (mesIngreso && mesesUltimos12.includes(mesIngreso)) {
         if (!resultados[mesIngreso]) {
           resultados[mesIngreso] = { ingresados: 0, iniciados: 0 };
         }
         resultados[mesIngreso].ingresados++;
       }
   
-      if (mesInicio) {
+      if (mesInicio && mesesUltimos12.includes(mesInicio)) {
         if (!resultados[mesInicio]) {
           resultados[mesInicio] = { ingresados: 0, iniciados: 0 };
         }
@@ -71,20 +83,31 @@ fetch(url)
       }
     });
   
-    // Ordenar los resultados por mes
+    // Preparar los resultados para los últimos 12 meses
+    const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const resultadosOrdenados = {};
-
-    nombresMeses.forEach((mes, index) => {
-      const mesClave = new Date(2024, index, 1).toISOString().slice(0, 7); // Año-Mes
+  
+    // Asegurar que los últimos 12 meses estén presentes, incluso si no tienen datos
+    mesesUltimos12.forEach(mesClave => {
+      const mesNombre = nombresMeses[parseInt(mesClave.slice(5, 7)) - 1]; // Obtener nombre del mes
       if (resultados[mesClave]) {
-        resultadosOrdenados[mes] = resultados[mesClave];
+        resultadosOrdenados[mesNombre] = resultados[mesClave];
       } else {
-        resultadosOrdenados[mes] = { ingresados: 0, iniciados: 0 };
+        resultadosOrdenados[mesNombre] = { ingresados: 0, iniciados: 0 };
       }
     });
-  console.log(resultadosOrdenados)
-    return resultadosOrdenados;
+  
+    // Invertir los resultados para que el mes actual esté al final
+    const resultadosInvertidos = {};
+    Object.keys(resultadosOrdenados).reverse().forEach(mes => {
+      resultadosInvertidos[mes] = resultadosOrdenados[mes];
+    });
+  
+    console.log(resultadosInvertidos);
+    return resultadosInvertidos;
   };
+  
+  
   const calcularTotalesPorEjecutivoYMes = (registros) => {
     const resultados = {};
 
@@ -116,39 +139,8 @@ console.log(resultados);
     return resultados;
 };
 
-const prepareDataForAreaCharts = (totales, tipo) => {
-    const mesesCompletos = Array.from({ length: 12 }, (_, i) => {
-        const fecha = new Date(2024, i, 1); // Cambia el año según corresponda
-        return fecha.toISOString().slice(0, 7); // Formato "YYYY-MM"
-    });
 
-    const seriesData = {};
 
-    mesesCompletos.forEach(mes => {
-        const ejecutivosMes = totales[mes] || {};
-
-        for (const ejecutivo in ejecutivosMes) {
-            if (!seriesData[ejecutivo]) {
-                seriesData[ejecutivo] = Array(12).fill(0);
-            }
-
-            const mesIndex = mesesCompletos.indexOf(mes);
-            seriesData[ejecutivo][mesIndex] = ejecutivosMes[ejecutivo][tipo];
-        }
-    });
-
-    const series = Object.keys(seriesData).map(ejecutivo => ({
-        name: ejecutivo,
-        data: seriesData[ejecutivo],
-    }));
-
-    return {
-        xaxis: mesesCompletos.map(mes =>
-            new Date(`${mes}-12`).toLocaleString('es-ES', { month: 'long' })
-        ),
-        series,
-    };
-};
 const calcularPorTipoYEstado = (registros) => {
     const resultados = {};
 console.log(registros)
@@ -185,34 +177,35 @@ const calcularPorCompania = (registros) => {
 
     return resultados;
 };
+const parseCurrency = (value) => {
+    if (typeof value !== 'string') return 0;
+    return parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
+};
+
 const calcularTotalesFacturadosPorMes = (registros) => {
     const resultados = {};
 
     registros.forEach(registro => {
-        // Validar si "Fecha de ingreso" es válida
         const fechaIngreso = registro["fecha de facturacion"];
-        const mes = fechaIngreso && !isNaN(new Date(fechaIngreso)) 
-            ? new Date(fechaIngreso).toISOString().slice(0, 7) 
+        const mes = fechaIngreso && !isNaN(new Date(fechaIngreso))
+            ? new Date(fechaIngreso).toISOString().slice(0, 7)
             : null;
 
-        if (!mes) {
-            console.warn(`Registro ignorado por fecha inválida:`, registro);
-            return; // Ignorar registros con fecha inválida
-        }
+        if (!mes) return;
 
-        // Procesar el monto sin IVA
-        const montoSinIVA = parseFloat((registro["TOTAL FACTURADO SIN IVA"] || "0").replace(/\./g, '').replace(',', '.'));
+        const montoSinIVA = parseCurrency(registro["TOTAL FACTURADO SIN IVA"]);
 
         if (!resultados[mes]) {
             resultados[mes] = { cantidad: 0, facturado: 0 };
         }
 
         resultados[mes].cantidad++;
-        resultados[mes].facturado += montoSinIVA || 0;
+        resultados[mes].facturado += montoSinIVA;
     });
 
     return resultados;
 };
+
 const calcularTotalesFacturadosPorMesPorEjecutivo = (registros) => {
     const resultados = {};
 
@@ -222,28 +215,21 @@ const calcularTotalesFacturadosPorMesPorEjecutivo = (registros) => {
             ? new Date(fechaIngreso).toISOString().slice(0, 7)
             : null;
 
-        if (!mes) {
-            console.warn(`Registro ignorado por fecha inválida:`, registro);
-            return; // Ignorar registros con fecha inválida
-        }
+        if (!mes) return;
 
-        const ejecutivo = registro["ejecutivo"];
-        const montoSinIVA = parseFloat((registro["TOTAL FACTURADO SIN IVA"] || "0").replace(/\./g, '').replace(',', '.'));
+        const ejecutivo = registro["ejecutivo"] || "Sin ejecutivo";
+        const montoSinIVA = parseCurrency(registro["TOTAL FACTURADO SIN IVA"]);
 
-        if (!resultados[mes]) {
-            resultados[mes] = {};
-        }
-
-        if (!resultados[mes][ejecutivo]) {
-            resultados[mes][ejecutivo] = { cantidad: 0, facturado: 0 };
-        }
+        if (!resultados[mes]) resultados[mes] = {};
+        if (!resultados[mes][ejecutivo]) resultados[mes][ejecutivo] = { cantidad: 0, facturado: 0 };
 
         resultados[mes][ejecutivo].cantidad++;
-        resultados[mes][ejecutivo].facturado += montoSinIVA || 0;
+        resultados[mes][ejecutivo].facturado += montoSinIVA;
     });
 
     return resultados;
 };
+
 const calcularTotalesCobradosPorMes = (registros) => {
     const resultados = {};
 
@@ -253,23 +239,21 @@ const calcularTotalesCobradosPorMes = (registros) => {
             ? new Date(fechaCobro).toISOString().slice(0, 7)
             : null;
 
-        if (!mes) {
-            console.warn(`Registro ignorado por fecha inválida:`, registro);
-            return; // Ignorar registros con fecha de cobro inválida
-        }
+        if (!mes) return;
 
-        const montoCobrado = parseFloat((registro["Total facturado con iva"] || "0").replace(/\./g, '').replace(',', '.'));
+        const montoCobrado = parseCurrency(registro["Total facturado con iva"]);
 
         if (!resultados[mes]) {
             resultados[mes] = { cantidad: 0, cobrado: 0 };
         }
 
         resultados[mes].cantidad++;
-        resultados[mes].cobrado += montoCobrado || 0;
+        resultados[mes].cobrado += montoCobrado;
     });
 
     return resultados;
 };
+
 const calcularComisionesPorMesYProductor = (registros) => {
     const resultados = {};
 
@@ -279,27 +263,20 @@ const calcularComisionesPorMesYProductor = (registros) => {
             ? new Date(fechaFacturacion).toISOString().slice(0, 7)
             : null;
 
-        if (!mes) {
-            console.warn(`Registro ignorado por fecha inválida:`, registro);
-            return; // Ignorar registros con fecha de facturación inválida
-        }
+        if (!mes) return;
 
         const productor = registro["Pas"] || "Sin productor";
-        const comision = parseFloat((registro["comision pas"] || "0").replace(/\./g, '').replace(',', '.'));
+        const comision = parseCurrency(registro["comision pas"]);
 
-        if (!resultados[mes]) {
-            resultados[mes] = {};
-        }
+        if (!resultados[mes]) resultados[mes] = {};
+        if (!resultados[mes][productor]) resultados[mes][productor] = 0;
 
-        if (!resultados[mes][productor]) {
-            resultados[mes][productor] = 0;
-        }
-
-        resultados[mes][productor] += comision || 0;
+        resultados[mes][productor] += comision;
     });
-console.log('resultados comision', resultados)
+
     return resultados;
 };
+
 const calcularTotalPercibidoPorMes = (registros) => {
     const resultados = {};
 
@@ -309,50 +286,39 @@ const calcularTotalPercibidoPorMes = (registros) => {
             ? new Date(fechaFacturacion).toISOString().slice(0, 7)
             : null;
 
-        if (!mes) {
-            console.warn(`Registro ignorado por fecha inválida:`, registro);
-            return; // Ignorar registros con fecha de facturación inválida
-        }
+        if (!mes) return;
 
-        const percibido = parseFloat((registro["total percibido(al final de deducciones)"] || "0").replace(/\./g, '').replace(',', '.'));
+        const percibido = parseCurrency(registro["total percibido(al final de deducciones)"]);
 
-        if (!resultados[mes]) {
-            resultados[mes] = 0;
-        }
+        if (!resultados[mes]) resultados[mes] = 0;
 
-        resultados[mes] += percibido || 0;
+        resultados[mes] += percibido;
     });
 
     return resultados;
 };
+
 const calcularTotalPercibidoPorCia = (registros) => {
     const resultados = {};
 
     registros.forEach((registro) => {
         const fechaCobro = registro["fecha de pago"];
-        const cia = registro["cia a reclamar"];
-        const totalPercibido = parseFloat(
-            registro["total percibido(al final de deducciones)"].replace('.', '').replace(',', '.')
-        ); // Convierte a número decimal
+        const cia = registro["cia a reclamar"] || "Desconocida";
+        const totalPercibido = parseCurrency(registro["total percibido(al final de deducciones)"]);
 
-        if (!fechaCobro || !cia || isNaN(totalPercibido)) return;
+        if (!fechaCobro || isNaN(totalPercibido)) return;
 
-        // Formatear la fecha al formato YYYY-MM
         const mesCobro = new Date(fechaCobro).toISOString().slice(0, 7);
 
-        if (!resultados[mesCobro]) {
-            resultados[mesCobro] = {};
-        }
-
-        if (!resultados[mesCobro][cia]) {
-            resultados[mesCobro][cia] = 0;
-        }
+        if (!resultados[mesCobro]) resultados[mesCobro] = {};
+        if (!resultados[mesCobro][cia]) resultados[mesCobro][cia] = 0;
 
         resultados[mesCobro][cia] += totalPercibido;
     });
 
     return resultados;
 };
+
 const calcularPlazoPromedioDePago = (registros) => {
     const resultados = {};
 
@@ -431,85 +397,109 @@ const calcularPlazoPromedioPorCia = (registros) => {
 };
 const prepararDatosGraficoPlazoPorCia = (promedios) => {
     const companias = Object.keys(promedios);
-    const datos = Object.values(promedios).map((promedio) =>
-        Math.round(promedio) // Redondear a números enteros
-    );
+    const datos = Object.values(promedios).map((promedio) => Math.round(promedio));
 
     return {
         xaxis: companias,
-        series: [
-            {
-                name: "Plazo Promedio de Pago (días)",
-                data: datos,
-            },
-        ],
+        series: [{
+            name: "Plazo Promedio de Pago (días)",
+            data: datos,
+        }],
+    };
+};
+
+const prepareDataForAreaCharts = (totales, tipo) => {
+    const today = new Date();
+    const mesesCompletos = Array.from({ length: 12 }, (_, i) => {
+        const fecha = new Date(today.getFullYear(), today.getMonth() - 11 + i, 1);
+        return fecha.toISOString().slice(0, 7); // Formato "YYYY-MM"
+    }).sort();
+
+    const seriesData = {};
+
+    mesesCompletos.forEach(mes => {
+        const ejecutivosMes = totales[mes] || {};
+
+        for (const ejecutivo in ejecutivosMes) {
+            if (!seriesData[ejecutivo]) {
+                seriesData[ejecutivo] = Array(12).fill(0);
+            }
+
+            const mesIndex = mesesCompletos.indexOf(mes);
+            seriesData[ejecutivo][mesIndex] = ejecutivosMes[ejecutivo][tipo];
+        }
+    });
+
+    const series = Object.keys(seriesData).map(ejecutivo => ({
+        name: ejecutivo,
+        data: seriesData[ejecutivo],
+    }));
+
+    return {
+        xaxis: mesesCompletos.map(mes =>
+            new Date(`${mes}-12`).toLocaleString('es-ES', { month: 'long' })
+        ),
+        series,
     };
 };
 
 const prepararDatosGraficoPlazoPromedio = (promedios) => {
-    const meses = Object.keys(promedios).map((mes) => {
-        const [año, mesNum] = mes.split("-");
-        const fecha = new Date(año, mesNum - 1, 1);
-        return fecha.toLocaleString("es-ES", { month: "long", year: "numeric" });
-    });
+    const meses = Object.keys(promedios)
+        .sort()
+        .map((mes) => {
+            const [año, mesNum] = mes.split("-");
+            const fecha = new Date(año, mesNum - 1, 1);
+            return fecha.toLocaleString("es-ES", { month: "long", year: "numeric" });
+        });
 
-    const datos = Object.values(promedios).map((promedio) =>
-        Math.round(promedio) // Redondear a números enteros
-    );
+    const datos = Object.values(promedios).map((promedio) => Math.round(promedio));
 
     return {
         xaxis: meses,
-        series: [
-            {
-                name: "Plazo Promedio de Pago (días)",
-                data: datos,
-            },
-        ],
+        series: [{
+            name: "Plazo Promedio de Pago (días)",
+            data: datos,
+        }],
     };
 };
 
 const prepararDatosGraficoCiaPorMes = (totales) => {
-    const meses = Object.keys(totales).map((mes) => {
-        const [año, mesNum] = mes.split("-");
-        const fecha = new Date(año, mesNum - 1, 1);
-        return fecha.toLocaleString("es-ES", { month: "long", year: "numeric" });
-    });
-
+    const meses = Object.keys(totales).sort();
     const companias = [...new Set(Object.values(totales).flatMap(Object.keys))];
     const series = companias.map((cia) => ({
         name: cia,
-        data: Object.keys(totales).map(
-            (mes) => (totales[mes][cia] || 0) // Asignar 0 si no hay datos para la compañía en ese mes
-        ),
+        data: meses.map((mes) => totales[mes][cia] || 0),
     }));
 
     return {
-        xaxis: meses,
+        xaxis: meses.map(mes => {
+            const [año, mesNum] = mes.split("-");
+            return new Date(año, mesNum - 1, 1).toLocaleString("es-ES", { month: "long", year: "numeric" });
+        }),
         series,
     };
 };
-const prepararDatosParaGraficoPercibido = (totales) => {
-    const meses = Object.keys(totales).map(mes => {
-        const [año, mesNum] = mes.split('-');
-        const fecha = new Date(año, mesNum - 1, 1); // Año, mes (0-indexado)
-        return fecha.toLocaleString('es-ES', { month: 'long', year: 'numeric' }); // Mes en español
-    });
 
+const prepararDatosParaGraficoPercibido = (totales) => {
+    const meses = Object.keys(totales).sort();
     const seriesData = Object.values(totales);
 
     return {
-        xaxis: meses,
+        xaxis: meses.map(mes => {
+            const [año, mesNum] = mes.split("-");
+            return new Date(año, mesNum - 1, 1).toLocaleString("es-ES", { month: "long", year: "numeric" });
+        }),
         series: [{
             name: 'Total Percibido',
             data: seriesData,
         }],
     };
 };
+
 const prepararDatosParaGraficoComisiones = (totales) => {
-    const meses = Object.keys(totales);
+    const meses = Object.keys(totales).sort();
     const productores = new Set();
 
-    // Recolectar productores únicos
     meses.forEach(mes => {
         Object.keys(totales[mes]).forEach(productor => productores.add(productor));
     });
@@ -524,8 +514,9 @@ const prepararDatosParaGraficoComisiones = (totales) => {
         series,
     };
 };
+
 const prepararDatosParaGraficoCobrado = (totales) => {
-    const meses = Object.keys(totales);
+    const meses = Object.keys(totales).sort();
     const cantidad = [];
     const cobrado = [];
 
@@ -537,33 +528,25 @@ const prepararDatosParaGraficoCobrado = (totales) => {
     return {
         xaxis: meses,
         series: [
-            {
-                name: 'Cantidad de casos',
-                type: 'column',
-                data: cantidad,
-            },
-            {
-                name: 'Monto cobrado ($)',
-                type: 'line',
-                data: cobrado,
-            },
+            { name: 'Cantidad de casos', type: 'column', data: cantidad },
+            { name: 'Monto cobrado ($)', type: 'line', data: cobrado },
         ],
     };
 };
+
+
 const prepararDatosParaGraficoFacturacionPorEjecutivo = (totales) => {
     const seriesCantidad = [];
     const seriesFacturado = [];
-    const meses = Object.keys(totales);
-
-    // Recorrer cada mes y ejecutivo
+    const meses = Object.keys(totales).sort();
     const ejecutivos = new Set();
+
     meses.forEach(mes => {
         for (const ejecutivo in totales[mes]) {
             ejecutivos.add(ejecutivo);
         }
     });
 
-    // Crear series por ejecutivo
     ejecutivos.forEach(ejecutivo => {
         const datosCantidad = [];
         const datosFacturado = [];
@@ -584,27 +567,25 @@ const prepararDatosParaGraficoFacturacionPorEjecutivo = (totales) => {
         seriesFacturado,
     };
 };
-// Preparar datos para el gráfico
+
 const prepararDatosParaGraficoFacturados = (totales) => {
     const meses = Object.keys(totales).sort();
     const cantidades = meses.map(mes => totales[mes].cantidad);
     const montos = meses.map(mes => totales[mes].facturado);
 
     return {
-        xaxis: meses.map(mes => new Date(`${mes}-01`).toLocaleString('es-ES', { month: 'long' })),
+        xaxis: meses.map(mes => new Date(`${mes}-12`).toLocaleString('es-ES', { month: 'long' })),
         series: [
             { name: 'Cantidad de casos', data: cantidades },
             { name: 'Total facturado ($)', data: montos }
         ]
     };
 };
-
-
 const prepararDatosBarrasApiladas = (datos) => {
     const series = [];
     const categorias = Object.keys(datos);
-
     const estados = new Set();
+
     categorias.forEach(categoria => {
         Object.keys(datos[categoria]).forEach(estado => estados.add(estado));
     });
@@ -618,7 +599,6 @@ const prepararDatosBarrasApiladas = (datos) => {
 
     return { series, categorias };
 };
-
 
 const prepararDatosDonut = (datos) => {
     return {

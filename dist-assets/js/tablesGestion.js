@@ -39,6 +39,25 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       selectedRows = rows.map((row, index) => {
         // Añade la fila visible en la hoja (índice + 1)
         const numeroFila = index + 1;
+        let isAtrasado = 0; // Indicador de atraso (0: no atrasado, 1: atrasado)
+        const lastUpdateDate = row[55] || "";
+        if (lastUpdateDate) {
+            const parts = lastUpdateDate.split('/');
+            const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+      
+            const daysDifference = getDaysDifference(newDate, currentDate);
+      
+            // Si supera los 7 días, agregar al arreglo
+            if (daysDifference > 7) {
+                const cliente = row[4] || ""; // Nombre del cliente (columna 4)
+                if (cliente) {
+                    clientesAtrasados.push(cliente);
+                }
+                isAtrasado = 1;
+            }
+        }
         return [
           numeroFila,       // Número de fila en Google Sheets
           row[1] || "",     // PAS
@@ -60,7 +79,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           row[48] || "",    // Compañía a reclamar
           row[53] || "",     // Compañía a reclamar
           row[54] || "",     // Compañía a reclamar
-          row[55] || ""     // Compañía a reclamar
+          row[55] || "",
+          isAtrasado     // Compañía a reclamar
         ];
       });
       selectedRows2 = rows.map((row, index) => {
@@ -108,7 +128,25 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           // Convierte el nombre del cliente a mayúsculas y compara
           const nombreCliente = (row[2] || "").toUpperCase();
           const apellidoCliente = (row[1] || "").toUpperCase();
-
+          let isAtrasado = 0; // Indicador de atraso (0: no atrasado, 1: atrasado)
+          const lastUpdateDate = row[55] || "";
+          if (lastUpdateDate) {
+              const parts = lastUpdateDate.split('/');
+              const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+              const currentDate = new Date();
+              currentDate.setHours(0, 0, 0, 0);
+        
+              const daysDifference = getDaysDifference(newDate, currentDate);
+        
+              // Si supera los 7 días, agregar al arreglo
+              if (daysDifference > 7) {
+                  const cliente = row[4] || ""; // Nombre del cliente (columna 4)
+                  if (cliente) {
+                      clientesAtrasados.push(cliente);
+                  }
+                  isAtrasado = 1;
+              }
+          }
           if (nombreCliente === nombre || apellidoCliente === apellido) {
             return [
               numeroFila,       // Número de fila en Google Sheets
@@ -131,7 +169,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
               row[48] || "",    // Compañía a reclamar
               row[53] || "",     // Compañía a reclamar
               row[54] || "",     // Compañía a reclamar
-              row[55] || ""     // Compañía a reclamar
+              row[55] || "",
+              isAtrasado     // Compañía a reclamar
             ];
           }
         })
@@ -140,6 +179,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
        const filteredRows = rows.filter(row => 
         row[28] !== "COBRADO" && 
         row[28] !== "RECHAZADO" && 
+        row[28] !== "CASO CONCILIADO/ PARA IMPUTAR" && 
         row[28] !== "CASO DADO DE BAJA"
     );
        console.log('filtered',filteredRows)
@@ -165,7 +205,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 const daysDifference = getDaysDifference(newDate, currentDate);
           
                 // Si supera los 7 días, agregar al arreglo
-                if (daysDifference > 7) {
+                if (daysDifference > 7 && row[28] !== 'A.CERRADO/FACTURADO') {
                     const cliente = row[4] || ""; // Nombre del cliente (columna 4)
                     if (cliente) {
                         clientesAtrasados.push(cliente);
@@ -195,18 +235,18 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       scrollY: 300,
     scrollX: true,
       columns: [
-        { title: "Nº" }, // Nueva columna para el número de fila
+        { title: "Nº",visible:false }, // Nueva columna para el número de fila
         { title: "PAS" },
         { title: "Cliente" },
-        { title: "Tel. Cliente" },
-        { title: "Mail Cliente" },
-        { title: "Fecha de ingreso" },
-        { title: "Fecha de inicio" },
-        { title: "Nº interno" },
-        { title: "Plan INT" },
-        { title: "Nº reclamo cia" },
+        { title: "Tel. Cliente",visible:false },
+        { title: "Mail Cliente",visible:false },
+        { title: "Fecha de ingreso",visible:false },
+        { title: "Fecha de inicio",visible:false },
+        { title: "Nº interno" ,visible:false},
+        { title: "Plan INT",visible:false },
+        { title: "Nº reclamo cia",visible:false },
         { title: "Estado" },
-        { title: "Observación" },
+        { title: "Observación",visible:false },
         { title: "Informe/Historial",
           render: function(data, type, row, meta) {
             // Si la celda contiene una URL, muestra un enlace cliqueable
@@ -216,9 +256,9 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
          },//46
         { title: "Tipo de reclamo" },
         { title: "Monto a reclamar" },
-        { title: "Monto cerrado" },
+        { title: "Monto cerrado" ,visible:false},
         { title: "Compañía a reclamar" },
-        { title: "Gestionado con.." },
+        { title: "Gestionado con.." ,visible:false},
         { 
           title: "Url Adjuntos",
           render: function(data, type, row, meta) {
@@ -233,7 +273,9 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return data ? `<a href="${data}" target="_blank">Ver Facturas</a>` : '';
           }
         },
-        { title: "Ultima actualización" },
+        { title: "Ultima actualización" ,visible:false},
+        { title: "Atrasado" ,visible:false},
+
         {
           title: "Acciones",
           render: function(data, type, row, meta) {
@@ -241,11 +283,12 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           }
         }
       ],
+      order: [[21, 'desc']],
+
       createdRow: function (row, data, dataIndex) {
-        console.log('datatable', $('#scroll_vertical_dynamic_height_table'));
         const lastUpdateDate = data[20];
         const parts = lastUpdateDate.split('/');
-    
+        const estadosExcluidos = data[10];
    
         // Validar y convertir la fecha
         const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
@@ -255,39 +298,54 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         // Calcular diferencia en días
         const daysDifference = getDaysDifference(newDate, currentDate);
 
-        if (daysDifference > 7) {
+        if (daysDifference > 7 ) {
             $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
             casosAtrasados.push({
                 nombre: data[2], // Nombre o identificador
                 dias: daysDifference,
+                estado: data[10]
             });
-           } else if (data[10] === 'COBRADO') {
-            $(row).addClass('table-success'); // Clase de Bootstrap para fila verde
-        } else if (data[10] === 'DESISTIDO') {
-            $(row).addClass('table-info'); // Clase de Bootstrap para fila azul
-        } else {
-            $(row).addClass('table'); // Clase por defecto
-        }
+           }
+           const cliente = data[2]; // Nombre del cliente (columna 4 en selectedRows2)
+           const urlVacia = data[19];
+           const estadoProhibido = data[10];
+   
+           if (clientesAtrasados.includes(cliente)&& estadoProhibido !== "A.CERRADO/FACTURADO") {
+               $(row).addClass('table-danger'); // Pintar la fila de rojo
+           }else if (urlVacia !== null &&  urlVacia !== '' ) {
+             $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
+         }
+   
     },
     drawCallback: function () {
       // Mostrar la alerta única después de procesar todas las filas
       if (casosAtrasados.length > 0) {
-          const mensaje = casosAtrasados.map(
-              caso => ` \n - ${caso.nombre}: ${caso.dias} días atrasados \n `
-          ).join(`\n`);
-
-          Swal.fire({
-              title: '¡Casos con actualización pendiente!',
-              text: `Los siguientes casos tienen más de 7 días de atraso:\n ${mensaje}`,
-              icon: 'warning',
-              confirmButtonText: 'Entendido'
-          });
-
-          // Vaciar el arreglo para evitar alertas duplicadas en futuras ejecuciones
-          casosAtrasados = [];
-      }
+        // Filtrar los casos según los estados no deseados
+        const estadosExcluidos = ["CASO DADO DE BAJA", "COBRADO", "RECHAZADO", "A.CERRADO/FACTURADO"];
+        
+        // Solo incluir los casos que no estén en los estados excluidos
+        const casosFiltrados = casosAtrasados.filter(caso => 
+            !estadosExcluidos.includes(caso.estado.toLowerCase().trim())
+        );
+    
+        if (casosFiltrados.length > 0) {
+            const mensaje = casosFiltrados.map(
+                caso => `\n - ${caso.nombre}: ${caso.dias} días atrasados \n`
+            ).join(`\n`);
+    
+            Swal.fire({
+                title: '¡Casos con actualización pendiente!',
+                text: `Los siguientes casos tienen más de 7 días de atraso:\n${mensaje}`,
+                icon: 'warning',
+                confirmButtonText: 'Entendido'
+            });
+        }
+    
+        // Vaciar el arreglo para evitar alertas duplicadas en futuras ejecuciones
+        casosAtrasados = [];
+    }
   },
-
+// 
       fixedHeader: true  // Activar el encabezado fijo
     });
 
@@ -336,13 +394,15 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       createdRow: function (row, data, dataIndex) {
         const cliente = data[1]; // Nombre del cliente (columna 4 en selectedRows2)
         const urlVacia = data[8];
-        console.log(urlVacia)
-        // Verificar si el cliente está en el arreglo de atrasados
-        if (clientesAtrasados.includes(cliente)) {
+        const estadoProhibido = data[2];
+
+        if (clientesAtrasados.includes(cliente)&& estadoProhibido !== "A.CERRADO/FACTURADO") {
             $(row).addClass('table-danger'); // Pintar la fila de rojo
         }else if (urlVacia !== null &&  urlVacia !== '' ) {
           $(row).addClass('table-warning'); // Clase de Bootstrap para fila amarilla
       }
+
+
     },
       fixedHeader: true  // Activar el encabezado fijo
     });
@@ -350,6 +410,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       .catch(error => console.error('Error al cargar datos de Google Sheets:', error));
   });
   function editarFila(rowIndex) {
+    console.log('rowIndex',rowIndex);
     const rowData = $('#table2').DataTable().row(rowIndex).data();
    
     

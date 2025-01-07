@@ -166,7 +166,12 @@ document.getElementById("iva").value = iva;
 document.getElementById("totalPercibido").value = totalPercibido;
 // Y así sucesivamente para otros campos
 
-
+function convertirAPesoNumerico(valor) {
+  if (typeof valor === 'string') {
+      return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+  }
+  return valor;
+}
 async function actualizar(e) {
     const fc = document.getElementById("file-input");
     const spreadsheetId = "1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs";
@@ -178,8 +183,9 @@ async function actualizar(e) {
     
     // Función para limpiar el valor de los inputs (eliminar puntos de miles)
     const limpiarNumero = (numero) => {
-      return parseFloat(numero.replace(/\./g, ''));
-    };
+      if (!numero) return 0;
+      return parseFloat(numero.replace(/\./g, '').replace(',', '.')) || 0;
+  };
   
     // Obtener valores de inputs y convertir a números sin punto
     const facturadoSinIva = limpiarNumero(document.getElementById("facturadoSinIva").value);
@@ -219,21 +225,17 @@ async function actualizar(e) {
   const montoCerrado = document.getElementById("montoCerrado").value;
   const fechaFactura = document.getElementById("fechaFactura").value;
   const consultores = document.getElementById("consultores").value;
-  const comisionPas = document.getElementById("comisionPas").value;
+  const comisionPas = limpiarNumero(document.getElementById("comisionPas").value);
   const nroFactura = document.getElementById("nroFactura").value;
     const facturadoConIva = facturadoSinIva + iva;
   const fechaPagoComision = document.getElementById("fechaPagoComision").value;
-    const totalPercibido =
-      facturadoSinIva +
-      iva - 
-      (retencionIva + retencionGanancia + retencionIBBcompania + retencionIBBbanco + gastosEstructura);
-    
+  const totalPercibido = (facturadoSinIva + iva - (retencionIva + retencionGanancia + retencionIBBcompania + retencionIBBbanco + gastosEstructura + comisionPas));
     const ultimaActualizacion = fechaHoy;
 
     // Función para formatear el número con punto de miles
     const formatearConPuntos = (numero) => {
-      return numero.toLocaleString('de-DE'); // 'de-DE' usa punto como separador de miles
-    };
+      return numero.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
   
     // Crear la solicitud BatchUpdate
     const batchUpdateBody = {
@@ -261,7 +263,7 @@ async function actualizar(e) {
                   { userEnteredValue: { stringValue: String(facturadoPor) } },
                   { userEnteredValue: { stringValue: String(caso) } },
                   { userEnteredValue: { stringValue: String(consultores) } },
-                  { userEnteredValue: { stringValue: String(comisionPas) } },
+                  { userEnteredValue: { stringValue: formatearConPuntos(comisionPas) } },
                   { userEnteredValue: { stringValue: formatearConPuntos(facturadoSinIva) } },
                   { userEnteredValue: { stringValue: String(nroFactura) } },
                   { userEnteredValue: { stringValue: formatearConPuntos(iva) } },

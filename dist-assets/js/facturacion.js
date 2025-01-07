@@ -22,7 +22,7 @@ $(document).ready(function() {
           const tipoReclamo = (row[28] || "").toUpperCase();
       
           // Verifica si el tipo de reclamo es "FACTURACION"
-          if (tipoReclamo === 'FACTURACION') {
+          if (tipoReclamo === 'A FACTURAR' || tipoReclamo === 'CASO CONCILIADO/ PARA IMPUTAR'|| tipoReclamo === 'COBRADO') {
             return [
               numeroFila,       // Número de fila en Google Sheets
               row[35] || "",    // Información relevante
@@ -63,7 +63,7 @@ $(document).ready(function() {
           const tipoReclamo = (row[28] || "").toUpperCase();
       
           // Verifica si el tipo de reclamo es "FACTURACION"
-          if (tipoReclamo === 'FACTURACION') {
+          if (tipoReclamo === 'A FACTURAR' || tipoReclamo === 'CASO CONCILIADO/ PARA IMPUTAR' || tipoReclamo === 'COBRADO') {
             return [
       // Número de fila en Google Sheets
               row[35] || "",    // Información relevante

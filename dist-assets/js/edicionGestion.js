@@ -1,7 +1,7 @@
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
 const rowIndex = params.get('row')
-console.log(rowIndex)
+console.log('index',rowIndex)
 const pas = params.get('pas');
 const cliente = params.get('cliente');
 const telefonoCliente = params.get('telefonoCliente');
@@ -809,7 +809,7 @@ const porcentaje = document.getElementById('honorarios').value;
         maximumFractionDigits: 2,
     });
 
-    const estado = "FACTURACION";
+    const estado = "A FACTURAR";
 //     const valuesAC = [
 //         estado,   
 //     ];

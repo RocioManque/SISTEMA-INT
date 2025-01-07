@@ -32,13 +32,16 @@ $(document).ready(function() {
                             <td>${row[8] || ""}</td>
                             <td>${row[7] || ""}</td>
                             <td>${row[13] || ""}</td>
-                            <td>${row[15] || ""}</td>
+                            <td>${row[16] || ""}</td>
                         </tr>
                     `);
                 }
 
                 // Inicializa DataTable después de cargar todos los datos
-                $('#zero_configuration_table').DataTable();
+                $('#zero_configuration_table').DataTable({
+                    scrollY: 300,
+                    scrollX: true,
+                });
             } else {
                 console.error("No se encontraron datos en la hoja de cálculo.");
             }

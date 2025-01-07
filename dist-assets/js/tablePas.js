@@ -26,7 +26,26 @@ $(document).ready(async function() {
         const response2 = await fetch(url1);
         const data = await response.json();
         const data2 = await response2.json();
-        const completo = Object.assign({}, data, data2);
+        // Determinar el número máximo de columnas entre ambas tablas
+const maxColumns = Math.max(
+    Math.max(...data.values.map(row => row.length)), // Máximo de columnas en data.values
+    Math.max(...data2.values.map(row => row.length)) // Máximo de columnas en data2.values
+);
+
+// Función para normalizar filas agregando columnas vacías cuando sea necesario
+function normalizeRow(row, maxColumns) {
+    return [...row, ...Array(maxColumns - row.length).fill("")]; // Agrega columnas vacías
+}
+
+// Normalizar las filas de ambas tablas al tamaño máximo de columnas
+const normalizedData1 = data.values.map(row => normalizeRow(row, maxColumns));
+const normalizedData2 = data2.values.map(row => normalizeRow(row, maxColumns));
+
+// Combinar las dos tablas normalizadas
+const completo = [...normalizedData1, ...normalizedData2];
+
+
+        console.log('completo',completo)
         return data.values.slice(1);  // Devuelve los datos sin encabezado
     }
     async function obtenerPas() {
