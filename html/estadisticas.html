@@ -16,6 +16,10 @@
           max-height: 400px; /* Ajusta la altura máxima */
           margin-left: 200px;
         }
+        .chart-container {
+    max-height: 200px;  /* Ajusta este valor según sea necesario */
+    overflow: hidden;
+  }
       </style>
 </head>
 
@@ -172,7 +176,7 @@
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div id="graficoPorCia"></div>
+                                <div id="graficoPorCia" class="chart-container"></div>
                             </div>
                         </div>
                     </div>

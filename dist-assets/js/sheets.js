@@ -9,15 +9,32 @@ const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const year = 2024; // Año deseado
 const range = 'sheet1!A:BF'
+const range1 = 'Respuestas de formulario 1!A:Y'
 
 
 
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
+const url1 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range1}?key=${API_KEY}`;
+
 const nombresMeses = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
   ];
+async function recuperarCantidadDeCasos() {
+    const response2 = await fetch(url1);
+    const data2 = await response2.json();
+    const rta = data2.values;
+    const headers = rta[0];
+    const respuestaFormulario = rta.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = row[index];
+        });
+        return obj;
+      });
 
+    return respuestaFormulario
+}
 // Fetch y procesamiento inicial
 fetch(url)
   .then(response => response.json())
@@ -42,70 +59,90 @@ fetch(url)
   .catch(error => console.error("Error al procesar los datos:", error));
 
 
-  const calcularTotalesPorMes = (registros) => {
+  const calcularIngresadosPorMes = async () => {
+    const resultadosDeIngresos = await recuperarCantidadDeCasos();
     const resultados = {};
-  
-    // Obtener la fecha actual y el mes actual
+
     const fechaActual = new Date();
-    const mesActual = fechaActual.getMonth(); // Mes actual (0-11)
-    const anioActual = fechaActual.getFullYear(); // Año actual
-  
-    // Generar los últimos 12 meses (mes actual y los anteriores)
+    const mesActual = fechaActual.getMonth();
+    const anioActual = fechaActual.getFullYear();
+
     const mesesUltimos12 = [];
     for (let i = 0; i < 12; i++) {
-      const mes = new Date(anioActual, mesActual - i, 1);
-      mesesUltimos12.push(mes.toISOString().slice(0, 7)); // Formato: "YYYY-MM"
+        const mes = new Date(anioActual, mesActual - i, 1);
+        mesesUltimos12.push(mes.toISOString().slice(0, 7));
     }
-  
+
+    resultadosDeIngresos.forEach(ingreso => {
+        const fechaIngreso = ingreso['Fecha de ingreso'];
+        const mesIngreso = fechaIngreso ? new Date(fechaIngreso).toISOString().slice(0, 7) : null;
+
+        if (mesIngreso && mesesUltimos12.includes(mesIngreso)) {
+            if (!resultados[mesIngreso]) {
+                resultados[mesIngreso] = { ingresados: 0 };
+            }
+            resultados[mesIngreso].ingresados++;
+        }
+    });
+
+    return resultados;
+};
+
+const calcularIniciadosPorMes = (registros) => {
+    const resultados = {};
+
+    const fechaActual = new Date();
+    const mesActual = fechaActual.getMonth();
+    const anioActual = fechaActual.getFullYear();
+
+    const mesesUltimos12 = [];
+    for (let i = 0; i < 12; i++) {
+        const mes = new Date(anioActual, mesActual - i, 1);
+        mesesUltimos12.push(mes.toISOString().slice(0, 7));
+    }
+
     registros.forEach(registro => {
-      const fechaIngreso = registro["Fecha de ingreso"];
-      const fechaInicio = registro["fecha ingreso a cia"];
-  
-      const mesIngreso = fechaIngreso
-        ? new Date(fechaIngreso).toISOString().slice(0, 7) // Año-Mes
-        : null;
-      const mesInicio = fechaInicio
-        ? new Date(fechaInicio).toISOString().slice(0, 7)
-        : null;
-  
-      if (mesIngreso && mesesUltimos12.includes(mesIngreso)) {
-        if (!resultados[mesIngreso]) {
-          resultados[mesIngreso] = { ingresados: 0, iniciados: 0 };
+        const fechaInicio = registro["fecha ingreso a cia"];
+        const mesInicio = fechaInicio ? new Date(fechaInicio).toISOString().slice(0, 7) : null;
+
+        if (mesInicio && mesesUltimos12.includes(mesInicio)) {
+            if (!resultados[mesInicio]) {
+                resultados[mesInicio] = { iniciados: 0 };
+            }
+            resultados[mesInicio].iniciados++;
         }
-        resultados[mesIngreso].ingresados++;
-      }
-  
-      if (mesInicio && mesesUltimos12.includes(mesInicio)) {
-        if (!resultados[mesInicio]) {
-          resultados[mesInicio] = { ingresados: 0, iniciados: 0 };
-        }
-        resultados[mesInicio].iniciados++;
-      }
     });
-  
-    // Preparar los resultados para los últimos 12 meses
+
+    return resultados;
+};
+
+const calcularTotalesPorMes = async (registros) => {
+    const ingresados = await calcularIngresadosPorMes();
+    const iniciados = calcularIniciadosPorMes(registros);
+
+    const resultados = {};
     const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-    const resultadosOrdenados = {};
-  
-    // Asegurar que los últimos 12 meses estén presentes, incluso si no tienen datos
-    mesesUltimos12.forEach(mesClave => {
-      const mesNombre = nombresMeses[parseInt(mesClave.slice(5, 7)) - 1]; // Obtener nombre del mes
-      if (resultados[mesClave]) {
-        resultadosOrdenados[mesNombre] = resultados[mesClave];
-      } else {
-        resultadosOrdenados[mesNombre] = { ingresados: 0, iniciados: 0 };
-      }
+
+    Object.keys(ingresados).forEach(mes => {
+        resultados[nombresMeses[parseInt(mes.slice(5, 7)) - 1]] = {
+            ingresados: ingresados[mes]?.ingresados || 0,
+            iniciados: iniciados[mes]?.iniciados || 0
+        };
     });
-  
-    // Invertir los resultados para que el mes actual esté al final
-    const resultadosInvertidos = {};
-    Object.keys(resultadosOrdenados).reverse().forEach(mes => {
-      resultadosInvertidos[mes] = resultadosOrdenados[mes];
+
+    Object.keys(iniciados).forEach(mes => {
+        const mesNombre = nombresMeses[parseInt(mes.slice(5, 7)) - 1];
+        if (!resultados[mesNombre]) {
+            resultados[mesNombre] = { ingresados: 0, iniciados: 0 };
+        }
+        resultados[mesNombre].iniciados = iniciados[mes].iniciados;
     });
-  
-    console.log(resultadosInvertidos);
-    return resultadosInvertidos;
-  };
+
+    console.log('estos son los resultados',resultados);
+    return resultados;
+};
+
+
   
   
   const calcularTotalesPorEjecutivoYMes = (registros) => {
@@ -608,8 +645,9 @@ const prepararDatosDonut = (datos) => {
 };
 
 // Renderizar gráficos con los meses en orden legiblePack
-const inicializarGraficos = (registros) => {
-    const totalesPorMes = calcularTotalesPorMes(registros);
+const inicializarGraficos = async (registros) => {
+    const totalesPorMes = await calcularTotalesPorMes(registros);
+    console.log('desde inicializar grafico',totalesPorMes)
     const totales = calcularTotalesPorEjecutivoYMes(registros);
     const chartDataIngresados = prepareDataForAreaCharts(totales, 'ingresados');
     const chartDataIniciados = prepareDataForAreaCharts(totales, 'iniciados');
@@ -946,6 +984,7 @@ const inicializarGraficos = (registros) => {
     const opcionesPlazoPromedioPorCia = {
         chart: {
             type: 'bar',
+            height: 400,
             toolbar: {
                 show: false,
             },
@@ -979,12 +1018,33 @@ const inicializarGraficos = (registros) => {
     // Opciones para el gráfico de donut
     const opcionesDonut = {
         chart: {
-            type: 'donut'
+            type: 'bar',
+            height: 400,
         },
-        series: donutData.series,
-        labels: donutData.labels,
+        series: [{
+            name: 'Casos',
+            data: donutData.series // Mantén los mismos datos de la serie
+        }],
+        xaxis: {
+            categories: donutData.labels, // Las etiquetas están aquí, pero no aparecerán en el gráfico
+            labels: {
+                show: false  // Esto oculta las etiquetas en el eje X
+            }
+        },
         title: {
             text: 'Casos por Compañía a Reclamar'
+        },
+        dataLabels: {
+            enabled: true // Esto oculta las etiquetas de los valores dentro de las barras
+        },
+        plotOptions: {
+            bar: {
+                horizontal: true,
+                distributed: true
+            }
+        },
+        legend: {
+            show: false // Esto desactiva la leyenda (el "Casos")
         }
     };
     const chartTotalesMes = new ApexCharts(document.querySelector("#graficoTotalesMes"), opcionesTotalesMes);

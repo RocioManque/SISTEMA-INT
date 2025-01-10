@@ -26,34 +26,73 @@ $(document).ready(async function() {
         const response2 = await fetch(url1);
         const data = await response.json();
         const data2 = await response2.json();
-        // Determinar el número máximo de columnas entre ambas tablas
-const maxColumns = Math.max(
-    Math.max(...data.values.map(row => row.length)), // Máximo de columnas en data.values
-    Math.max(...data2.values.map(row => row.length)) // Máximo de columnas en data2.values
-);
-
-// Función para normalizar filas agregando columnas vacías cuando sea necesario
-function normalizeRow(row, maxColumns) {
-    return [...row, ...Array(maxColumns - row.length).fill("")]; // Agrega columnas vacías
-}
-
-// Normalizar las filas de ambas tablas al tamaño máximo de columnas
-const normalizedData1 = data.values.map(row => normalizeRow(row, maxColumns));
-const normalizedData2 = data2.values.map(row => normalizeRow(row, maxColumns));
-
-// Combinar las dos tablas normalizadas
-const completo = [...normalizedData1, ...normalizedData2];
-
-
-        console.log('completo',completo)
-        return data.values.slice(1);  // Devuelve los datos sin encabezado
+    
+        // Extraer encabezados
+        const headers1 = data.values[0];
+        const headers2 = data2.values[0];
+    
+        // Unificar encabezados sin duplicados
+        const unifiedHeaders = Array.from(new Set([...headers1, ...headers2]));
+    
+        // Función para mapear y reorganizar filas según los encabezados unificados
+        function mapRowToUnifiedHeaders(row, headers, unifiedHeaders) {
+            return unifiedHeaders.map(header => {
+                const index = headers.indexOf(header);
+                return index !== -1 ? row[index] : ""; // Si no existe, agrega vacío
+            });
+        }
+    
+        // Normalizar los datos incluyendo los encabezados
+        const normalizedData1 = [unifiedHeaders, ...data.values.slice(1).map(row => mapRowToUnifiedHeaders(row, headers1, unifiedHeaders))];
+        const normalizedData2 = [unifiedHeaders, ...data2.values.slice(1).map(row => mapRowToUnifiedHeaders(row, headers2, unifiedHeaders))];
+    
+        // Combinar tablas sin duplicar encabezados
+        const completo = [unifiedHeaders, ...normalizedData1.slice(1), ...normalizedData2.slice(1)];
+    
+        return completo;  // Devuelve los datos con encabezado unificado
     }
+    
     async function obtenerPas() {
         const responsePas = await fetch(url3);
         const dataPas = await responsePas.json();
         return dataPas.values.slice(1);  // Devuelve los datos sin encabezado
     }
+    async function obtenerPasAsignados() {
+        const responsePas = await fetch(url3);
+        const dataPas = await responsePas.json();
+        const pasData = dataPas.values.slice(1); // Elimina encabezados
+    
+        // Obtener el organizador desde localStorage
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        const nombreOrganizador = userData.name.toUpperCase().trim();
+    console.log('nombreOrganizador',nombreOrganizador)
+    console.log('PasData',pasData)
+        // Buscar el organizador y recolectar los PAS asignados
+        let pasAsignados = [];
+    
+        pasData.forEach(row => {
+            const organizador = row[21]?.toUpperCase().trim();  // Ajusta el índice de columna del organizador
+            const pasAsignado = row[2]?.toUpperCase().trim();  // Ajusta el índice de columna del PAS
+            if (organizador === nombreOrganizador && pasAsignado) {
+                pasAsignados.push(pasAsignado);
+            }
+        });
+    
+        console.log("PAS asignados al organizador:", pasAsignados);
+        return pasAsignados;
+    }
+    
+   
         const rows = await obtenerDatosDesdeGoogleSheet2();
+ // Filtrar casos usando los PAS asignados
+   
+        const pasAsignados = await obtenerPasAsignados();
+    
+ // Suponiendo que la columna 1 contiene el PAS asignado
+        const filteredRows = rows.filter(row => pasAsignados.includes((row[1] || "").toUpperCase().trim()));
+
+        console.log("Casos filtrados:", filteredRows);
+
         const bup = await obtenerPas();
       const userData = JSON.parse(localStorage.getItem('userData'));
       const nombrePas = userData.name.toUpperCase().trim();
@@ -67,6 +106,7 @@ const completo = [...normalizedData1, ...normalizedData2];
             const ejecutivoAsignado = persona[15];
                 if (ejecutivoAsignado) {
                     const cardId = `#${ejecutivoAsignado.toLowerCase().replace(/\s+/g, '')}`;
+                    $('.full-width').toggleClass('col-md-9');
                     $(cardId).show(); 
                     $('#showCardButton').click(function() {
                         $(cardId).toggle(); // Alternar la visibilidad de la tarjeta
@@ -80,9 +120,10 @@ const completo = [...normalizedData1, ...normalizedData2];
       let selectedRows = [];
 
       if (userRole === "organizador") {
+
           // Mostrar todos los casos sin filtrar
-          selectedRows = rows.map(row => [
-              row[35] || "",  
+          selectedRows = filteredRows.map(row => [
+             `${row[4]} contra ${row[5]}` || "",
               row[6] || "",  
               row[29] || "",  
               row[28] || "", 
@@ -92,9 +133,12 @@ const completo = [...normalizedData1, ...normalizedData2];
           ]);
       } else if (userRole === "pas") {
           // Mostrar casos asignados al ejecutivo
+          console.log(rows[0])
+            const clienteIndex = rows[0].indexOf("cliente");
+            const ciaIndex = rows[0].indexOf("cia a reclamar");
           selectedRows = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas)
               .map(row => [
-                  row[35] || "",  
+                  `${row[clienteIndex]} contra ${row[ciaIndex]}` || "",  
                   row[6] || "",  
                   row[29] || "",  
                   row[28] || "", 
@@ -119,8 +163,9 @@ const completo = [...normalizedData1, ...normalizedData2];
       console.log(selectedRows)
       if (userRole === "organizador") {
         // Mostrar todos los casos sin filtrar
-        selectedRows2 = rows.map(row => [
-            row[2] || "",   
+        selectedRows2 = filteredRows.map(row => [
+            row[2] || "",  
+            row[6] || "",  
             row[24] || "",  
         ]);
     } else if (userRole === "pas") {
@@ -131,6 +176,7 @@ const completo = [...normalizedData1, ...normalizedData2];
                 row[6] || "",  
                 row[24] || "",  
             ]);
+            
     } else if (userRole === "prueba") {
         // Mostrar casos de un ejecutivo específico predefinido
         const pruebaEjecutivo = "MAIRA".toUpperCase(); // Cambiar por el nombre real
