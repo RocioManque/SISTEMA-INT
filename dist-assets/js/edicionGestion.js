@@ -20,7 +20,8 @@ const montoCerrado = params.get('montoCerrado');
 const companiaReclamar = params.get('companiaReclamar');
 const gestionadoCon = params.get('gestionadoCon');
 const urlAdjuntos = params.get('urlAdjuntos');
-
+const ingresoCia = params.get('ingresoCia');
+const honorarios = params.get('honorarios');
 const today = new Date();
 const year = today.getFullYear();
 const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses empiezan desde 0
@@ -203,7 +204,6 @@ const formattedDate = `${year}-${month}-${day}`;
            })
            .then(data => {
                const rows = data.values;
-               console.log(rows);
    
                // Extrae los nombres de la tercera columna (índice [2]), excluyendo la primera fila (cabeceras)
                const selectedRows = rows.slice(1).map(row => row[0]);
@@ -220,6 +220,7 @@ const formattedDate = `${year}-${month}-${day}`;
                $('#honorarios').select2({
                    data: listaDinamica4
                });
+               $('#honorarios').val(honorarios).trigger('change');
    
            })
            .catch(error => console.error('Error al cargar datos', error));
@@ -239,6 +240,8 @@ document.getElementById('obs').value = observacion;
 document.getElementById('email').value = mailCliente;
 document.getElementById('telefono').value = telefonoCliente;
 document.getElementById('historial').value = informeHistorial;
+document.getElementById('ingresoCia').value = ingresoCia;
+document.getElementById('honorarios').value = honorarios;
 
 //upload Multiple Files
 function updateProgressBar(percentage) {

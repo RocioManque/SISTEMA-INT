@@ -120,7 +120,12 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       });
     } else {
       // Si no es superusuario, filtra por el ejecutivo
-      selectedRows = rows
+      selectedRows = rows.filter(row => 
+        row[28] !== "COBRADO" && 
+        row[28] !== "RECHAZADO" && 
+        row[28] !== "CASO CONCILIADO/ PARA IMPUTAR" && 
+        row[28] !== "CASO DADO DE BAJA"
+    )
         .map((row, index) => {
           // Añade la fila visible en la hoja (índice + 1)
           const numeroFila = index + 1;
@@ -170,6 +175,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
               row[53] || "",     // Compañía a reclamar
               row[54] || "",     // Compañía a reclamar
               row[55] || "",
+              row[57] || "",
+              row[56] || "",
               isAtrasado     // Compañía a reclamar
             ];
           }
@@ -274,6 +281,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           }
         },
         { title: "Ultima actualización" ,visible:false},
+        { title: "Fecha ingreso a cia",visible:false},
+        { title: "Honorarios",visible:false},
         { title: "Atrasado" ,visible:false},
 
         {
@@ -435,6 +444,8 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         companiaReclamar: rowData[16],
         gestionadoCon: rowData[17],
         urlAdjuntos: rowData[18],
+        ingresoCia: rowData[21],
+        honorarios: rowData[22],
     });
 
     if (window.opener) {
