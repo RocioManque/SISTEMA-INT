@@ -225,7 +225,7 @@ async function actualizar(e) {
   const montoCerrado = document.getElementById("montoCerrado").value;
   const fechaFactura = document.getElementById("fechaFactura").value;
   const consultores = document.getElementById("consultores").value;
-  const comisionPas = limpiarNumero(document.getElementById("comisionPas").value);
+  const comisionPas = calcularPorcentaje("comisionPas");
   const nroFactura = document.getElementById("nroFactura").value;
     const facturadoConIva = facturadoSinIva + iva;
   const fechaPagoComision = document.getElementById("fechaPagoComision").value;
