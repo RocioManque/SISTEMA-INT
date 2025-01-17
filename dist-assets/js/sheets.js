@@ -239,7 +239,7 @@ const calcularTotalesFacturadosPorMes = (registros) => {
         resultados[mes].cantidad++;
         resultados[mes].facturado += montoSinIVA;
     });
-
+    console.log('facturados', resultados)
     return resultados;
 };
 

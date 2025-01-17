@@ -89,7 +89,7 @@ $(document).ready(async function() {
         const pasAsignados = await obtenerPasAsignados();
     
  // Suponiendo que la columna 1 contiene el PAS asignado
-        const filteredRows = rows.filter(row => pasAsignados.includes((row[1] || "").toUpperCase().trim()));
+        const filteredRows = rows.filter(row => pasAsignados.includes((row[1] || "").toUpperCase().trim())&& row[28] !== "PARA INGRESAR" );
 
         console.log("Casos filtrados:", filteredRows);
 
@@ -136,7 +136,7 @@ $(document).ready(async function() {
           console.log(rows[0])
             const clienteIndex = rows[0].indexOf("cliente");
             const ciaIndex = rows[0].indexOf("cia a reclamar");
-          selectedRows = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas)
+          selectedRows = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas && row[28] !== "PARA INGRESAR" )
               .map(row => [
                   `${row[clienteIndex]} contra ${row[ciaIndex]}` || "",  
                   row[6] || "",  

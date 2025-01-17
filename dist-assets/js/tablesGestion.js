@@ -120,13 +120,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       });
     } else {
       // Si no es superusuario, filtra por el ejecutivo
-      selectedRows = rows.filter(row => 
-        row[28] !== "COBRADO" && 
-        row[28] !== "RECHAZADO" && 
-        row[28] !== "CASO CONCILIADO/ PARA IMPUTAR" && 
-        row[28] !== "CASO DADO DE BAJA"
-    )
-        .map((row, index) => {
+      selectedRows = rows.map((row, index) => {
           // Añade la fila visible en la hoja (índice + 1)
           const numeroFila = index + 1;
 
