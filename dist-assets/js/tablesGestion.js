@@ -60,27 +60,29 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         }
         return [
           numeroFila,       // Número de fila en Google Sheets
-          row[1] || "",     // PAS
-          row[4] || "",     // Cliente
-          row[7] || "",     // Fecha de ingreso
-          row[8] || "",    // Fecha de inicio
-          row[0] || "",     // Nº de Reclamo
-          row[25] || "",    // Estado
-          row[3] || "",     // Última actualización
-          row[26] || "",    // Tipo de reclamo
-          row[27] || "",    // Tipo de reclamo
-          row[28] || "",    // Tipo de reclamo
-          row[9] || "",     // Monto a reclamar
-          row[24] || "",    // Compañía a reclamar
-          row[29] || "",    // Compañía a reclamar
-          row[30] || "",    // Compañía a reclamar
-          row[31] || "",    // Compañía a reclamar
-          row[5] || "",     // Compañía a reclamar
-          row[48] || "",    // Compañía a reclamar
-          row[53] || "",     // Compañía a reclamar
-          row[54] || "",     // Compañía a reclamar
-          row[55] || "",
-          isAtrasado     // Compañía a reclamar
+              row[1] || "",     // PAS
+              row[4] || "",     // Cliente
+              row[7] || "",     // Fecha de ingreso
+              row[8] || "",    // Fecha de inicio
+              row[0] || "",     // Nº de Reclamo
+              row[25] || "",    // Estado
+              row[3] || "",     // Última actualización
+              row[26] || "",    // Tipo de reclamo
+              row[27] || "",    // Tipo de reclamo
+              row[28] || "",    // Tipo de reclamo
+              row[9] || "",     // Monto a reclamar
+              row[24] || "",    // Compañía a reclamar
+              row[29] || "",    // Compañía a reclamar
+              row[30] || "",    // Compañía a reclamar
+              row[31] || "",    // Compañía a reclamar
+              row[5] || "",     // Compañía a reclamar
+              row[48] || "",    // Compañía a reclamar
+              row[53] || "",     // Compañía a reclamar
+              row[54] || "",     // Compañía a reclamar
+              row[55] || "",
+              row[57] || "",
+              row[56] || "",
+              isAtrasado     // Compañía a reclamar
         ];
       });
       selectedRows2 = rows.map((row, index) => {
