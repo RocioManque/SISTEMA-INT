@@ -203,16 +203,141 @@
         <div class="modal-dialog modal-lg"> <!-- Clase para modal grande -->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Datos de facturación</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Creando factura</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
                 </div>
                 <div class="modal-body" id="factura">
-                   <h4>Usted esta a punto de facturar los siguientes Datos</h4>
-                   <p><strong>Tipo de Comprobante:</strong> C </p>
-                   <p><strong>Facturado Por:</strong> Leonardo Juan Castagna Avila</p>
-                   <p><strong>Facturado A : </strong><span id="razonSocial"></span> </p>
-                   <p><strong>Detalle:</strong> Caso <span id="casoProducto"></span></p>
-                   <p><strong>Monto Total:</strong> $<span id="importeTotal"></span> </p>
+                    <div class="bordered p-3">
+                        <!-- Encabezado de la Factura -->
+                        <div class="row">
+                            <div class="col-4">
+                                <h6 class="bold">IN ITINERE</h6>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="factura-type">
+                                    <span class="factura-code">C</span>
+                                </div>
+                                <p>COD. 011</p>
+                            </div>
+                            <div class="col-4 text-right">
+                                <p>Punto de Venta: <strong>00001</strong></p>
+                                <p>Comp. Nro: <strong><span id="Comprobante"></span></strong></p>
+                                <p>Fecha de Emisión: <strong><span id="fechaEmision"></span></strong></p>
+                            </div>
+                        </div>
+                
+                        <!-- Línea divisoria del encabezado -->
+                        <div class="header-divider"></div>
+                
+                        <!-- Datos del Emisor -->
+                        <div class="bordered p-2 mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><strong>Razón Social: CASTAGNA AVILA LEONARDO JUAN</strong></p>
+                                    <p><strong>Domicilio Comercial: Cacique Coliqueo 1020 Dpto:118 - El
+                                        Palomar, Buenos Aires</strong></p>
+                                    <p><strong>Condición frente al IVA:</strong> Responsable Monotributo</p>
+                                </div>
+                                <div class="col-6">
+                                    <p><strong>CUIT: 23254409359</strong></p>
+                                    <p><strong>Ingresos Brutos: 23254409359</strong></p>
+                                    <p><strong>Fecha de Inicio de Actividades: 01/07/2023</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Período Facturado y Fecha de Pago -->
+                        <div class="bordered p-2 mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <p><strong>Período Facturado Desde: </strong><span id="facturadoDesde"></span> </p>
+                                </div>
+                                <div class="col-4">
+                                    <p><strong>Hasta:<span id="facturadoHasta"></span></strong> </p>
+                                </div>
+                                <div class="col-4">
+                                    <p><strong>Fecha de Vto. para el pago:</strong><span id="vtoPagoFactura"></span> </p>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Datos del Cliente -->
+                        <div class="bordered p-2 mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><strong>CUIT: <span id="cuitEmpresa"></span></strong></p>
+                                    <p><strong>Apellido y Nombre / Razón Social: </strong><span id="razonSocial"></span></p>
+                                    <p><strong>Condición frente al IVA:</strong> <span id="condicionIva"></span></p>
+                                </div>
+                                <div class="col-6">
+                                    <p><strong>Domicilio: </strong><span id="domicilioCia"></span></p>
+                                    <p><strong>Condición de venta: </strong><span id="condicionVenta"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Tabla de Productos/Servicios -->
+                        <div class="bordered">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="center-text">Código</th>
+                                        <th class="center-text">Producto / Servicio</th>
+                                        <th class="center-text">Cantidad</th>
+                                        <th class="center-text">U. Medida</th>
+                                        <th class="center-text">Precio Unit.</th>
+                                        <th class="center-text">% Bonif</th>
+                                        <th class="center-text">Imp. Bonif.</th>
+                                        <th class="center-text">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="center-text">1.00</td>
+                                        <td class="center-text">HONORARIOS PROFESIONALES RECLAMO <span id="casoProducto"></span>
+                                            </td>
+                                        <td class="center-text">1.00</td>
+                                        <td class="center-text">unidades</td>
+                                        <td class="center-text"><span id="precioUnitario"></span></td>
+                                        <td class="center-text">0.00</td>
+                                        <td class="center-text">0.00</td>
+                                        <td class="center-text"><span id="subtotal"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                
+                        <!-- Totales -->
+                        <div class="bordered p-3">
+                            <div class="row">
+                                <div class="col-8">
+                                    <p>&nbsp;</p>
+                                </div>
+                                <div class="col-4">
+                                    <p><strong>Subtotal:$<span id="subtotalFinal"></span></strong></p>
+                                    <p><strong>Importe Otros Tributos: $0.00</strong></p>
+                                    <p><strong>Importe Total:$ <span id="importeTotal"></span></strong></p>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <!-- Información del CAE -->
+                        <div class="bordered p-2 mt-3">
+                            <div class="row">
+                                <div class="col-8">
+                                    <img src="/dist-assets/images/afip-qr.png" alt="">
+                                </div>
+                                <div class="col-6">
+                                    <p class="bold">ARCA</p>
+                                    <p>Comprobante Autorizado</p>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <p><strong>CAE N°: </strong> <span id="nroCAE"></span></p>
+                                    <p><strong>Fecha de Vto. de CAE: </strong> <span id="fechaVtoCAE"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -429,7 +554,7 @@ function clearStoredToken() {
     <script src="/dist-assets/js/plugins/datatables.min.js"></script>
     <script src="/dist-assets/js/scripts/datatables.script.min.js"></script>
     <script src="/dist-assets/js/scripts/customizer.script.min.js"></script>
-    <script type="module" src="/dist-assets/js/facturacion.js"></script>
+    <script src="/dist-assets/js/facturacion.js"></script>
 </body>
 
 </html>

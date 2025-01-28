@@ -1,5 +1,6 @@
 // Captura los parámetros de la URL
 const params = new URLSearchParams(window.location.search);
+console.log('params',params)
 const rowIndex = params.get("index");
 const caso = params.get("caso");
 const plan = params.get("plan");
@@ -10,7 +11,7 @@ const nroReclamoCia = params.get("nroReclamoCia");
 const montoReclamado = params.get("montoReclamado");
 const montoCerrado = params.get("montoCerrado");
 const fechaDePago = params.get("fechaDePago");
-const fechaDeFacturacion = params.get("fechaDeFacturacion");
+const fechaDeFacturacion = params.get("fechaFacturacion");
 const facturadoPor = params.get("facturadoPor");
 const consultores = params.get("consultores");
 const comisionPas = params.get("comisionPas");
@@ -189,22 +190,33 @@ async function actualizar(e) {
   
     // Obtener valores de inputs y convertir a números sin punto
     const facturadoSinIva = limpiarNumero(document.getElementById("facturadoSinIva").value);
-    
+    const montoCerradoFactura = limpiarNumero(document.getElementById("montoCerrado").value);
+
+    const calcularPorcentajeComision = (inputId) => {
+      const porcentaje = parseFloat(limpiarNumero(document.getElementById(inputId).value));
+      return parseFloat(
+        porcentaje > 0 && porcentaje < 100 && porcentaje != null
+          ? (montoCerradoFactura * porcentaje) / 100
+          : porcentaje
+      );
+    };
+
     const calcularPorcentaje = (inputId) => {
-      const porcentaje = parseFloat(document.getElementById(inputId).value);
+      const porcentaje = parseFloat(limpiarNumero(document.getElementById(inputId).value));
       return parseFloat(
         porcentaje > 0 && porcentaje < 100 && porcentaje != null
           ? (facturadoSinIva * porcentaje) / 100
-          : 0
+          : porcentaje
       );
     };
   
     const calcularPorcentajeIva = (inputId) => {
-      const porcentaje = parseFloat(document.getElementById(inputId).value);
+      const porcentaje = parseFloat(limpiarNumero(document.getElementById(inputId).value));;
+      console.log('porcentaje',porcentaje)
       return parseFloat(
         porcentaje > 0 && porcentaje < 100 && porcentaje != null
           ? (facturadoSinIva * porcentaje) / 100
-          : 0
+          : porcentaje
       );
     };
   
@@ -225,7 +237,7 @@ async function actualizar(e) {
   const montoCerrado = document.getElementById("montoCerrado").value;
   const fechaFactura = document.getElementById("fechaFactura").value;
   const consultores = document.getElementById("consultores").value;
-  const comisionPas = calcularPorcentaje("comisionPas");
+  const comisionPas = calcularPorcentajeComision("comisionPas");
   const nroFactura = document.getElementById("nroFactura").value;
     const facturadoConIva = facturadoSinIva + iva;
   const fechaPagoComision = document.getElementById("fechaPagoComision").value;

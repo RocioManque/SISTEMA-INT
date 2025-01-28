@@ -185,7 +185,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         row[28] !== "CASO CONCILIADO/ PARA IMPUTAR" && 
         row[28] !== "CASO DADO DE BAJA"
     );
-       console.log('filtered',filteredRows)
+       
         selectedRows2 = filteredRows
         .map((row, index) => {
           // Añade la fila visible en la hoja (índice + 1)
@@ -232,7 +232,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         })
         .filter(row => row !== undefined); // Filtra filas vacías resultantes
     }
-
+    console.log('filtered desde donde corresponda',selectedRows2)
     $('#table2').DataTable({
       data: selectedRows,
       scrollY: 300,
@@ -325,14 +325,16 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     drawCallback: function () {
       // Mostrar la alerta única después de procesar todas las filas
       if (casosAtrasados.length > 0) {
+
         // Filtrar los casos según los estados no deseados
         const estadosExcluidos = ["CASO DADO DE BAJA", "COBRADO", "RECHAZADO", "A.CERRADO/FACTURADO"];
         
         // Solo incluir los casos que no estén en los estados excluidos
         const casosFiltrados = casosAtrasados.filter(caso => 
-            !estadosExcluidos.includes(caso.estado.toLowerCase().trim())
+     
+         !estadosExcluidos.includes(caso.estado)
         );
-    
+
         if (casosFiltrados.length > 0) {
             const mensaje = casosFiltrados.map(
                 caso => `\n - ${caso.nombre}: ${caso.dias} días atrasados \n`

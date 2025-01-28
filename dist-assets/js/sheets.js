@@ -61,6 +61,7 @@ fetch(url)
 
   const calcularIngresadosPorMes = async () => {
     const resultadosDeIngresos = await recuperarCantidadDeCasos();
+    console.log('Resultados de ingresos',resultadosDeIngresos)
     const resultados = {};
 
     const fechaActual = new Date();
@@ -84,8 +85,9 @@ fetch(url)
             resultados[mesIngreso].ingresados++;
         }
     });
-
+console.log(resultados)
     return resultados;
+
 };
 
 const calcularIniciadosPorMes = (registros) => {
@@ -112,31 +114,37 @@ const calcularIniciadosPorMes = (registros) => {
             resultados[mesInicio].iniciados++;
         }
     });
-
+console.log(resultados)
     return resultados;
 };
 
 const calcularTotalesPorMes = async (registros) => {
     const ingresados = await calcularIngresadosPorMes();
     const iniciados = calcularIniciadosPorMes(registros);
-
+console.log(ingresados)
+console.log(iniciados)
     const resultados = {};
     const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-    Object.keys(ingresados).forEach(mes => {
+  
+    Object.keys(ingresados)
+    .sort((a, b) => new Date(a) - new Date(b)) // Ordenar las claves cronológicamente
+    .forEach(mes => {
         resultados[nombresMeses[parseInt(mes.slice(5, 7)) - 1]] = {
             ingresados: ingresados[mes]?.ingresados || 0,
             iniciados: iniciados[mes]?.iniciados || 0
         };
     });
 
-    Object.keys(iniciados).forEach(mes => {
+Object.keys(iniciados)
+    .sort((a, b) => new Date(a) - new Date(b)) // Ordenar las claves cronológicamente
+    .forEach(mes => {
         const mesNombre = nombresMeses[parseInt(mes.slice(5, 7)) - 1];
         if (!resultados[mesNombre]) {
             resultados[mesNombre] = { ingresados: 0, iniciados: 0 };
         }
         resultados[mesNombre].iniciados = iniciados[mes].iniciados;
     });
+
 
     console.log('estos son los resultados',resultados);
     return resultados;

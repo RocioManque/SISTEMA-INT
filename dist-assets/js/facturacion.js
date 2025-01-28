@@ -1,4 +1,3 @@
-
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const apiKey = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E'; //  clave de API
 const range = 'sheet1'; // 
@@ -25,7 +24,7 @@ $(document).ready(function() {
           // Verifica si el tipo de reclamo es "FACTURACION"
           if (tipoReclamo === 'A FACTURAR' || tipoReclamo === 'CASO CONCILIADO/ PARA IMPUTAR'|| tipoReclamo === 'COBRADO') {
             return [
-              numeroFila,       // Información relevante    // Número de fila en Google Sheets
+              numeroFila,       // Número de fila en Google Sheets
               row[35] || "",    // Información relevante
               row[26] || "",   
               row[28] || "",  
@@ -49,8 +48,7 @@ $(document).ready(function() {
               row[39] || "", 
               row[32] || "",    
               row[47] || "",   
-              row[52] || "",
-              row[5] || "",     
+              row[52] || "",     
             ];
           }
           return null; // Excluye filas que no coincidan
@@ -113,7 +111,6 @@ $(document).ready(function() {
             { title: "Fecha de Pago Factura" },//32
             { title: "Fecha de pago comisión" },//47
             { title: "Total percibido" },//52
-            { title: "compañia" },//52
             { title: "Acciones", render: function(data, type, row, meta) {
                 return `  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="facturar(${meta.row})">
         Facturar
@@ -305,14 +302,26 @@ alertClick()
    const formattedDate = `${day}/${month}/${year}`;
 console.log(formattedDate)
    // Asignar la fecha al inputdocument.getElementById("comprobante").textContent = caeNumero;
-
-document.getElementById("razonSocial").textContent = rowData[25]; 
+document.getElementById("fechaEmision").textContent = formattedDate;
+document.getElementById("facturadoDesde").textContent = formattedDate;
+document.getElementById("facturadoHasta").textContent = formattedDate;
+document.getElementById("vtoPagoFactura").textContent = formattedDate;
+document.getElementById("cuitEmpresa").textContent = ''; 
+document.getElementById("razonSocial").textContent = ''; 
+document.getElementById("condicionIva").textContent = ''; 
+document.getElementById("domicilioCia").textContent = ''; 
+document.getElementById("condicionVenta").textContent = ''; 
 document.getElementById("casoProducto").textContent = rowData[1]; 
-document.getElementById("importeTotal").textContent = rowData[11]; 
+document.getElementById("precioUnitario").textContent = rowData[13]; 
+document.getElementById("subtotal").textContent = rowData[13]; 
+document.getElementById("subtotalFinal").textContent = rowData[13]; 
+document.getElementById("importeTotal").textContent = rowData[13]; 
+document.getElementById("nroCAE").textContent = ''; 
+document.getElementById("fechaVtoCAE").textContent = ''; 
+
   }
   function editarFila(rowIndex) {
     const rowData = $('#zero_configuration_table').DataTable().row(rowIndex).data();
-    
     // Construir la URL con los datos de la fila
     const urlParams = new URLSearchParams({
         index: rowData[0],
