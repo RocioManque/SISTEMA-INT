@@ -237,6 +237,10 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       data: selectedRows,
       scrollY: 300,
     scrollX: true,
+    paging: false,          // Desactiva la paginación (muestra todos los registros)
+    info: true,            // Oculta la información de "Mostrando X de Y registros"
+    searching: true,        // Habilita el buscador
+    ordering: true,    
       columns: [
         { title: "Nº",visible:false }, // Nueva columna para el número de fila
         { title: "PAS" },
@@ -327,7 +331,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       if (casosAtrasados.length > 0) {
 
         // Filtrar los casos según los estados no deseados
-        const estadosExcluidos = ["CASO DADO DE BAJA", "COBRADO", "RECHAZADO", "A.CERRADO/FACTURADO"];
+        const estadosExcluidos = ["CASO DADO DE BAJA", "COBRADO", "RECHAZADO", "A.CERRADO/FACTURADO", "CASO CONCILIADO/ PARA IMPUTAR"];
         
         // Solo incluir los casos que no estén en los estados excluidos
         const casosFiltrados = casosAtrasados.filter(caso => 
@@ -361,6 +365,10 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       data: selectedRows2,
       scrollY: 300,
     scrollX: true,
+    paging: false,          // Desactiva la paginación (muestra todos los registros)
+    info: false,            // Oculta la información de "Mostrando X de Y registros"
+    searching: true,        // Habilita el buscador
+    ordering: true,    
       columns: [
         { title: "PAS" },
         { title: "Cliente" },

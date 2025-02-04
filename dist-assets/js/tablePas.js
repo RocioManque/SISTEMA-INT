@@ -220,8 +220,10 @@ $(document).ready(async function() {
         ],
     });
 });      
+
      // Capturar y almacenar el índice
 async function capturarRowIndex(index) {
+    console.log('index 2',index);
   const rowData = $('#ghost-table').DataTable().row(index).data();
 
   const historyList = rowData[2].trim()!='' ? rowData[2] : 'NO EXISTE REGISTRO DE INFORME EN ESTE CASO';;

@@ -148,10 +148,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" >
                         <div class="card mb-4">
                             <div class="card-body">
-                               <div id="graficoTotalesEjecutivosIngresados"></div>
+                               <div id="graficoTotalesEjecutivosIngresados" ></div>
                             </div>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div id="graficoTotalesEjecutivosIniciados"></div>
+                                <div id="graficoTotalesEjecutivosIniciados" style="width: 100%; height: auto;"></div>
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="grafico-facturados-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="grafico-facturados"></div>
@@ -188,8 +188,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="row" >
+                    <div class="col-md-6" id="graficoFacturadoEjecutivo-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoFacturadoEjecutivo"></div>
@@ -197,7 +197,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="graficoFacturadosMontoEjecutivo-1" >
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoFacturadosMontoEjecutivo"></div>
@@ -207,7 +207,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="graficoCobrados-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoCobrados"></div>
@@ -215,7 +215,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="graficoComision-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoComision"></div>
@@ -225,7 +225,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="graficoPercibido-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoPercibido"></div>
@@ -233,7 +233,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="graficoPercibidoCia-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoPercibidoCia"></div>
@@ -243,7 +243,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="graficoPromedio-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoPromedio"></div>
@@ -251,7 +251,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="graficoPromedioCias-1">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div id="graficoPromedioCias"></div>
@@ -267,10 +267,10 @@
   <script>
         document.addEventListener('DOMContentLoaded', () => {
             const userData = JSON.parse(localStorage.getItem('userData'));
-        
-            if (userData) {
-                const permission = userData.permission; // Asumimos que este es un string con el permiso del usuario
+         const permission = userData.permission; // Asumimos que este es un string con el permiso del usuario
                 const name = userData.name;
+            if (userData) {
+               
                 document.getElementById('userNameDisplay').innerText = `${userData.name}`;
                 // Ocultar todas las pestañas inicialmente
                 document.querySelectorAll('.views').forEach(view => {
@@ -323,6 +323,30 @@
                 // Si no hay información de usuario, redirigir a login
                 window.location.href = 'index.html';
             }
+
+// Validar si el permiso es "ejecutivo"
+if (permission === 'ejecutivo' || permission === 'mediacion') {
+    // Lista de IDs de los gráficos
+    const graficos = [
+        'grafico-facturados-1',
+        'graficoFacturadoEjecutivo-1',
+        'graficoFacturadosMontoEjecutivo-1',
+        'graficoCobrados-1',
+        'graficoComision-1',
+        'graficoPercibido-1',
+        'graficoPercibidoCia-1',
+        'graficoPromedio-1',
+        'graficoPromedioCias-1'
+    ];
+
+    // Ocultar cada gráfico
+    graficos.forEach(id => {
+        const grafico = document.getElementById(id);
+        if (grafico) {
+            grafico.style.display = 'none';  // Oculta el gráfico
+        }
+    });
+}
         });
   </script>
    <!-- ============ Search UI Start ============= -->
