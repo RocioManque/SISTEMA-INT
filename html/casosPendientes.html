@@ -10,6 +10,9 @@
     <link href="/dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="/dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
+    <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
     <link rel="stylesheet" href="/dist-assets/css/plugins/datatables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -66,8 +69,8 @@
                             <li class="views" id="baseUnica">
                                 <div>
                                     <div>
-                                        <label class="toggle" for="drop-2">Base única</label>
-                                        <a href="baseUnica.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Base única</span></a>
+                                        <label class="toggle" for="drop-2">Directorio</label>
+                                        <a href="baseUnica.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Directorio</span></a>
                                     </div>
                                 </div>
                             </li>
@@ -115,6 +118,11 @@
                 <div class="breadcrumb">
                     <h1>Mesa de Entrada</h1>
                 </div>
+                <div class="mt-2"  style="float:inline-end;">
+                    <button id="btnExportar" class="views btn btn-primary">
+                        <i class="fas fa-file-excel"></i> Exportar datos a Excel
+                    </button>
+                    </div>
                 <div class="separator-breadcrumb border-top"></div>
                 <div class="row mb-4">
                     <div class="col-md-12">  
@@ -188,6 +196,7 @@
                     document.getElementById('facturacion').style.display = 'block';
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
+                    document.getElementById('btnExportar').style.display = 'block';
                 } else if (permission === 'ejecutivo') {
                     document.getElementById('nuevoCaso').style.display = 'block';
                     document.getElementById('casosGestion').style.display = 'block';
@@ -195,6 +204,7 @@
                     document.getElementById('estadisticas').style.display = 'block';
                 } else if (permission === 'mesa de entrada') {
                     document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
                     document.getElementById('casosPendientes').style.display = 'block';
                 } else if (permission === 'mediacion') {
                     document.getElementById('nuevoCaso').style.display = 'block';
@@ -216,12 +226,27 @@
                     document.getElementById('baseUnica').style.display = 'block';
                 }else if (permission === 'FACTURACION') {
                     document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
                     document.getElementById('estadisticas').style.display = 'block';
                 }
             } else {
                 // Si no hay información de usuario, redirigir a login
                 window.location.href = 'index.html';
             }
+            const $btnExportar = document.querySelector("#btnExportar"), 
+        $tabla = document.querySelector("#table2");
+
+    $btnExportar.addEventListener("click", function() {
+        let tableExport = new TableExport($tabla, {
+            exportButtons: false, // No queremos botones
+            filename: "initinere_mesa_de_entrada", //Nombre del archivo de Excel
+            sheetname: "Reporte de casos", //Título de la hoja
+        });
+        let datos = tableExport.getExportData();
+        let preferenciasDocumento = datos.table2.xlsx;
+        tableExport.export2file(preferenciasDocumento.data, preferenciasDocumento.mimeType, preferenciasDocumento.filename, preferenciasDocumento.fileExtension, preferenciasDocumento.merges, preferenciasDocumento.RTL, preferenciasDocumento.sheetname);
+    });
+        
         });
   </script>
     <!-- ============ Search UI End ============= -->

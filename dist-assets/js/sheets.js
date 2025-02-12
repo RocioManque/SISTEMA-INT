@@ -747,7 +747,7 @@ const inicializarGraficos = async (registros) => {
             },
         },
         title: {
-            text: 'Casos Ingresados a Cias por Ejecutivo por mes',
+            text: 'Casos Iniciados a Cias por Ejecutivo por mes',
         },
         legend: {
             position: 'top',

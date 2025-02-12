@@ -66,7 +66,10 @@ $(document).ready(function() {
           if (tipoReclamo === 'A FACTURAR' || tipoReclamo === 'CASO CONCILIADO/ PARA IMPUTAR' || tipoReclamo === 'COBRADO') {
             return [
       // Número de fila en Google Sheets
-              row[35] || "",    // Información relevante
+              row[35] || "",
+              row[25] || "",   
+              row[1] || "",  
+              row[2] || "",    // Información relevante
               row[26] || "",   
               row[28] || "",  
               row[29] || "",   
@@ -126,6 +129,9 @@ $(document).ready(function() {
       scrollX: true,
       columns: [
           { title: "Caso" }, //35
+          { title: "Fecha de inicio" }, 
+          { title: "Pas" }, 
+          { title: "Ejecutivo" }, 
           { title: "Plan INT" },//26
           { title: "Estado" },//28
           { title: "Tipo de reclamo" },//29

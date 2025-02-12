@@ -41,6 +41,10 @@ $(document).ready(function() {
                 $('#zero_configuration_table').DataTable({
                     scrollY: 300,
                     scrollX: true,
+                    paging: false,          // Desactiva la paginación (muestra todos los registros)
+                    info: true,            // Oculta la información de "Mostrando X de Y registros"
+                    searching: true,        // Habilita el buscador
+                    ordering: true, 
                 });
             } else {
                 console.error("No se encontraron datos en la hoja de cálculo.");

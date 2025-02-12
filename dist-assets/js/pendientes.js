@@ -99,6 +99,10 @@ $(document).ready(function() {
       data: selectedRows,
       scrollY: 300,
       scrollX: true,
+      paging: false,          // Desactiva la paginación (muestra todos los registros)
+      info: true,            // Oculta la información de "Mostrando X de Y registros"
+      searching: true,        // Habilita el buscador
+      ordering: true, 
       columns: [
           { title: "Nº" }, //index
           { title: "Fecha de Ingreso" }, //35
@@ -209,6 +213,10 @@ $(document).ready(function() {
     data: selectedRows2,
     scrollY: 300,
     scrollX: true,
+    paging: false,          // Desactiva la paginación (muestra todos los registros)
+    info: true,            // Oculta la información de "Mostrando X de Y registros"
+    searching: true,        // Habilita el buscador
+    ordering: true, 
     columns: [
         { title: "Fecha de Ingreso" }, //35
         { title: "Pas" },//26

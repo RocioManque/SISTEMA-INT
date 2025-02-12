@@ -232,7 +232,6 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         })
         .filter(row => row !== undefined); // Filtra filas vacías resultantes
     }
-    console.log('filtered desde donde corresponda',selectedRows2)
     $('#table2').DataTable({
       data: selectedRows,
       scrollY: 300,

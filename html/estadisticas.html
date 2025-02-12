@@ -75,8 +75,8 @@
                             <li class="views" id="baseUnica">
                                 <div>
                                     <div>
-                                        <label class="toggle" for="drop-2">Base única</label>
-                                        <a href="baseUnica.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Base única</span></a>
+                                        <label class="toggle" for="drop-2">Directorio</label>
+                                        <a href="baseUnica.html"><i class="nav-icon i-File-Horizontal-Text mr-2 text-white"></i> <span class="text-white">Directorio</span></a>
                                     </div>
                                 </div>
                             </li>
@@ -294,6 +294,7 @@
                     document.getElementById('estadisticas').style.display = 'block';
                 } else if (permission === 'mesa de entrada') {
                     document.getElementById('nuevoCaso').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
                     document.getElementById('casosPendientes').style.display = 'block';
                 } else if (permission === 'mediacion') {
                     document.getElementById('nuevoCaso').style.display = 'block';
@@ -317,6 +318,7 @@
                     document.getElementById('baseUnica').style.display = 'block';
                 }else if (permission === 'FACTURACION') {
                     document.getElementById('facturacion').style.display = 'block';
+                    document.getElementById('baseUnica').style.display = 'block';
                     document.getElementById('estadisticas').style.display = 'block';
                 }
             } else {
@@ -325,7 +327,7 @@
             }
 
 // Validar si el permiso es "ejecutivo"
-if (permission === 'ejecutivo' || permission === 'mediacion') {
+if (permission === 'ejecutivo' || permission === 'mediacion'|| permission === 'jefe de operaciones') {
     // Lista de IDs de los gráficos
     const graficos = [
         'grafico-facturados-1',

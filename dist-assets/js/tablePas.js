@@ -29,7 +29,7 @@ $(document).ready(async function() {
     
         // Extraer encabezados
         const headers1 = data.values[0];
-        const headers2 = data2.values[0];
+        const headers2 = data2.values[0]; 
     
         // Unificar encabezados sin duplicados
         const unifiedHeaders = Array.from(new Set([...headers1, ...headers2]));
@@ -194,6 +194,10 @@ $(document).ready(async function() {
         data: selectedRows,
         scrollY: 300,
         scrollX: true,
+        paging: false,          // Desactiva la paginación (muestra todos los registros)
+        info: true,            // Oculta la información de "Mostrando X de Y registros"
+        searching: true,        // Habilita el buscador
+        ordering: true, 
         columns: [
             { title: "Caso" },
             { title: "Dominio" },
@@ -212,6 +216,10 @@ $(document).ready(async function() {
         data: selectedRows2,
         scrollY: 300,
         scrollX: true,
+        paging: false,          // Desactiva la paginación (muestra todos los registros)
+        info: true,            // Oculta la información de "Mostrando X de Y registros"
+        searching: true,        // Habilita el buscador
+        ordering: true, 
         columns: [
             { title: "Ejecutivo" },
             { title: "dominio" },
