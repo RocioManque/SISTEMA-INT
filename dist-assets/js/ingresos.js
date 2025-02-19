@@ -1058,7 +1058,7 @@ try {
     // Filtrar y obtener nombres con el permiso indicado
     const resultado = rows
         .slice(1) // Omitir encabezados
-        .filter(row => row[permissionIndex] === 'LEGALES') // Filtrar por permiso
+        .filter(row => row[permissionIndex] === 'legales') // Filtrar por permiso
         .map(row => row[nameIndex]); // Obtener solo los nombres
 
     console.log('Resultado: ', resultado[0]); // Mostrar el primer abogado encontrado

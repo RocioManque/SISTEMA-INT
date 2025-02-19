@@ -148,7 +148,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                   isAtrasado = 1;
               }
           }
-          if (nombreCliente === nombre || apellidoCliente === apellido) {
+          if (nombreCliente === nombre || nombreCliente === nombreEjecutivo) {
             return [
               numeroFila,       // Número de fila en Google Sheets
               row[1] || "",     // PAS

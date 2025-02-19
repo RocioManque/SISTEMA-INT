@@ -434,6 +434,7 @@ const fechaHoy = `${daya}/${montha}/${yeara}`;
     const montoReclamado = document.getElementById('montoReclamado').value;
     const montoCerrado = document.getElementById('montoCerrado').value;
     const ingresadoCia = document.getElementById('ingresoCia').value;
+    const caso = cliente + ' contra ' + ciaReclamada
     const ultimaActualizacion = fechaHoy
      // Subir archivos
      const url = urlAdjuntos;
@@ -558,6 +559,27 @@ const fechaHoy = `${daya}/${montha}/${yeara}`;
                                 { userEnteredValue: { stringValue: String(tipoReclamo) } },          
                                 { userEnteredValue: { stringValue: String(montoReclamado) } },          
                                 { userEnteredValue: { stringValue: String(montoCerrado) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: rowIndex - 1,
+                        endRowIndex: rowIndex,
+                        startColumnIndex: 35, // Es el indice primero
+                        endColumnIndex: 36 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(caso) } },     
                             ]
                         }
                     ],
@@ -755,7 +777,7 @@ function legales(e){
         // Filtrar y obtener nombres con el permiso indicado
         const resultado = rows
           .slice(1) // Omitir encabezados
-          .filter(row => row[permissionIndex] === 'LEGALES') // Filtrar por permiso
+          .filter(row => row[permissionIndex] === 'legales') // Filtrar por permiso
           .map(row => row[nameIndex]); // Obtener solo los nombres
 
           console.log('resultado',resultado[0])

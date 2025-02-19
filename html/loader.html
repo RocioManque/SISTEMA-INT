@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantalla de Carga</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
+    <link href="../../dist-assets/css/themes/lite-purple.min.css" rel="stylesheet" />
+    <link href="../../dist-assets/css/plugins/perfect-scrollbar.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .loading_wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f4fdf6; /* Fondo más claro */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        /* Animación del logo girando sobre el eje X */
+        .loader_logo {
+            width: 100px;
+            height: 100px;
+           
+        }
+
+        .loader_logo img {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes flip-x {
+            0% { transform: rotateX(0deg); }
+            50% { transform: rotateX(180deg); }
+            100% { transform: rotateX(360deg); }
+        }
+
+        /* Contenedor de las olas */
+        .your-container {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .css-waves {
+            width: 100%;
+            height: 200px; /* Olas más grandes */
+        }
+
+        .animated-waves use {
+            animation: wave-animation 10s infinite linear;
+        }
+
+        /* Invirtiendo la paleta de colores con mayor diferencia */
+        .animated-waves use:nth-child(1) { fill: #1c562d; animation-duration: 6s; transform: scaleY(1.2) translateY(15px); } /* Ola más alta */
+        .animated-waves use:nth-child(2) { fill: #244e31; animation-duration: 8s; transform: scaleY(1.1) translateY(5px); }
+        .animated-waves use:nth-child(3) { fill: #668770; animation-duration: 10s; transform: scaleY(0.9) translateY(-5px); } /* Ola más baja */
+        .animated-waves use:nth-child(4) { fill: #b4cfbb; animation-duration: 12s; transform: scaleY(0.8) translateY(-10px); } /* Ola más baja aún */
+
+        @keyframes wave-animation {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-50%); } /* Se mueve solo la mitad del ancho */
+            100% { transform: translateX(0); } /* Vuelve sin saltos */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading_wrap" id="loading_wrap">
+        <div class="loader_logo">
+            <div class="spinner-bubble spinner-bubble-success m-5"></div>
+        </div>
+
+        <div class="your-container">
+            <svg class="css-waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 40" preserveAspectRatio="none">
+                <defs>
+                    <path id="wave-pattern" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z"></path>
+                </defs>
+                <g class="animated-waves">
+                    <use href="#wave-pattern" x="0" y="0"></use>
+                    <use href="#wave-pattern" x="50" y="5"></use>
+                    <use href="#wave-pattern" x="100" y="10"></use>
+                    <use href="#wave-pattern" x="150" y="15"></use>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+</body>
+
+<script src="../../dist-assets/js/plugins/jquery-3.3.1.min.js"></script>
+<script src="../../dist-assets/js/plugins/bootstrap.bundle.min.js"></script>
+<script src="../../dist-assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../../dist-assets/js/scripts/script.min.js"></script>
+<script src="../../dist-assets/js/scripts/sidebar-horizontal.script.js"></script>
+</html>

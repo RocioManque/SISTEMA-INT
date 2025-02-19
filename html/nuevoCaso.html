@@ -340,6 +340,9 @@
                 // Si no hay información de usuario, redirigir a login
                 window.location.href = 'index.html';
             }
+
+            const hoy = new Date().toISOString().split("T")[0]; // Obtiene la fecha en formato YYYY-MM-DD
+            document.getElementById("ingreso").value = hoy;
         });
         
         $(document).on('change', '#adjDniFrente', function() {
