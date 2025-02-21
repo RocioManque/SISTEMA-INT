@@ -233,7 +233,7 @@ document.getElementById('sendWhatsApp').addEventListener('click', function() {
 //legales
 function legales(e){
     e.preventDefault();
-    const responsable = "LEGALES";
+    const responsable = "legales";
     const valuesC = [
         responsable,   
     ];

@@ -19,7 +19,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   fetch(url)
   .then(response => response.json())
   .then(data => {
-    const rows = data.values; // Aquí obtienes todas las filas
+    const rows = data.values.slice(1); // Aquí obtienes todas las filas
   
     
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -232,6 +232,10 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         })
         .filter(row => row !== undefined); // Filtra filas vacías resultantes
     }
+    $.fn.dataTable.ext.type.order["date-custom-pre"] = function (data) {
+      let fechaTimestamp = $(data).attr("data-fecha");
+      return fechaTimestamp ? parseInt(fechaTimestamp) : 0;
+  };
     $('#table2').DataTable({
       data: selectedRows,
       scrollY: 300,
@@ -239,7 +243,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     paging: false,          // Desactiva la paginación (muestra todos los registros)
     info: true,            // Oculta la información de "Mostrando X de Y registros"
     searching: true,        // Habilita el buscador
-    ordering: true,    
+    ordering: true,
       columns: [
         { title: "Nº",visible:false }, // Nueva columna para el número de fila
         { title: "PAS" },
@@ -253,13 +257,29 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         { title: "Nº reclamo cia",visible:false },
         { title: "Estado" },
         { title: "Observación",visible:false },
-        { title: "Informe/Historial",
-          render: function(data, type, row, meta) {
-            // Si la celda contiene una URL, muestra un enlace cliqueable
-            return data ? `<pre  style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" data-bs-placement="top" title="${data}">${data}</pre>` : '';
+        {
+          title: "Informe/Historial",
+          render: function (data, type, row, meta) {
+              if (!data) return "";
+      
+              let lineas = data.split("\n") // Divide en líneas
+                               .map(linea => linea.trim()) // Elimina espacios en cada línea
+                               .filter(linea => linea !== ""); // Elimina líneas vacías
+      
+              // Revertir el orden para que la última línea aparezca primero
+              let textoReordenado = lineas.reverse().join("\n");
+      
+              let truncatedData = textoReordenado.length > 18 ? textoReordenado.substring(0, 18) + "..." : textoReordenado;
+      
+              return `<pre style="max-width: 300px; white-space: pre-wrap; overflow: hidden; text-overflow: ellipsis;" 
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="${textoReordenado}">
+                            ${truncatedData}
+                      </pre>`;
           }
+      },
+      
+           
           
-         },//46
         { title: "Tipo de reclamo" },
         { title: "Monto a reclamar" },
         { title: "Monto cerrado" ,visible:false},

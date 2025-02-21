@@ -80,6 +80,14 @@
                                     </div>
                                 </div>
                             </li>
+                            <li class="views" id="casosLegales">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Legales</label>
+                                        <a href="legales.html"><i class="nav-icon mr-2 i-Receipt text-white"></i><span class="text-white">Legales</span></a>
+                                    </div>
+                                </div>
+                            </li>
                             <li class="views" id="baseUnica">
                                 <div>
                                     <div>
@@ -154,7 +162,7 @@
             <!-- ============ Body content start ============= -->
             <div class="main-content">
                 <div class="breadcrumb">
-                Lo ultimo en In itinere              
+              <h1>  Lo ultimo en In itinere  </h1>            
                 </div>
                 <div class="separator-breadcrumb border-top"></div>
                 <!-- <div class="col-md-12 d-flex justify-content-end"> 
@@ -187,6 +195,7 @@
                     document.getElementById('estadisticas').style.display = 'block';
                     document.getElementById('facturacion').style.display = 'block';
                     document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('casosLegales').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
                 } else if (permission === 'ejecutivo') {
                     document.getElementById('nuevoCaso').style.display = 'block';
@@ -229,7 +238,7 @@
                     document.getElementById('linkedin').style.display = 'block';
                     document.getElementById('instagram').style.display = 'block';
 
-                }else if (permission === 'LEGALES') {
+                }else if (permission === 'legales') {
                     document.getElementById('casosGestion').style.display = 'block';
                     document.getElementById('baseUnica').style.display = 'block';
                 }else if (permission === 'FACTURACION') {

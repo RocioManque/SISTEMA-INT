@@ -1778,7 +1778,7 @@ const historialConcat = `${oldText} \n ${newText}`;
 //         console.log(result)
 //       if (result.length > 0) {
 //         // Encontramos el ejecutivo en la fila filtrada
-//         const ejecutivo = 'LEGALES' // Suponiendo que el 'ejecutivo' está en la segunda columna (índice 1)
+//         const ejecutivo = 'legales' // Suponiendo que el 'ejecutivo' está en la segunda columna (índice 1)
 //         const nroInterno = 'INT0009'
 //         console.log('Ejecutivo encontrado:', ejecutivo);
 

@@ -69,6 +69,14 @@
                                     </div>
                                 </div>
                             </li>
+                            <li class="views" id="casosLegales">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Legales</label>
+                                        <a href="legales.html"><i class="nav-icon mr-2 i-Receipt text-white"></i><span class="text-white">Legales</span></a>
+                                    </div>
+                                </div>
+                            </li>
                             <li class="views" id="baseUnica">
                                 <div>
                                     <div>
@@ -121,10 +129,7 @@
                 <div class="breadcrumb">
                 </div>
                 <div class="separator-breadcrumb border-top"></div>
-                <div class="row mb-4">
-                    <!-- <div class="col-md-12 d-flex justify-content-end"> 
-                        <button onclick="handleAuthClick()">A</button>
-                    </div> -->
+                <div class="row">
                 </div>
                 <div class="inbox-main-sidebar-container" data-sidebar-container="main">
                     <div class="inbox-main-content" data-sidebar-content="main">
@@ -140,6 +145,10 @@
                                     <div class="col-md-6">
                                     <div class="form-floating">
                                         <div class="">
+                                            <div class="input-group mt-2 mb-3">
+                                                <div class="input-group-prepend "><span class="input-group-text" >Monto Reclamado</span></div>
+                                                <input class="form-control" id="montoReclamado" type="text" aria-describedby="basic-addon3" />
+                                            </div>
                                             <div class="input-group mt-2 mb-3">
                                                 <div class="input-group-prepend "><span class="input-group-text" >Monto Cerrado</span></div>
                                                 <input class="form-control" id="montoCerrado" type="text" aria-describedby="basic-addon3" />
@@ -165,10 +174,7 @@
                                                 <div class="input-group-prepend "><span class="input-group-text" >Fecha de Pago Comisión</span></div>
                                                 <input class="form-control" id="fechaPagoComision" type="date" aria-describedby="basic-addon3" />
                                             </div>
-                                            <div class="input-group mt-2 mb-3" style="color: black;">
-                                                <div class="input-group-prepend " ><span class="input-group-text" >Total Percibido</span></div>
-                                                <input class="form-control" id="totalPercibido" type="text" aria-describedby="basic-addon3" />
-                                            </div>
+                                           
                                          </div>
                                       </div>
                                    <div>
@@ -179,17 +185,6 @@
                                       </div>
                                    
                                    </div>
-                                   
-                                   <div id="liveAlertPlaceholder"></div>
-                                   <!-- <div class="col-md-6 mb-4">
-                                            <form class="dropzone dropzone-area" id="button-select-upload" action="#">
-                                                <div class="fallback">
-                                                    <input name="file" type="file" multiple="multiple" />
-                                                </div>
-                                                <div class="dz-message">Drop Files Here To Upload</div>
-                                            </form>
-                                </div> -->
-                
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
@@ -225,6 +220,10 @@
                                     <div class="input-group-prepend "><span class="input-group-text" >Gastos estructura</span></div>
                                     <input class="form-control" id="gastosEstructura" type="text" aria-describedby="basic-addon3" />
                                 </div>
+                                <div class="input-group mt-2 mb-3">
+                                    <div class="input-group-prepend"><span class="input-group-text " >Total Percibido</span></div>
+                                    <input class="form-control" id="totalPercibido" type="text" aria-describedby="basic-addon3" />
+                                </div>
 
                              </div>
                 
@@ -235,9 +234,9 @@
                     </div>
                             </div>
                             <!-- Secondary Inbox sidebar-->
-                            <div class="inbox-secondary-sidebar perfect-scrollbar rtl-ps-none" data-sidebar="secondary"><i class="sidebar-close i-Close" data-sidebar-toggle="secondary"></i>
+                            <div class="inbox-secondary-sidebar perfect-scrollbar rtl-ps-none mt-5 pt-3" data-sidebar="secondary"><i class="sidebar-close i-Close" data-sidebar-toggle="secondary"></i>
                                 <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >CASO</span></div>
+                                    <div class="input-group-prepend"><span class="input-group-text" >CASO</span></div>
                                     <input class="form-control" id="caso" type="text" aria-describedby="basic-addon3" />
                                 </div>
                                 <div class="input-group mt-2 mb-3">
@@ -270,10 +269,6 @@
                                 <div class="input-group mt-2 mb-3">
                                     <div class="input-group-prepend "><span class="input-group-text" >Tipo de Reclamo</span></div>
                                     <input class="form-control" id="tipoReclamo" type="text" aria-describedby="basic-addon3" />
-                                </div>
-                                <div class="input-group mt-2 mb-3">
-                                    <div class="input-group-prepend "><span class="input-group-text" >Monto Reclamado</span></div>
-                                    <input class="form-control" id="montoReclamado" type="text" aria-describedby="basic-addon3" />
                                 </div>
                                
                                 
@@ -311,6 +306,7 @@
                     document.getElementById('estadisticas').style.display = 'block';
                     document.getElementById('facturacion').style.display = 'block';
                     document.getElementById('casosPas').style.display = 'block';
+                    document.getElementById('casosLegales').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
                 } else if (permission === 'ejecutivo') {
                     document.getElementById('nuevoCaso').style.display = 'block';
@@ -336,7 +332,7 @@
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
 
-                }else if (permission === 'LEGALES') {
+                }else if (permission === 'legales') {
                     document.getElementById('casosGestion').style.display = 'block';
                     document.getElementById('baseUnica').style.display = 'block';
                 }else if (permission === 'FACTURACION') {

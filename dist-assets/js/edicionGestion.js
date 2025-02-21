@@ -709,7 +709,6 @@ const fechaHoy = `${daya}/${montha}/${yeara}`;
                   });
                   
               });
-            console.log('Actualización múltiple realizada con éxito:', result);
         } else {
             Swal.fire({
                 title: '¡UPS!',

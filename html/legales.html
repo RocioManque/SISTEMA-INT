@@ -161,6 +161,14 @@
                                     </div>
                                 </div>
                             </li>
+                            <li class="views" id="casosLegales">
+                                <div>
+                                    <div>
+                                        <label class="toggle" for="drop-2">Legales</label>
+                                        <a href="legales.html"><i class="nav-icon mr-2 i-Receipt text-white"></i><span class="text-white">Legales</span></a>
+                                    </div>
+                                </div>
+                            </li>
                             <li class="views" id="baseUnica">
                                 <div>
                                     <div>
@@ -210,20 +218,16 @@
         <div class="main-content-wrap d-flex flex-column">
             <!-- ============ Body content start ============= -->
             <div class="main-content">
-                <div class="breadcrumb">
-                    <h1>Mis casos</h1>
-                    <div class="breadcrumb">
-                        
+                <div class="main-content">
+                    <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h1 style="margin: 0;">Casos Judiciales</h1>
+                        <button id="btnExportar" class="views btn btn-primary">
+                            <i class="fas fa-file-excel"></i> Exportar datos a Excel
+                        </button>
                     </div>
                     
-                </div>
-                <div  style="float:inline-end;">
-                    <button id="btnExportar" class="views btn btn-primary">
-                        <i class="fas fa-file-excel"></i> Exportar datos a Excel
-                    </button>
-                    </div>
                 <div class="separator-breadcrumb border-top"></div>
-                <div class="row mb-4">
+                <div class="row">
                 </div>
                 <!-- end of row-->
                 <div class="row mb-4" style="display: none;">
@@ -296,6 +300,7 @@
                     document.getElementById('facturacion').style.display = 'block';
                     document.getElementById('casosPas').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
+                    document.getElementById('casosLegales').style.display = 'block';
                     document.getElementById('btnExportar').style.display = 'block';
                 } else if (permission === 'ejecutivo') {
                     document.getElementById('nuevoCaso').style.display = 'block';
@@ -326,7 +331,7 @@
                     document.getElementById('btnExportar').style.display = 'block';
                     document.getElementById('novedades').style.display = 'block';
 
-                }else if (permission === 'LEGALES') {
+                }else if (permission === 'legales') {
                     document.getElementById('casosGestion').style.display = 'block';
                     document.getElementById('btnExportar').style.display = 'block';
                     document.getElementById('baseUnica').style.display = 'block';
@@ -366,7 +371,7 @@
     <script src="/dist-assets/js/scripts/datatables.script.min.js"></script>
     <script src="/dist-assets/js/scripts/customizer.script.min.js"></script>
    
-    <script src="/dist-assets/js/tablesGestion.js"></script>
+    <script src="/dist-assets/js/legales.js"></script>
 </body>
 
 </html>

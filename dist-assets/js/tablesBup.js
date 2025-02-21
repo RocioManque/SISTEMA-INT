@@ -27,10 +27,10 @@ $(document).ready(function() {
                             <td>${row[3] || ""}</td>
                             <td>${row[5] || ""}</td>
                             <td>${row[12] || ""}</td>
+                            <td>${row[15] || ""}</td>
+                            <td>${row[13] || ""}</td>
                             <td>${row[6] || ""}</td>
                             <td>${row[10] || ""}</td>
-                            <td>${row[8] || ""}</td>
-                            <td>${row[7] || ""}</td>
                             <td>${row[13] || ""}</td>
                             <td>${row[16] || ""}</td>
                         </tr>

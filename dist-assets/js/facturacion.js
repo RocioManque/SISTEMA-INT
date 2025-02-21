@@ -117,8 +117,9 @@ $(document).ready(function() {
             { title: "Acciones", render: function(data, type, row, meta) {
                 return `  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="facturar(${meta.row})">
         Facturar
-      </button> <button class="btn btn-primary mt-2" type="button" onclick="editarFila(${meta.row})">Editar</button>
-      <button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#uploadFc" onclick="capturarRowIndex(${meta.row})" >Cargar Factura</button>`;
+      <button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#uploadFc" onclick="capturarRowIndex(${meta.row})" >Cargar Factura</button>
+      </button> <button class="btn btn-primary mt-2" type="button" onclick="editarFila(${meta.row})">Editar</button>`;
+      
             }}
             
         ],
@@ -127,6 +128,10 @@ $(document).ready(function() {
       data: selectedRows2,
       scrollY: 300,
       scrollX: true,
+      paging: false,          // Desactiva la paginación (muestra todos los registros)
+      info: true,            // Oculta la información de "Mostrando X de Y registros"
+      searching: true,        // Habilita el buscador
+      ordering: true,    
       columns: [
           { title: "Caso" }, //35
           { title: "Fecha de inicio" }, 
@@ -144,8 +149,9 @@ $(document).ready(function() {
           { title: "Acciones", render: function(data, type, row, meta) {
               return `  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="facturar(${meta.row})">
       Facturar
-    </button> <button class="btn btn-primary mt-2" type="button" onclick="editarFila(${meta.row})">Editar</button>
-    <button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#uploadFc" onclick="capturarRowIndex(${meta.row})" >Cargar Factura</button>`;
+    </button> 
+    <button class="btn btn-primary mt-2" type="button" data-toggle="modal" data-target="#uploadFc" onclick="capturarRowIndex(${meta.row})" >Cargar Factura</button>
+    <button class="btn btn-primary mt-2" type="button" onclick="editarFila(${meta.row})">Editar</button>`;
           }}
           
       ],

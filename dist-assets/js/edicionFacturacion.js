@@ -349,16 +349,27 @@ async function actualizar(e) {
       if (response.ok) {
         const result = await response.json();
         Swal.fire({
-          title: "¡Éxito!",
-          text: "El caso se actualizó correctamente.",
-          icon: "success",
-          confirmButtonText: "Aceptar",
+          title: '¡Éxito!',
+          text: 'Los cambios se guardaron correctamente.',
+          icon: 'success', // Puede ser 'success', 'error', 'warning', 'info', 'question'
+          confirmButtonText: 'Aceptar',
         }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "/html/facturacion.html";
-          }
+          Swal.fire({
+              title: '¡Atención!',
+              text: '¿Querés volver a facturación?',
+              icon: 'question',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Sí, vamos',
+              cancelButtonText: 'No, me quedo'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = '/html/facturacion.html'; 
+              }
+            });
+            
         });
-        console.log("Actualización múltiple realizada con éxito:", result);
       } else {
         Swal.fire({
           title: "¡UPS!",
