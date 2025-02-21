@@ -19,7 +19,7 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   fetch(url)
   .then(response => response.json())
   .then(data => {
-    const rows = data.values.slice(1); // Aquí obtienes todas las filas
+    const rows = data.values; // Aquí obtienes todas las filas
   
     
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -125,7 +125,6 @@ return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       selectedRows = rows.map((row, index) => {
           // Añade la fila visible en la hoja (índice + 1)
           const numeroFila = index + 1;
-
           // Convierte el nombre del cliente a mayúsculas y compara
           const nombreCliente = (row[2] || "").toUpperCase();
           const apellidoCliente = (row[1] || "").toUpperCase();
