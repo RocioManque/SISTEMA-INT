@@ -224,13 +224,26 @@ $(document).ready(function() {
         { title: "Dominio" },//29
         { title: "Compañia a Reclamar" },//27
         { title: "Tipo Reclamo" },//45
-        { title: "Informe/Historial",
-          render: function(data, type, row, meta) {
-            // Si la celda contiene una URL, muestra un enlace cliqueable
-            return data ? `<pre  style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" data-bs-placement="top" title="${data}">${data}</pre>` : '';
+        {
+          title: "Informe/Historial",
+          render: function (data, type, row, meta) {
+              if (!data) return "";
+      
+              let lineas = data.split("\n") // Divide en líneas
+                               .map(linea => linea.trim()) // Elimina espacios en cada línea
+                               .filter(linea => linea !== ""); // Elimina líneas vacías
+      
+              // Revertir el orden para que la última línea aparezca primero
+              let textoReordenado = lineas.reverse().join("\n");
+      
+              let truncatedData = textoReordenado.length > 18 ? textoReordenado.substring(0, 18) + "..." : textoReordenado;
+      
+              return `<pre style="max-width: 300px; white-space: pre-wrap; overflow: hidden; text-overflow: ellipsis;" 
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="${textoReordenado}">
+                            ${truncatedData}
+                      </pre>`;
           }
-          
-         },//46
+      },
         { title: "Estado" },//47
         { 
           title: "URL Carpeta",
