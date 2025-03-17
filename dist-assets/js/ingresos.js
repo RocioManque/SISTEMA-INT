@@ -389,7 +389,6 @@ async function handleFileUploadsAndSheetUpdate(rowIndex) {
 
     // Actualizar la fila en Google Sheets
     const success = await updateRowInSheet(rowIndex, updatedUrls);
-
     Swal.close();
     if (success) {
         Swal.fire({
@@ -797,7 +796,8 @@ const historialConcat = `${oldText} \n ${newText}`;
     const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs'; // Reemplaza con tu ID de Google Sheets
     const ultimaFilaDeTabla = await obtenerUltimaFila(spreadsheetId)
     const nroInterno = await obtenerNuevoNumeroCaso()
-    const ejecutivoEncontrado = await encontrarEjecutivo()
+    const ejecutivoEncontrado = await encontrarEjecutivo();
+    const planEncontrado = await encontrarPlan();
     const IndexNuevaFila = ultimaFilaDeTabla + 1
     // Supongamos que tienes valores para las columnas a actualizar
     const fechaIngreso = document.getElementById('ingreso').value; // Valor para actualizar en la columna deseada
@@ -810,6 +810,7 @@ const historialConcat = `${oldText} \n ${newText}`;
     const observaciones = document.getElementById('obs').value;
     const historial = document.getElementById('actualizacion') ? historialConcat : document.getElementById('historial').value; //TODO: actualizacion + historial
     const estado = "PARA INGRESAR";
+    const estadoMesa = "PARA INGRESAR";
     const tipoReclamo = document.getElementById('tipoReclamo').value;
     const adjuntosUrl = carpetaUrl
     const caso = cliente + ' contra ' + ciaReclamada
@@ -875,6 +876,27 @@ const historialConcat = `${oldText} \n ${newText}`;
                         sheetId: '454305688',
                         startRowIndex: IndexNuevaFila - 1,
                         endRowIndex: IndexNuevaFila,
+                        startColumnIndex: 26, // Es el indice primero
+                        endColumnIndex: 27 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(planEncontrado) } },          
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688',
+                    range: {   //range se utiliza en update
+                        sheetId: '454305688',
+                        startRowIndex: IndexNuevaFila - 1,
+                        endRowIndex: IndexNuevaFila,
                         startColumnIndex: 28, // Es el indice primero
                         endColumnIndex: 30 // Es el indice posterior
                     },
@@ -913,7 +935,7 @@ const historialConcat = `${oldText} \n ${newText}`;
             },
             {
                 updateCells: {   //updateCells: este actualiza fila segun range (row)
-                    //sheetId: '454305688',
+                    //sheetId: '454305688', '1270329764'
                     range: {   //range se utiliza en update
                         sheetId: '454305688',
                         startRowIndex: IndexNuevaFila - 1,
@@ -925,6 +947,28 @@ const historialConcat = `${oldText} \n ${newText}`;
                         {
                             values: [
                                 { userEnteredValue: { stringValue: String(adjuntosUrl) } },          
+                                 
+                            ]
+                        }
+                    ],
+                    fields: 'userEnteredValue'
+                }
+                
+            },
+            {
+                updateCells: {   //updateCells: este actualiza fila segun range (row)
+                    //sheetId: '454305688', '1270329764'
+                    range: {   //range se utiliza en update
+                        sheetId: '1270329764',
+                        startRowIndex: rowIndex - 1,
+                        endRowIndex: rowIndex,
+                        startColumnIndex: 22, // Es el indice primero
+                        endColumnIndex: 23 // Es el indice posterior
+                    },
+                    rows: [
+                        {
+                            values: [
+                                { userEnteredValue: { stringValue: String(estadoMesa) } },          
                                  
                             ]
                         }
@@ -1024,6 +1068,51 @@ async function encontrarEjecutivo() {
         }
     } catch (error) {
         console.error('Error al buscar el ejecutivo:', error);
+        return null; // Retorna null en caso de error
+    }
+}
+async function encontrarPlan() {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const rows = data.values; // Supongo que 'values' es el array de filas de Google Sheets
+
+        // Filtrar por el valor del campo 'pas' y obtener el 'ejecutivo' correspondiente
+        const nameToFind = document.getElementById('pasDropdown').value; // El nombre que quieres buscar (sin apellido)
+
+        const result = rows.filter(row => {
+            const fullName = row[2]?.trim(); // Asegúrate de eliminar espacios en blanco al inicio y final
+            if (!fullName) return false; // Evita errores si 'fullName' es undefined o null
+
+            const nameToFindStr = String(nameToFind).trim().toLowerCase(); // Elimina espacios y convierte a minúsculas
+
+            // Dividir el nombre completo en partes (nombre y apellido)
+            const nameParts = fullName.split(/\s+/); // Usa expresión regular para dividir por espacios
+
+            // Dividir nameToFind en partes (nombre y apellido)
+            const nameToFindParts = nameToFindStr.split(/\s+/); // Divide el nombre ingresado en partes
+
+            // Si el nombreToFind tiene más de un nombre (por ejemplo, nombre y apellido), comparamos ambas partes
+            if (nameToFindParts.length > 1) {
+                // Compara nombre y apellido
+                return nameParts.length >= 2 &&
+                    nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase() && // Comparar primer nombre
+                    nameParts[1].toLowerCase() === nameToFindParts[1].toLowerCase();   // Comparar apellido
+            } else {
+                // Si solo hay un nombre en nameToFind, lo comparamos solo con la primera parte de fullName
+                return nameParts[0].toLowerCase() === nameToFindParts[0].toLowerCase();
+            }
+        });
+
+        if (result.length > 0) {
+            // Encontramos el ejecutivo en la fila filtrada
+            const plan = result[0][12]; // Suponiendo que el 'plan' está en la columna 15
+            return plan; // Retorna el valor de 'plan'
+        } else {
+            return null; // Retorna null si no se encontró
+        }
+    } catch (error) {
+        console.error('Error al buscar el plan:', error);
         return null; // Retorna null en caso de error
     }
 }

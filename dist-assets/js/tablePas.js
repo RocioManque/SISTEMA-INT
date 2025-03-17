@@ -133,9 +133,8 @@ $(document).ready(async function() {
           ]);
       } else if (userRole === "pas") {
           // Mostrar casos asignados al ejecutivo
-          console.log(rows[0])
             const clienteIndex = rows[0].indexOf("cliente");
-            const ciaIndex = rows[0].indexOf("cia a reclamar");
+            const ciaIndex = rows[0].indexOf("cia a reclamar"); 
           selectedRows = rows.filter(row => (row[1] || "").toUpperCase().trim() === nombrePas && row[28] !== "PARA INGRESAR" )
               .map(row => [
                   `${row[clienteIndex]} contra ${row[ciaIndex]}` || "",  

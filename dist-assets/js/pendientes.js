@@ -20,7 +20,7 @@ $(document).ready(function() {
     const rows = data.values.slice(1); 
 
     // Filtrar filas para excluir aquellas con estado "PARA INGRESAR" 
-    const filteredRows = rows.filter(row => row[22] !== "PARA INGRESAR");
+    const filteredRows = rows.filter(row => row[22] !== "PARA INGRESAR" && row[22] !== "CASO DADO DE BAJA" );
 
     const selectedRows = filteredRows.map((row) => {
       // Encuentra el índice real de la fila en la hoja original
@@ -224,26 +224,13 @@ $(document).ready(function() {
         { title: "Dominio" },//29
         { title: "Compañia a Reclamar" },//27
         { title: "Tipo Reclamo" },//45
-        {
-          title: "Informe/Historial",
-          render: function (data, type, row, meta) {
-              if (!data) return "";
-      
-              let lineas = data.split("\n") // Divide en líneas
-                               .map(linea => linea.trim()) // Elimina espacios en cada línea
-                               .filter(linea => linea !== ""); // Elimina líneas vacías
-      
-              // Revertir el orden para que la última línea aparezca primero
-              let textoReordenado = lineas.reverse().join("\n");
-      
-              let truncatedData = textoReordenado.length > 18 ? textoReordenado.substring(0, 18) + "..." : textoReordenado;
-      
-              return `<pre style="max-width: 300px; white-space: pre-wrap; overflow: hidden; text-overflow: ellipsis;" 
-                            data-bs-toggle="tooltip" data-bs-placement="top" title="${textoReordenado}">
-                            ${truncatedData}
-                      </pre>`;
+        { title: "Informe/Historial",
+          render: function(data, type, row, meta) {
+            // Si la celda contiene una URL, muestra un enlace cliqueable
+            return data ? `<pre  style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" data-bs-placement="top" title="${data}">${data}</pre>` : '';
           }
-      },
+          
+         },//46
         { title: "Estado" },//47
         { 
           title: "URL Carpeta",
@@ -262,22 +249,35 @@ $(document).ready(function() {
     ],
     order: [[10, 'desc']], // Ordenar por la columna de indicador (9) en orden descendente
       createdRow: function (row, data, dataIndex) {
-        const cliente = data[2]; 
-        const lastUpdateDate = data[9];
-        const parts = lastUpdateDate.split('/');
-        // Validar y convertir la fecha
-        const newDate = new Date(parts[2], parts[1] - 1, parts[0]);
-        const currentDate = new Date();
-        currentDate.setHours(0, 0, 0, 0); // Ignorar la hora
-        const daysDifference = getDaysDifference(newDate, currentDate);
+        const cliente = data[2];
+let lastUpdateDate = data[9];
+const lastCreateDate = data[0];
 
-        if (daysDifference > 3) {
-          $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
-          casosAtrasados.push({
-              nombre: data[2], // Nombre o identificador
-              dias: daysDifference,
-          });
-        }
+let newDate;
+
+if (!lastUpdateDate) {
+    // Si lastUpdateDate está vacío, usar lastCreateDate
+    const parts = lastCreateDate.split('-'); // yyyy-mm-dd
+    newDate = new Date(parts[0], parts[1] - 1, parts[2]);
+} else {
+    // Usar lastUpdateDate
+    const parts = lastUpdateDate.split('/'); // dd/mm/yyyy
+    newDate = new Date(parts[2], parts[1] - 1, parts[0]);
+}
+
+const currentDate = new Date();
+currentDate.setHours(0, 0, 0, 0); // Ignorar la hora
+
+const daysDifference = getDaysDifference(newDate, currentDate);
+
+if (daysDifference > 3) {
+    $(row).addClass('table-danger'); // Clase de Bootstrap para fila roja
+    casosAtrasados.push({
+        nombre: cliente, // Nombre o identificador
+        dias: daysDifference,
+    });
+}
+
 
 
         // Calcular diferencia en días

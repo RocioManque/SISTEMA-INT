@@ -485,6 +485,10 @@
                 loader.style.display = "none"; // Ocultar completamente después de la animación
             }, 500);
         });
+        const tokenData = retrieveToken();
+    if (tokenData && tokenData.expires_at) {
+        scheduleTokenExpirationWarning(tokenData.expires_at);
+    }
             const userData = JSON.parse(localStorage.getItem('userData'));
         
             if (userData) {

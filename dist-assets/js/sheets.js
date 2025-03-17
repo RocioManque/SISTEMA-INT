@@ -7,7 +7,9 @@ const DISCOVERY_DOCS = [
 const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets';
 // Llamar a la función con el ID de la hoja y el año deseado
 const spreadsheetId = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
+const spreadsheetId2 = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
 const year = 2024; // Año deseado
+const range0 = 'Sheet1!A:W'
 const range = 'sheet1!A:BF'
 const range1 = 'Respuestas de formulario 1!A:Y'
 
@@ -15,6 +17,7 @@ const range1 = 'Respuestas de formulario 1!A:Y'
 
 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${API_KEY}`;
 const url1 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range1}?key=${API_KEY}`;
+const url2 = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId2}/values/${range0}?key=${API_KEY}`;
 
 const nombresMeses = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
@@ -35,6 +38,55 @@ async function recuperarCantidadDeCasos() {
 
     return respuestaFormulario
 }
+async function recuperarCantidadDeCasosPorEjecutivo() {
+    // Obtener los datos de la hoja principal (casos)
+    const response1 = await fetch(url1);
+    const data1 = await response1.json();
+    const casos = data1.values;
+
+    // Obtener los datos de la hoja secundaria (asignación de ejecutivos)
+    const response2 = await fetch(url2);
+    const data2 = await response2.json();
+    const asignaciones = data2.values;
+    console.log(asignaciones)
+    // Convertir la segunda hoja en un mapa {nombre -> ejecutivo}
+    const asignacionEjecutivos = {};
+    const headers2 = asignaciones[0];
+    const indexNombre = headers2.indexOf("Pas");
+    console.log(indexNombre)
+    const indexEjecutivo = headers2.indexOf("ejecutivo");
+    console.log(indexEjecutivo)
+
+    asignaciones.slice(1).forEach(row => {
+        asignacionEjecutivos[row[indexNombre]] = row[indexEjecutivo];
+    });
+    
+
+    // Procesar los casos
+    const headers1 = casos[0];
+    const indexFecha = headers1.indexOf("Fecha de ingreso");
+    const indexNombreCaso = headers1.indexOf("Pas");
+
+    const casosProcesados = casos.slice(1).map(row => {
+        const nombre = row[indexNombreCaso];
+        const fecha = new Date(row[indexFecha]);
+        const mes = fecha.getMonth() + 1; // Mes (1-12)
+        const ejecutivo = asignacionEjecutivos[nombre] || "Sin asignar";
+
+        return { mes, ejecutivo };
+    });
+
+    // Agrupar por mes y ejecutivo
+    const resultado = {};
+    casosProcesados.forEach(({ mes, ejecutivo }) => {
+        if (!resultado[mes]) resultado[mes] = {};
+        if (!resultado[mes][ejecutivo]) resultado[mes][ejecutivo] = 0;
+        resultado[mes][ejecutivo]++;
+    });
+console.log("ESTO ES DESGLOSE", resultado)
+    return resultado;
+}
+
 // Fetch y procesamiento inicial
 fetch(url)
   .then(response => response.json())
@@ -61,7 +113,7 @@ fetch(url)
 
   const calcularIngresadosPorMes = async () => {
     const resultadosDeIngresos = await recuperarCantidadDeCasos();
-    console.log('Resultados de ingresos',resultadosDeIngresos)
+    // console.log('Resultados de ingresos',resultadosDeIngresos)
     const resultados = {};
 
     const fechaActual = new Date();
@@ -85,7 +137,7 @@ fetch(url)
             resultados[mesIngreso].ingresados++;
         }
     });
-console.log(resultados)
+// console.log(resultados)
     return resultados;
 
 };
@@ -114,15 +166,15 @@ const calcularIniciadosPorMes = (registros) => {
             resultados[mesInicio].iniciados++;
         }
     });
-console.log(resultados)
+// console.log(resultados)
     return resultados;
 };
 
 const calcularTotalesPorMes = async (registros) => {
     const ingresados = await calcularIngresadosPorMes();
     const iniciados = calcularIniciadosPorMes(registros);
-console.log(ingresados)
-console.log(iniciados)
+// console.log(ingresados)
+// console.log(iniciados)
     const resultados = {};
     const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
   
@@ -146,7 +198,7 @@ Object.keys(iniciados)
     });
 
 
-    console.log('estos son los resultados',resultados);
+    // console.log('estos son los resultados',resultados);
     return resultados;
 };
 
@@ -158,6 +210,7 @@ Object.keys(iniciados)
 
     registros.forEach(registro => {
         const mesIngreso = new Date(registro["Fecha de ingreso"]).toISOString().slice(0, 7); // Año-Mes
+        console.log('fecha de ingreso', mesIngreso)
         const mesInicio = registro["fecha ingreso a cia"]
             ? new Date(registro["fecha ingreso a cia"]).toISOString().slice(0, 7)
             : null;
@@ -180,7 +233,7 @@ Object.keys(iniciados)
             resultados[mesIngreso][claveEjecutivo].iniciados++;
         }
     });
-console.log(resultados);
+// console.log(resultados);
     return resultados;
 };
 
@@ -188,11 +241,11 @@ console.log(resultados);
 
 const calcularPorTipoYEstado = (registros) => {
     const resultados = {};
-console.log(registros)
+// console.log(registros)
     registros.forEach(registro => {
         const tipoReclamo = registro["tipo de reclamo"] || "Desconocido";
         const estado = registro["Estado "] || "Sin estado";
-console.log(estado)
+// console.log(estado)
         if (!resultados[tipoReclamo]) {
             resultados[tipoReclamo] = {};
         }
@@ -203,7 +256,7 @@ console.log(estado)
 
         resultados[tipoReclamo][estado]++;
     });
-console.log(resultados)
+// console.log(resultados)
     return resultados;
 };
 
@@ -247,7 +300,7 @@ const calcularTotalesFacturadosPorMes = (registros) => {
         resultados[mes].cantidad++;
         resultados[mes].facturado += montoSinIVA;
     });
-    console.log('facturados', resultados)
+    // console.log('facturados', resultados)
     return resultados;
 };
 
@@ -654,8 +707,17 @@ const prepararDatosDonut = (datos) => {
 
 // Renderizar gráficos con los meses en orden legiblePack
 const inicializarGraficos = async (registros) => {
+    window.addEventListener("load", function () {
+        let loader = document.getElementById("loading_wrap");
+        loader.style.opacity = "0"; // Desvanecer el loader
+        setTimeout(() => {
+            loader.style.display = "none"; // Ocultar completamente después de la animación
+        }, 500);
+    });
     const totalesPorMes = await calcularTotalesPorMes(registros);
-    console.log('desde inicializar grafico',totalesPorMes)
+    const nuevo = recuperarCantidadDeCasosPorEjecutivo();
+    console.log(nuevo)
+    // console.log('desde inicializar grafico',totalesPorMes)
     const totales = calcularTotalesPorEjecutivoYMes(registros);
     const chartDataIngresados = prepareDataForAreaCharts(totales, 'ingresados');
     const chartDataIniciados = prepareDataForAreaCharts(totales, 'iniciados');
