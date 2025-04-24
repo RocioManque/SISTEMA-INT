@@ -1,262 +1,275 @@
-<div class="inbox-main-sidebar-container" data-sidebar-container="main">
-    <div class="inbox-main-content" data-sidebar-content="main">
-        <!-- SECONDARY SIDEBAR CONTAINER-->
-        <div class="inbox-secondary-sidebar-container box-shadow-1" data-sidebar-container="secondary">
-            <div data-sidebar-content="secondary">
-                <div class="inbox-secondary-sidebar-content position-relative" style="min-height: 500px">
-                    <div class="inbox-topbar box-shadow-1 perfect-scrollbar rtl-ps-none pl-3" data-suppress-scroll-y="true">
-                     <a class="link-icon mr-3" id="facturar" onclick="facturar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i> Facturar</a><a class="link-icon mr-3" id="saveChanges" onclick="actualizar(event)" style="cursor: pointer;"><i class="icon-regular i-Mail-Password"></i>Guardar</a><a class="link-icon mr-3" id='sendWhatsApp' style="cursor: pointer;"><i class="icon-regular i-Mail-Send"></i> Notificar a cliente</a>
-
-                    </div>
-                    <div class="row">
-                    <div class="col-md-6">
-                    <div class="form-floating">
-                        <div class="">
-                            <div class="input-group mt-2 mb-3">
-                                <div class="input-group-prepend "><span class="input-group-text" >Total facturado sin IVA</span></div>
-                                <input class="form-control" id="facturadoSinIva" type="text" aria-describedby="basic-addon3" />
-                            </div>
-                            <div class="input-group mt-2 mb-3">
-                                <div class="input-group-prepend "><span class="input-group-text" >Nro de factura/Comprobante</span></div>
-                                <input class="form-control" id="nroFactura" type="text" aria-describedby="basic-addon3" />
-                            </div>
-                            <div class="input-group mt-2 mb-3">
-                                <div class="input-group-prepend "><span class="input-group-text" >IVA</span></div>
-                                <input class="form-control" id="iva" type="text" aria-describedby="basic-addon3" />
-                            </div>
-                            <div class="input-group mt-2 mb-3">
-                                <div class="input-group-prepend "><span class="input-group-text" >Total facturado con IVA</span></div>
-                                <input class="form-control" id="facturadoConIva" type="text" aria-describedby="basic-addon3" />
-                            </div>
-                            <div class="input-group mt-2 mb-3">
-                                <div class="input-group-prepend "><span class="input-group-text" >Fecha de Pago Comisión</span></div>
-                                <input class="form-control" id="fechaPagoComision" type="text" aria-describedby="basic-addon3" />
-                            </div>
-                            <div class="input-group mt-2 mb-3">
-                                <div class="input-group-prepend "><span class="input-group-text" >Total Percibido</span></div>
-                                <input class="form-control" id="totalPercibido" type="text" aria-describedby="basic-addon3" />
-                            </div>
-                         </div>
-                      </div>
-                   <div>
-                    <div class="form-check form-check-inline mt-5">
-                        <label class="checkbox checkbox-outline-info">
-                          
-                        </label>
-                      </div>
-                   
-                   </div>
-                   
-                   <div id="liveAlertPlaceholder"></div>
-                   <!-- <div class="col-md-6 mb-4">
-                            <form class="dropzone dropzone-area" id="button-select-upload" action="#">
-                                <div class="fallback">
-                                    <input name="file" type="file" multiple="multiple" />
-                                </div>
-                                <div class="dz-message">Drop Files Here To Upload</div>
-                            </form>
-                </div> -->
-
-            </div>
-            <div class="col-md-6">
-                <div class="form-floating">
-                  </div>
-               <div>
-               </div>
-             <div class="">
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Consultores</span></div>
-                    <input class="form-control" id="consultores" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Comisión Pas</span></div>
-                    <input class="form-control" id="comisionPas" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Retención IVA</span></div>
-                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Retención Ganancia</span></div>
-                    <input class="form-control" id="retencionGanancia" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Retención IIBB Compañia</span></div>
-                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Retención IIBB Banco</span></div>
-                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Gastos estructura</span></div>
-                    <input class="form-control" id="retencionIva" type="text" aria-describedby="basic-addon3" />
-                </div>
-             </div>
-
-        </div>
-            </div>
-         </div>
-        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Initinere Dashboard</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- ApexCharts -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <style>
+    body { padding-top: 70px; background: #f5f7fa; }
+    .card { border: none; border-radius: .75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .navbar-brand { font-weight: bold; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Initinere</a>
     </div>
-            </div>
-            <!-- Secondary Inbox sidebar-->
-            <div class="inbox-secondary-sidebar perfect-scrollbar rtl-ps-none" data-sidebar="secondary"><i class="sidebar-close i-Close" data-sidebar-toggle="secondary"></i>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >CASO</span></div>
-                    <input class="form-control" id="caso" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >plan INT</span></div>
-                    <input class="form-control" id="plan" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Nro de Reclamo CIA</span></div>
-                    <input class="form-control" id="nroReclamo" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Facturado Por</span></div>
-                    <input class="form-control" id="facturadoPor" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de Pago</span></div>
-                    <input class="form-control" id="reclamo" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" >Tipo de Reclamo</span>
-                    </div>
-                    <select class="form-control" id="tipoReclamo" aria-describedby="basic-addon3">
-                        <option value="" disabled selected>Selecciona una opción</option>
-                        <option value="Administrativo">Administrativo</option>
-                        <option value="Mediación">Mediación</option>
-                        <option value="Mediación Express">Mediación Express</option>
-                        <!-- Añade más opciones aquí según sea necesario -->
-                    </select>
-                    
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Monto Reclamado</span></div>
-                    <input class="form-control" id="montoReclamado" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Monto Cerrado</span></div>
-                    <input class="form-control" id="montoCerrado" type="text" aria-describedby="basic-addon3" />
-                </div>
-                <div class="input-group mt-2 mb-3">
-                    <div class="input-group-prepend "><span class="input-group-text" >Fecha de facturación</span></div>
-                    <input class="form-control" id="fechaFactura" type="text" aria-describedby="basic-addon3" />
-                </div>
-
-            </div>
+  </nav>
+  <div class="container-fluid">
+    <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#casos-ingresados">Casos Ingresados</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#casos-iniciados">Casos Iniciados</button></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="casos-ingresados">
+        <!-- filtros para ingresados -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <select id="range-ing" class="form-select">
+              <option value="year" selected>Año</option>
+              <option value="month">Mes</option>
+              <option value="week">Semana</option>
+            </select>
+          </div>
+          <div class="col-md-3" id="year-ing-wrapper" style="display:none;"><select id="year-ing" class="form-select"></select></div>
+          <div class="col-md-3"><select id="period-ing" class="form-select"></select></div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="main-content">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title"> Casos ingresados por mes</div>
-                            <canvas id="casesByMonthChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title">Casos Facturados por mes</div>
-                            <canvas id="closedCasesByMonthChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title"> Promedio Anual de Casos</div>
-                            <canvas id="promedioAnualCasosChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title">Casos Desistidos vs Casos Cobrados</div>
-                            <canvas id="dismissedChart"  width="200" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title"> Promedio dias del caso</div>
-                            <canvas id="averageTimeChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title"> Activos vs Cerrados</div>
-                            <canvas id="activeVsClosedChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title"> Casos por ejecutivo</div>
-                            <canvas id="casesByExecutiveChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title"> Casos por Compañia</div>
-                            <canvas id="casesByCompanyChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title">Total facturado por Mes </div>
-                            <canvas id="facturadoPorMesChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="card-title"> Total facturado por ejecutivo</div>
-                            <canvas id="facturadoPorEjecutivoChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
+        <div class="row g-4">
+          <div class="col-md-3"><div class="card p-3"><h6>Total de Casos iniciadoa a INT</h6><div id="chart-total-ing"></div></div></div>
+          <div class="col-md-4"><div class="card p-3"><h6>Casos asignados por Ejecutivo</h6><div id="chart-by-ej-ing" style="height:260px;"></div></div></div>
+          <div class="col-md-4"><div class="card p-3"><h6>Tendencia 12 Meses</h6><div id="chart-trend-ing" style="height:260px;"></div></div></div>
+          <div class="col-md-10"><div class="card p-3"><h6>Mapeo Semanal de casos Ingresados</h6><div id="chart-heat-ing" style="height:260px;"></div></div></div>
         </div>
+      </div>
+      <div class="tab-pane fade" id="casos-iniciados">
+        <!-- filtros para iniciados -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <select id="range-init" class="form-select">
+              <option value="year" selected>Año</option>
+              <option value="month">Mes</option>
+              <option value="week">Semana</option>
+            </select>
+          </div>
+          <div class="col-md-3" id="year-init-wrapper" style="display:none;"><select id="year-init" class="form-select"></select></div>
+          <div class="col-md-3"><select id="period-init" class="form-select"></select></div>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-3"><div class="card p-3"><h6>Total de casos iniciados a INT</h6><div id="chart-total-init"></div></div></div>
+          <div class="col-md-4"><div class="card p-3"><h6>Casos iniciados por ejecutivo</h6><div id="chart-by-ej-init" style="height:260px;"></div></div></div>
+          <div class="col-md-4"><div class="card p-3"><h6>Tendencia 12 Meses</h6><div id="chart-trend-init" style="height:260px;"></div></div></div>
+          <div class="col-md-10"><div class="card p-3"><h6>Mapeo Semanal de casos Iniciados</h6><div id="chart-heat-init" style="height:260px;"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+      // Paleta verde musgo
+      const mossPalette = ["#1c562d", "#2f7a47", "#a9d6b1", "#561c44", "#f5f5f5"];
+    const API_KEY = 'AIzaSyBLuMXUjJmU3XLfErAIH-iI4pXzmSnl-0E';
+    const ID = '1QzbFeGvzlzxVYN53G_5Dkl7Lji41Q6_0iMCqhVJhHhs';
+
+    function getWeek(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      const day = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - day);
+      return Math.ceil((((d - new Date(Date.UTC(d.getUTCFullYear(), 0, 1))) / 86400000) + 1) / 7);
+    }
+
+
+    async function fetchIngresados() {
+      const [c, a] = await Promise.all([
+        fetch(`https://sheets.googleapis.com/v4/spreadsheets/${ID}/values/Respuestas de formulario 1!A:Y?key=${API_KEY}`).then(r => r.json()),
+        fetch(`https://sheets.googleapis.com/v4/spreadsheets/${ID}/values/Sheet1!A:W?key=${API_KEY}`).then(r => r.json())
+      ]);
+      const hdrC = c.values.shift();
+      const hdrA = a.values.shift();
+      const idxF = hdrC.indexOf('Fecha de ingreso');
+      const idxPasC = hdrC.indexOf('Pas');
+      const idxPasA = hdrA.indexOf('Pas');
+      const idxEj = hdrA.indexOf('ejecutivo');
+      const mapEj = {};
+      a.values.forEach(r => mapEj[r[idxPasA]] = r[idxEj]);
+      return c.values
+        .filter(r => r[idxF])
+        .map(r => {
+          const d = new Date(r[idxF]);
+          return {
+            year: d.getFullYear(),
+            month: d.getMonth() + 1,
+            week: getWeek(d),
+            ej: mapEj[r[idxPasC]] || 'Sin asignar'
+          };
+        });
+    }
+
+    async function fetchIniciados() {
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${ID}/values/Sheet1!A:BF?key=${API_KEY}`);
+      const d = await res.json();
+      const hdr = d.values.shift();
+      const idxF = hdr.indexOf('fecha ingreso a cia');
+      const idxEj = hdr.indexOf('ejecutivo');
+      return d.values
+        .filter(r => r[idxF])
+        .map(r => {
+          const dt = new Date(r[idxF]);
+          return {
+            year: dt.getFullYear(),
+            month: dt.getMonth() + 1,
+            week: getWeek(dt),
+            ej: r[idxEj] || 'Sin asignar'
+          };
+        });
+    }
+
+    function setup(tab, fetchFn, ids) {
+      fetchFn().then(data => {
+        const selR = document.getElementById(ids.range);
+        const selY = document.getElementById(ids.year);
+        const selP = document.getElementById(ids.period);
+        const wrapY = document.getElementById(ids.yearWrap);
+
+        function update() {
+          if (!document.getElementById(tab).classList.contains('active')) return;
+          const r = selR.value;
+          const y = selY.value;
+          const p = selP.value;
+          const filt = data.filter(d => {
+            if (r === 'year') return d.year == p;
+            if (r === 'month') return d.year == y && d.month == p;
+            return d.year == y && d.week == Number(p.replace('Semana ', ''));
+          });
+          drawTotal(ids.total, filt);
+          drawBy(ids.bar, filt);
+          drawTrendChart(ids.trend, filt);
+          drawHeat(ids.heat, filt);
+        }
+
+        selR.onchange = () => {
+          const r = selR.value;
+          const years = [...new Set(data.map(d => d.year))].sort();
+          wrapY.style.display = r === 'year' ? 'none' : 'block';
+          if (r === 'year') {
+            selP.innerHTML = years.map(y => `<option>${y}</option>`).join('');
+          } else {
+            selY.innerHTML = years.map(y => `<option>${y}</option>`).join('');
+            if (r === 'month') {
+              selP.innerHTML = Array.from({ length: 12 }, (_, i) =>
+                `<option value="${i+1}">${new Date(0, i).toLocaleString('es', { month: 'long' })}</option>`
+              ).join('');
+            } else {
+              selP.innerHTML = Array.from({ length: 53 }, (_, i) =>
+                `<option>Semana ${i+1}</option>`
+              ).join('');
+            }
+          }
+          update();
+        };
+        selY.onchange = update;
+        selP.onchange = update;
+        selR.dispatchEvent(new Event('change'));
+      });
+    }
+   // Setup chart re-render on tab show
+   document.querySelectorAll('#dashboardTabs button[data-bs-toggle="tab"]').forEach(btn => {
+      btn.addEventListener('shown.bs.tab', () => {
+        const target = btn.getAttribute('data-bs-target').substring(1);
+        if (target === 'casos-ingresados') {
+          setup('casos-ingresados', fetchIngresados, idsIngresados);
+        } else if (target === 'casos-iniciados') {
+          setup('casos-iniciados', fetchIniciados, idsIniciados);
+        }
+      });
+    });
+
+    // Common draw functions with mossPalette
+    function drawTotal(id, data) {
+      const total = data.length;
+      const opts = {
+        colors: mossPalette,
+        chart: { type: 'radialBar', height: 200 },
+        series: [total], labels: ['Casos'],
+        plotOptions: {
+          radialBar: { dataLabels: { name: { fontSize: '18px' }, value: { formatter: v => v, show: true, fontSize: '24px' }, total: { show: true, label: 'Total', formatter: () => total } } }
+        }
+      };
+      const el = document.getElementById(id);
+      if (!el) return; el.innerHTML = '';
+      new ApexCharts(el, opts).render();
+    }
+
+    function drawBy(id, data) {
+      const cnt = {};
+      data.forEach(d => cnt[d.ej] = (cnt[d.ej] || 0) + 1);
+      const labels = Object.keys(cnt);
+      const series = labels.map(l => cnt[l]);
+      const opts = {
+        colors: mossPalette,
+        chart: { type: 'bar', height: 260 },
+        series: [{ data: series }], xaxis: { categories: labels }
+      };
+      const el = document.getElementById(id);
+      if (!el) return; el.innerHTML = '';
+      new ApexCharts(el, opts).render();
+    }
+
+    function drawTrendChart(id, data) {
+      const agg = {};
+      data.forEach(d => {
+        const key = `${d.year}-${String(d.month).padStart(2, '0')}`;
+        agg[key] = (agg[key] || 0) + 1;
+      });
+      const allKeys = Object.keys(agg).sort();
+      if (!allKeys.length) return;
+      let [y, m] = allKeys[allKeys.length - 1].split('-').map(Number);
+      const keys = [];
+      for (let i = 0; i < 12; i++) {
+        keys.unshift(`${y}-${String(m).padStart(2,'0')}`);
+        m--; if (m === 0) { m = 12; y--; }
+      }
+      const vals = keys.map(k => agg[k] || 0);
+      const opts = {
+        colors: mossPalette,
+        chart: { type: 'line', height: 260, zoom: { enabled: false } },
+        series: [{ name: 'Casos', data: vals }],
+        xaxis: { categories: keys }
+      };
+      const el = document.getElementById(id);
+      if (!el) return; el.innerHTML = '';
+      new ApexCharts(el, opts).render();
+    }
+
+    function drawHeat(id, data) {
+      const years = [...new Set(data.map(d => d.year))].sort();
+      const series = years.map(y => {
+        const cnt = Array(53).fill(0);
+        data.filter(d => d.year === y).forEach(d => cnt[d.week - 1]++);
+        return { name: String(y), data: cnt };
+      });
+      const opts = {
+        colors: mossPalette,
+        chart: { type: 'heatmap', height: 320 },
+        series,
+        xaxis: { categories: Array.from({ length: 53 }, (_, i) => `S${i+1}`) }
+      };
+      const el = document.getElementById(id);
+      if (!el) return; el.innerHTML = '';
+      new ApexCharts(el, opts).render();
+    }
+
+    // Identifiers for reuse
+    const idsIngresados = { range: 'range-ing', yearWrap: 'year-ing-wrapper', year: 'year-ing', period: 'period-ing', total: 'chart-total-ing', bar: 'chart-by-ej-ing', trend: 'chart-trend-ing', heat: 'chart-heat-ing' };
+    const idsIniciados = { range: 'range-init', yearWrap: 'year-init-wrapper', year: 'year-init', period: 'period-init', total: 'chart-total-init', bar: 'chart-by-ej-init', trend: 'chart-trend-init', heat: 'chart-heat-init' };
+    document.addEventListener('DOMContentLoaded', () => {
+      setup('casos-ingresados', fetchIngresados, idsIngresados);
+      setup('casos-iniciados', fetchIniciados, idsIniciados);
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
